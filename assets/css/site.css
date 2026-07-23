@@ -1,0 +1,86 @@
+/* Shared site chrome — home, blog, dashboards index. The cfb-model app has
+   its own self-contained styles.css and doesn't use this file. */
+
+:root{
+  --ink:#14171B;
+  --paper:#F7F4EC;
+  --surface:#FFFFFF;
+  --steel:#7E9BC0;
+  --brass:#C9A24C;
+  --ink-muted:#5B5F66;
+  --ink-faint:#8C8F93;
+  --hairline:#E3DECE;
+  --shadow-card:0 1px 2px rgba(20,23,27,.05),0 8px 24px rgba(20,23,27,.06);
+  --radius-md:14px;
+  --font-sans:'Archivo', system-ui, -apple-system, sans-serif;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-sans);
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+}
+a{color:var(--steel);text-decoration:none;}
+a:hover{color:var(--brass);}
+
+.site-header{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:16px;padding:24px 40px;border-bottom:1px solid var(--hairline);
+}
+.site-header .brand{
+  display:flex;align-items:center;gap:14px;
+}
+.site-header .brand img{height:40px;}
+.site-header .brand span{font-weight:900;font-size:20px;}
+.site-nav{display:flex;gap:24px;flex-wrap:wrap;}
+.site-nav a{
+  font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-muted);
+}
+.site-nav a:hover, .site-nav a.active{color:var(--steel);}
+
+.site-main{max-width:1000px;margin:0 auto;padding:48px 40px 80px;}
+
+.hero h1{font-size:36px;font-weight:900;margin:0 0 12px;line-height:1.15;}
+.hero p{font-size:17px;color:var(--ink-muted);max-width:640px;line-height:1.6;}
+
+.card-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;margin-top:36px;
+}
+.card{
+  background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);
+  padding:28px;display:flex;flex-direction:column;gap:10px;
+}
+.card h2{margin:0;font-size:19px;font-weight:900;}
+.card p{margin:0;color:var(--ink-muted);font-size:14px;line-height:1.5;flex:1;}
+.card .tag{
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--brass);
+}
+.card .cta{font-size:13px;font-weight:700;margin-top:4px;}
+.card.disabled{opacity:.55;}
+.card.disabled .cta{color:var(--ink-faint);}
+
+.site-footer{
+  padding:24px 40px;border-top:1px solid var(--hairline);
+  color:var(--ink-faint);font-size:13px;text-align:center;
+}
+
+.post-list{display:flex;flex-direction:column;gap:20px;margin-top:32px;}
+.post-list .post{
+  background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);
+  padding:24px 28px;
+}
+.post-list .post h2{margin:0 0 6px;font-size:18px;}
+.post-list .post .meta{font-size:12px;color:var(--ink-faint);margin-bottom:10px;}
+.post-list .empty{color:var(--ink-muted);font-size:15px;padding:24px 0;}
+
+.post-body{max-width:720px;}
+.post-body h1{font-size:30px;margin-bottom:6px;}
+.post-body .meta{color:var(--ink-faint);font-size:13px;margin-bottom:28px;}
+.post-body p{line-height:1.7;font-size:16px;color:var(--ink);}
+.post-body a.back{display:inline-block;margin-bottom:24px;font-size:13px;font-weight:700;}
