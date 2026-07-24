@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 NFL Preseason Pre-Read — Weaver Analytics</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="pr-topbar">
+  <div class="brand">
+    <img src="../assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="pr-nav">
+    <a href="../index.html">Home</a>
+    <a href="../cfb-model/index.html">CFB Model</a>
+    <a href="../nfl-model/index.html">NFL Model</a>
+    <a href="../dashboards/index.html">Dashboards</a>
+    <a href="index.html" class="active">Pre-Read</a>
+    <a href="../blog/index.html">Blog</a>
+  </nav>
+</header>
+
+<nav class="pr-jumpnav">
+  <a href="#exec-summary">Executive Summary</a>
+  <a href="#coaching-carousel">Coaching Carousel</a>
+  <a href="#qb-situations">QB Situations</a>
+  <a href="#rookies-trades-injuries">Rookies, Trades &amp; Injuries</a>
+  <a href="#predictions">Division Predictions</a>
+  <a href="#deep-dives">Division Deep Dives</a>
+  <a href="#fantasy">Fantasy Football</a>
+  <a href="#appendix">Methodology &amp; Sources</a>
+</nav>
+
+<section class="pr-cover">
+  <div class="eyebrow">July 2026 · Pre-Training Camp Edition</div>
+  <h1>2026 NFL Preseason Pre-Read</h1>
+  <p>Coaching carousel, QB rooms, rookie impact, and a from-scratch prediction model.</p>
+</section>
+
+<section class="pr-section" id="exec-summary">
+  <div class="section-eyebrow">Executive Summary</div>
+  <h2>The Offseason in Five Numbers</h2>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num">10</div>
+      <div class="label">Head Coaching Changes</div>
+      <div class="note">Tied for the most in a single NFL offseason ever.</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">3</div>
+      <div class="label">Wide-Open QB Rooms</div>
+      <div class="note">Teams with a genuinely wide-open QB competition entering camp.</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">4</div>
+      <div class="label">Toss-Up Divisions</div>
+      <div class="note">Rated a true toss-up by our confidence model (AFC South, NFC East, NFC South).</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">+21</div>
+      <div class="label">Saints Trajectory Score</div>
+      <div class="note">Highest in the league — not bad for a team we almost wrote off as a "dark horse."</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">14</div>
+      <div class="label">Rams – Cardinals Power Swing</div>
+      <div class="note">Point swing between the Rams (best Power Score) and the Cardinals (worst).</div>
+    </div>
+  </div>
+</section>
+
+<section class="pr-section" id="coaching-carousel">
+  <div class="section-eyebrow">Coaching Carousel</div>
+  <h2>16 Teams Changed Their Staff</h2>
+  <p class="dek">Half the league made a change at HC, OC, or DC — tied for the most head-coaching turnover in a single offseason ever.</p>
+
+  <div class="card-grid" style="margin-bottom:32px;">
+    <div class="card">
+      <h4>3 of 3 roles changed</h4>
+      <p>Ravens, Giants, Bills, Browns, Steelers, Titans, Dolphins, Raiders</p>
+    </div>
+    <div class="card">
+      <h4>2 of 3 roles changed</h4>
+      <p>Falcons, Cardinals, Chargers, Commanders</p>
+    </div>
+    <div class="card">
+      <h4>1 of 3 roles changed</h4>
+      <p>Seahawks, Lions, Chiefs, Cowboys</p>
+    </div>
+    <div class="card">
+      <h4>No staff changes — 16 teams</h4>
+      <p>Eagles, Bears, Packers, Vikings, Rams, 49ers, Bengals, Texans, Colts, Jaguars, Patriots, Jets, Buccaneers, Panthers, Saints, Broncos</p>
+    </div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:6px;">Who Moved Where</h3>
+  <p class="dek" style="margin-bottom:16px;">All 10 new head coaches this cycle. Left badge is the coach's previous stop, right badge is the new team.</p>
+  <div class="card">
+    <div class="hire-row"><span class="name">Jeff Hafley</span><span class="arrow-badge">GB → MIA</span><span class="note">ex-Packers DC</span></div>
+    <div class="hire-row"><span class="name">Kevin Stefanski</span><span class="arrow-badge">CLE → ATL</span><span class="note">ex-Browns HC</span></div>
+    <div class="hire-row"><span class="name">Mike McCarthy</span><span class="arrow-badge">DAL → PIT</span><span class="note">former Cowboys/Packers HC</span></div>
+    <div class="hire-row"><span class="name">John Harbaugh</span><span class="arrow-badge">BAL → NYG</span><span class="note">ex-Ravens HC</span></div>
+    <div class="hire-row"><span class="name">Robert Saleh</span><span class="arrow-badge">SF → TEN</span><span class="note">ex-49ers DC</span></div>
+    <div class="hire-row"><span class="name">Mike LaFleur</span><span class="arrow-badge">LAR → ARI</span><span class="note">ex-Rams OC</span></div>
+    <div class="hire-row"><span class="name">Jesse Minter</span><span class="arrow-badge">LAC → BAL</span><span class="note">ex-Chargers DC</span></div>
+    <div class="hire-row"><span class="name">Joe Brady</span><span class="arrow-badge">BUF → BUF</span><span class="note">promoted, ex-Bills OC</span></div>
+    <div class="hire-row"><span class="name">Todd Monken</span><span class="arrow-badge">BAL → CLE</span><span class="note">ex-Ravens OC</span></div>
+    <div class="hire-row"><span class="name">Klint Kubiak</span><span class="arrow-badge">SEA → LV</span><span class="note">ex-Seahawks OC</span></div>
+  </div>
+</section>
+
+<section class="pr-section" id="qb-situations">
+  <div class="section-eyebrow">QB Situations</div>
+  <h2>The League-Wide QB Status Board</h2>
+  <p class="dek">Tied for highest QB turnover in league history entering a season.</p>
+
+  <div class="qb-board">
+    <div class="division-block">
+      <h3>AFC East</h3>
+      <div class="qb-row"><span class="team">Bills</span><span class="qb">Josh Allen</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Patriots</span><span class="qb">Drake Maye</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Jets</span><span class="qb">Geno Smith</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Dolphins</span><span class="qb">Malik Willis</span><span class="badge badge-set">Set</span></div>
+    </div>
+    <div class="division-block">
+      <h3>AFC North</h3>
+      <div class="qb-row"><span class="team">Ravens</span><span class="qb">Lamar Jackson</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Bengals</span><span class="qb">Joe Burrow</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Steelers</span><span class="qb">Aaron Rodgers</span><span class="badge badge-waiting">Rookie Waiting</span></div>
+      <div class="qb-row"><span class="team">Browns</span><span class="qb">Watson / Sanders / Gabriel / Green</span><span class="badge badge-open">Wide Open</span></div>
+    </div>
+    <div class="division-block">
+      <h3>AFC South</h3>
+      <div class="qb-row"><span class="team">Texans</span><span class="qb">C.J. Stroud</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Jaguars</span><span class="qb">Trevor Lawrence</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Colts</span><span class="qb">Daniel Jones</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Titans</span><span class="qb">Cam Ward</span><span class="badge badge-set">Set</span></div>
+    </div>
+    <div class="division-block">
+      <h3>AFC West</h3>
+      <div class="qb-row"><span class="team">Broncos</span><span class="qb">Bo Nix</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Chiefs</span><span class="qb">Patrick Mahomes</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Chargers</span><span class="qb">Justin Herbert</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Raiders</span><span class="qb">Kirk Cousins</span><span class="badge badge-waiting">Rookie Waiting</span></div>
+    </div>
+    <div class="division-block">
+      <h3>NFC East</h3>
+      <div class="qb-row"><span class="team">Eagles</span><span class="qb">Jalen Hurts</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Cowboys</span><span class="qb">Dak Prescott</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Giants</span><span class="qb">Jaxson Dart</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Commanders</span><span class="qb">Jayden Daniels</span><span class="badge badge-set">Set</span></div>
+    </div>
+    <div class="division-block">
+      <h3>NFC North</h3>
+      <div class="qb-row"><span class="team">Bears</span><span class="qb">Caleb Williams</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Packers</span><span class="qb">Jordan Love</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Lions</span><span class="qb">Jared Goff</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Vikings</span><span class="qb">Murray / McCarthy</span><span class="badge badge-open">Wide Open</span></div>
+    </div>
+    <div class="division-block">
+      <h3>NFC South</h3>
+      <div class="qb-row"><span class="team">Panthers</span><span class="qb">Bryce Young</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Buccaneers</span><span class="qb">Baker Mayfield</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Saints</span><span class="qb">Tyler Shough</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Falcons</span><span class="qb">Tua / Penix</span><span class="badge badge-open">Wide Open</span></div>
+    </div>
+    <div class="division-block">
+      <h3>NFC West</h3>
+      <div class="qb-row"><span class="team">Rams</span><span class="qb">Matthew Stafford</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">49ers</span><span class="qb">Brock Purdy</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Seahawks</span><span class="qb">Sam Darnold</span><span class="badge badge-set">Set</span></div>
+      <div class="qb-row"><span class="team">Cardinals</span><span class="qb">Jacoby Brissett</span><span class="badge badge-waiting">Rookie Waiting</span></div>
+    </div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 6px;">Spotlight: Cleveland's Four-Man Room</h3>
+  <p class="dek" style="margin-bottom:16px;">The most chaotic QB room in the league entering training camp — no presumed favorite among four real options.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h4>Deshaun Watson — Veteran</h4>
+      <p>Clemson. 72 regular-season starts, three-time Pro Bowler. Recovering from a ruptured Achilles — no 2025 regular-season snaps logged.<br><br><strong>Superpower:</strong> playoff-tested arm talent and mobility when healthy.<br><strong>Weakness:</strong> extensive injury history — availability is the real question, not talent.</p>
+    </div>
+    <div class="card">
+      <h4>Shedeur Sanders — 2025 Rookie</h4>
+      <p>Colorado. 2025 draft: Round 5, Pick 144. 120/212, 1,400 yds, 7 TD, 10 INT, 3-4 as a starter, 18.8 QBR.<br><br><strong>Superpower:</strong> deep-ball accuracy and big-play ability — four 50+-yard completions in his first three starts.<br><strong>Weakness:</strong> turnover-prone; holds the ball too long against NFL pass rush.</p>
+    </div>
+    <div class="card">
+      <h4>Dillon Gabriel — 2025 Rookie</h4>
+      <p>Oregon. 2025 draft: Round 3, Pick 94; FBS all-time leader in total TDs (189). 110/185, 937 yds, 7 TD, 2 INT, 1-5 as a starter, 80.8 rating.<br><br><strong>Superpower:</strong> ball security — lowest INT rate of the three; most career starts in FBS history.<br><strong>Weakness:</strong> lacks downfield explosiveness — among the league's lowest EPA/dropback in 2025.</p>
+    </div>
+    <div class="card">
+      <h4>Taylen Green — 2026 Rookie</h4>
+      <p>Arkansas (transfer from Boise State). 2026 draft: Round 6, Pick 182. 2025 college: 2,714 yds, 19 TD, 11 INT — broke NFL Combine vertical &amp; broad jump records at 6'6"/224.<br><br><strong>Superpower:</strong> elite size, arm talent, and athleticism — rare physical upside for the position.<br><strong>Weakness:</strong> raw decision-making and operational polish — graded a Day 3 developmental project.</p>
+    </div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 6px;">Rookie QBs Waiting in the Wings</h3>
+  <table class="pr-table" style="margin-top:12px;">
+    <tr><th>Player</th><th>Team</th><th>Draft</th><th>Note</th></tr>
+    <tr><td>Fernando Mendoza</td><td>Raiders</td><td>2026, No. 1 overall</td><td>Behind Cousins; expected to take over mid-season</td></tr>
+    <tr><td>Carson Beck</td><td>Cardinals</td><td>2026, ~65th overall</td><td>Behind Brissett; real chance he plays in 2026</td></tr>
+    <tr><td>Shedeur Sanders</td><td>Browns</td><td>2025, 5th round</td><td>In the thick of the QB1 competition now</td></tr>
+    <tr><td>Dillon Gabriel</td><td>Browns</td><td>2025, 3rd round</td><td>Also in the mix, third in the pecking order</td></tr>
+    <tr><td>Taylen Green</td><td>Browns</td><td>2026, 6th round</td><td>Developmental dual-threat, long shot for 2026</td></tr>
+    <tr><td>Will Howard</td><td>Steelers</td><td>2025, 6th round</td><td>Bridge/depth behind Rodgers</td></tr>
+    <tr><td>Drew Allar</td><td>Steelers</td><td>2026, 3rd round</td><td>Developmental, buried on the depth chart</td></tr>
+  </table>
+</section>
+
+<section class="pr-section" id="rookies-trades-injuries">
+  <div class="section-eyebrow">Who's There and Who's Not</div>
+  <h2>Rookies, Trades, and Injuries</h2>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:6px;">Top Instant-Impact Rookies (All Positions)</h3>
+  <div class="card-grid" style="margin:16px 0 32px;">
+    <div class="card"><h4>Caleb Downs — S, DAL</h4><p>Plug-and-play starter, DROY buzz</p></div>
+    <div class="card"><h4>Jeremiyah Love — RB, ARI</h4><p>No. 3 overall, immediate lead-back role</p></div>
+    <div class="card"><h4>Carnell Tate — WR, TEN</h4><p>No. 4 overall, clear WR1 path</p></div>
+    <div class="card"><h4>Mansoor Delane — CB, KC</h4><p>Top-10 pick, immediate starter</p></div>
+    <div class="card"><h4>Jadarian Price — RB, SEA</h4><p>Steps into the vacated lead role</p></div>
+    <div class="card"><h4>Arvell Reese — LB, NYG</h4><p>Centerpiece of the defensive rebuild</p></div>
+    <div class="card"><h4>Kenyon Sadiq — TE, NYJ</h4><p>First-round starter behind Geno Smith</p></div>
+    <div class="card"><h4>Omar Cooper Jr. — WR, NYJ</h4><p>First-round receiver, immediate role</p></div>
+    <div class="card"><h4>Max Iheanachor — OT, PIT</h4><p>First-round line starter</p></div>
+    <div class="card"><h4>Spencer Fano — OT, CLE</h4><p>Immediate line starter</p></div>
+    <div class="card"><h4>Jordyn Tyson — WR, NO</h4><p>New top target for Tyler Shough</p></div>
+    <div class="card"><h4>Malachi Lawrence — EDGE, DAL</h4><p>Part of the total defensive rebuild</p></div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:6px;">The Trades That Reshaped Rosters</h3>
+  <p class="dek" style="margin-bottom:16px;">The five moves that mattered most this offseason — player, origin team, and destination.</p>
+  <figure class="chart-figure">
+    <img src="assets/charts/trades-reshuffle.svg" alt="Offseason trades chart">
+  </figure>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:6px;">The Injury Picture Entering Camp</h3>
+  <p class="dek" style="margin-bottom:16px;">Five situations carrying real, sourced medical status into training camp — not soft narrative, actual reported updates already baked into the model.</p>
+  <div class="card-grid">
+    <div class="card"><h4>Chiefs <span class="badge badge-major">Major</span></h4><p>Mahomes tore his ACL + LCL in Week 15. Week 1 2026 availability is genuinely uncertain despite ahead-of-schedule rehab reports — KC added Kenneth Walker III to reduce pressure on his return.</p></div>
+    <div class="card"><h4>Packers <span class="badge badge-major">Major</span></h4><p>Parsons' ACL + meniscus recovery is now reported to likely cost him much of the regular season — not cleared for practice until September, targeting a postseason return.</p></div>
+    <div class="card"><h4>Lions <span class="badge badge-major">Major</span></h4><p>S Kerby Joseph's status is "team does not know when or if he will return" per HC Dan Campbell — worse than a recovery-timeline question.</p></div>
+    <div class="card"><h4>Seahawks <span class="badge badge-moderate">Moderate</span></h4><p>RB Zach Charbonnet's ACL recovery could cost him the start of the season — newly reported, not previously priced in.</p></div>
+    <div class="card"><h4>Colts <span class="badge badge-moderate">Moderate</span></h4><p>WR Alec Pierce's ankle surgery carries a 4-6 month recovery that could cost him the preseason and part of the regular season.</p></div>
+  </div>
+</section>
+
+<section class="pr-section" id="predictions">
+  <div class="section-eyebrow">Division Recap &amp; Predictions</div>
+  <h2>2025 Final Standings, All 8 Divisions</h2>
+  <table class="pr-table" style="margin-bottom:32px;">
+    <tr><th>Division</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th></tr>
+    <tr><td>AFC East</td><td>Patriots 14-3</td><td>Bills 12-5</td><td>Dolphins 7-10</td><td>Jets 3-14</td></tr>
+    <tr><td>AFC North</td><td>Steelers 10-7</td><td>Ravens 8-9</td><td>Bengals 6-11</td><td>Browns 5-12</td></tr>
+    <tr><td>AFC South</td><td>Jaguars 13-4</td><td>Texans 12-5</td><td>Colts 8-9</td><td>Titans 3-14</td></tr>
+    <tr><td>AFC West</td><td>Broncos 14-3</td><td>Chargers 11-6</td><td>Chiefs 6-11</td><td>Raiders 3-14</td></tr>
+    <tr><td>NFC East</td><td>Eagles 11-6</td><td>Cowboys 7-9-1</td><td>Commanders 5-12</td><td>Giants 4-13</td></tr>
+    <tr><td>NFC North</td><td>Bears 11-6</td><td>Packers 9-7-1</td><td>Vikings 9-8</td><td>Lions 9-8</td></tr>
+    <tr><td>NFC South</td><td>Panthers 8-9</td><td>Buccaneers 8-9</td><td>Falcons 8-9</td><td>Saints 6-11</td></tr>
+    <tr><td>NFC West</td><td>Seahawks 14-3</td><td>Rams 12-5</td><td>49ers 12-5</td><td>Cardinals 3-14</td></tr>
+  </table>
+  <p class="dek" style="margin-top:-16px;">Source: Pro-Football-Reference.com, 2025 NFL Standings &amp; Team Stats.</p>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">The Full Picture: 2025 Finish → 2026 Predicted</h3>
+  <p class="dek">Left = 2025 final standings order. Right = 2026 predicted rank (Power Score). Green = predicted to rise, red = predicted to fall.</p>
+  <div class="chart-row">
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-east.svg" alt="AFC East predicted rank chart"><figcaption>AFC East</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-north.svg" alt="AFC North predicted rank chart"><figcaption>AFC North</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-south.svg" alt="AFC South predicted rank chart"><figcaption>AFC South</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-west.svg" alt="AFC West predicted rank chart"><figcaption>AFC West</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-east.svg" alt="NFC East predicted rank chart"><figcaption>NFC East</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-north.svg" alt="NFC North predicted rank chart"><figcaption>NFC North</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-south.svg" alt="NFC South predicted rank chart"><figcaption>NFC South</figcaption></figure>
+    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-west.svg" alt="NFC West predicted rank chart"><figcaption>NFC West</figcaption></figure>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Division Confidence Ratings</h3>
+  <table class="pr-table" style="margin-bottom:32px;">
+    <tr><th>Division</th><th>Leader</th><th>Runner-up</th><th>Gap (1v2)</th><th>Rating</th></tr>
+    <tr><td>AFC East</td><td>Patriots</td><td>Bills</td><td>3.1</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>AFC North</td><td>Bengals</td><td>Steelers</td><td>2.5</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>AFC South</td><td>Texans</td><td>Jaguars</td><td>0.9</td><td><span class="badge badge-low">Low</span></td></tr>
+    <tr><td>AFC West</td><td>Broncos</td><td>Chargers</td><td>6.8</td><td><span class="badge badge-high">High</span></td></tr>
+    <tr><td>NFC East</td><td>Eagles</td><td>Cowboys</td><td>1.1</td><td><span class="badge badge-low">Low</span></td></tr>
+    <tr><td>NFC North</td><td>Bears</td><td>Vikings</td><td>2.6</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>NFC South</td><td>Saints</td><td>Panthers</td><td>1.0</td><td><span class="badge badge-low">Low</span></td></tr>
+    <tr><td>NFC West</td><td>Rams</td><td>Seahawks</td><td>2.8</td><td><span class="badge badge-medium">Medium</span></td></tr>
+  </table>
+  <p class="dek" style="margin-top:-16px;">Confidence = gap between the #1 and #2 team's Power Score, minus their average Volatility ÷ 6.</p>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Cone of Uncertainty, by Division</h3>
+  <p class="dek">Power Score ± Upside/Downside range.</p>
+  <table class="pr-table" style="margin-bottom:32px;">
+    <tr><th>Division</th><th>#1</th><th>Range</th><th>#2</th><th>Range</th><th>#3</th><th>Range</th><th>#4</th><th>Range</th></tr>
+    <tr><td>AFC East</td><td>Patriots</td><td>+6.1</td><td>Bills</td><td>+3.0</td><td>Jets</td><td>-0.9</td><td>Dolphins</td><td>-5.8</td></tr>
+    <tr><td>AFC North</td><td>Bengals</td><td>-0.4</td><td>Steelers</td><td>-2.9</td><td>Ravens</td><td>-2.9</td><td>Browns</td><td>-8.8</td></tr>
+    <tr><td>AFC South</td><td>Texans</td><td>+8.1</td><td>Jaguars</td><td>+7.2</td><td>Colts</td><td>+3.4</td><td>Titans</td><td>-5.5</td></tr>
+    <tr><td>AFC West</td><td>Broncos</td><td>+8.4</td><td>Chargers</td><td>+1.6</td><td>Chiefs</td><td>-2.3</td><td>Raiders</td><td>-8.9</td></tr>
+    <tr><td>NFC East</td><td>Eagles</td><td>+4.5</td><td>Cowboys</td><td>+3.4</td><td>Giants</td><td>+1.0</td><td>Commanders</td><td>-5.2</td></tr>
+    <tr><td>NFC North</td><td>Bears</td><td>+4.3</td><td>Vikings</td><td>+1.7</td><td>Packers</td><td>+0.8</td><td>Lions</td><td>-2.4</td></tr>
+    <tr><td>NFC South</td><td>Saints</td><td>+5.3</td><td>Panthers</td><td>+4.3</td><td>Buccaneers</td><td>-0.6</td><td>Falcons</td><td>-3.4</td></tr>
+    <tr><td>NFC West</td><td>Rams</td><td>+8.2</td><td>Seahawks</td><td>+5.4</td><td>49ers</td><td>+0.6</td><td>Cardinals</td><td>-7.7</td></tr>
+  </table>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Projected Wins — Narrowest Confidence Ranges</h3>
+  <p class="dek">Ranked by model-projected 2026 wins. Range shown is the model's confidence band, not a hard floor/ceiling.</p>
+  <div class="win-list">
+    <div class="win-row"><span class="rank">1</span><span class="team">Broncos (DEN)</span><span class="range">8.6 – 12.3</span></div>
+    <div class="win-row"><span class="rank">2</span><span class="team">Rams (LAR)</span><span class="range">8.4 – 12.2</span></div>
+    <div class="win-row"><span class="rank">3</span><span class="team">Texans (HOU)</span><span class="range">8.3 – 12.2</span></div>
+    <div class="win-row"><span class="rank">4</span><span class="team">Saints (NO)</span><span class="range">7.9 – 11.7</span></div>
+    <div class="win-row"><span class="rank">5</span><span class="team">Patriots (NE)</span><span class="range">7.8 – 11.2</span></div>
+    <div class="win-row"><span class="rank">6</span><span class="team">Jaguars (JAX)</span><span class="range">7.1 – 11.1</span></div>
+    <div class="win-row"><span class="rank">7</span><span class="team">Seahawks (SEA)</span><span class="range">7.0 – 10.6</span></div>
+    <div class="win-row"><span class="rank">8</span><span class="team">Panthers (CAR)</span><span class="range">7.0 – 10.3</span></div>
+    <div class="win-row"><span class="rank">9</span><span class="team">Eagles (PHI)</span><span class="range">6.8 – 10.1</span></div>
+    <div class="win-row"><span class="rank">10</span><span class="team">Colts (IND)</span><span class="range">6.7 – 10.1</span></div>
+    <div class="win-row"><span class="rank">11</span><span class="team">Bears (CHI)</span><span class="range">5.5 – 10.0</span></div>
+    <div class="win-row"><span class="rank">12</span><span class="team">Cowboys (DAL)</span><span class="range">5.1 – 9.6</span></div>
+    <div class="win-row"><span class="rank">13</span><span class="team">Bills (BUF)</span><span class="range">5.0 – 9.5</span></div>
+    <div class="win-row"><span class="rank">14</span><span class="team">Vikings (MIN)</span><span class="range">4.5 – 9.1</span></div>
+    <div class="win-row"><span class="rank">15</span><span class="team">Bengals (CIN)</span><span class="range">4.3 – 9.0</span></div>
+    <div class="win-row"><span class="rank">16</span><span class="team">Chargers (LAC)</span><span class="range">4.2 – 8.9</span></div>
+  </div>
+  <p class="dek" style="margin-top:12px;">Full 1–32 order for every team is in the Composite Power Ranking table below.</p>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">The Team Risk Map</h3>
+  <p class="dek">X = Power Score (prediction). Y = Stability (inverse of Upside + Downside range). Ringed dots are the judgment calls below.</p>
+  <figure class="chart-figure">
+    <img src="assets/charts/risk-map.svg" alt="Team risk map scatter plot" style="max-width:640px;">
+  </figure>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Judgment Calls</h3>
+  <p class="dek">Vulnerable Leader = ranked 1st/2nd with Downside ≥ 7. Sneaky Riser = ranked 3rd/4th with Upside ≥ 6.</p>
+  <div class="card-grid">
+    <div class="card"><h4>Bengals <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>AFC North, #1. Downside 7 — the division lead runs through Burrow's own recent injury history plus Erick All's unresolved ACL.</p></div>
+    <div class="card"><h4>Steelers <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>AFC North, #2. Downside 8 — the highest in the league. This ranking assumes a 42-year-old Rodgers holds up for a full season.</p></div>
+    <div class="card"><h4>Cowboys <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>NFC East, #2. Downside 9, 2nd-highest in the league. Dallas's rise depends on Overshown fully recovering from a severe multi-ligament knee injury.</p></div>
+    <div class="card"><h4>Packers <span class="badge badge-major">Fallen Leader</span></h4><p>NFC North, now #3. Not a "vulnerable" lead anymore — Parsons is now reported likely to miss much of the season, and it already cost Green Bay 2nd place in the division.</p></div>
+    <div class="card"><h4>Titans <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC South, #4. Upside 7 — the only team with two players on the national All-Breakout Team (Ward, Helm).</p></div>
+    <div class="card"><h4>Raiders <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC West, #4. Upside 7 — Ashton Jeanty is a real regression-to-the-mean case, independent of the scheme change.</p></div>
+    <div class="card"><h4>Cardinals <span class="badge badge-set">Sneaky Riser</span></h4><p>NFC West, #4. Upside 7, Downside 7 — the widest total range in the league. Boom-or-bust, not just a bad team.</p></div>
+    <div class="card"><h4>Jets <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC East, #3. Upside 6 — T'Vondre Sweat has real breakout DT tools on a team already showing more life than its record.</p></div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Strength of Schedule Impacts</h3>
+  <div class="card-grid" style="margin-bottom:32px;">
+    <div class="card"><h4>Saints get a schedule bump</h4><p>11.6 projected wins — not just a strong Power Score, but the easiest schedule in the league (SOS -1.41).</p></div>
+    <div class="card"><h4>Commanders and Cardinals have the two hardest schedules</h4><p>SOS +2.08 and +2.03 respectively — stacked on already-bad Power Scores, that's why they land near the bottom of projected wins even relative to teams with similar Power Scores.</p></div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Composite Power Ranking, 1–32</h3>
+  <p class="dek">Synthesized from ESPN FPI, Yahoo Sports, Sharp Football Analysis, and PhillyVoice preseason rankings — directional, not a single outlet's number.</p>
+  <table class="pr-table">
+    <tr><th>Rank</th><th>Team</th><th>Rank</th><th>Team</th><th>Rank</th><th>Team</th><th>Rank</th><th>Team</th></tr>
+    <tr><td>1</td><td>Rams</td><td>9</td><td>Ravens</td><td>17</td><td>Bengals</td><td>25</td><td>Giants</td></tr>
+    <tr><td>2</td><td>Seahawks</td><td>10</td><td>Eagles</td><td>18</td><td>Commanders</td><td>26</td><td>Falcons</td></tr>
+    <tr><td>3</td><td>Bills</td><td>11</td><td>Cowboys</td><td>19</td><td>Vikings</td><td>27</td><td>Raiders</td></tr>
+    <tr><td>4</td><td>Broncos</td><td>12</td><td>Bears</td><td>20</td><td>Steelers</td><td>28</td><td>Titans</td></tr>
+    <tr><td>5</td><td>Patriots</td><td>13</td><td>Lions</td><td>21</td><td>Colts</td><td>29</td><td>Browns</td></tr>
+    <tr><td>6</td><td>Chargers</td><td>14</td><td>Texans</td><td>22</td><td>Buccaneers</td><td>30</td><td>Cardinals</td></tr>
+    <tr><td>7</td><td>49ers</td><td>15</td><td>Packers</td><td>23</td><td>Panthers</td><td>31</td><td>Jets</td></tr>
+    <tr><td>8</td><td>Chiefs</td><td>16</td><td>Jaguars</td><td>24</td><td>Saints</td><td>32</td><td>Dolphins</td></tr>
+  </table>
+</section>
+
+<section class="pr-section" id="deep-dives">
+  <div class="section-eyebrow">Division Deep Dives</div>
+  <h2>Predictions, Division by Division</h2>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>AFC East</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <p class="summary">The Jets closed real ground on a productive offseason — just not enough to pass the top two yet.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Patriots (+6.1)</div><div class="blurb">Full coaching continuity and an A.J. Brown blockbuster addition outweigh a real edge rusher hole and the Vrabel distraction.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Bills (+3.0)</div><div class="blurb">Absorbing a full coordinator overhaul, softened by Joe Brady's internal promotion to HC.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Jets (-0.9) <span class="trend-up">▲</span></div><div class="blurb">NFL.com called their offseason "extremely productive." Full staff continuity into Year 2 under Glenn.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Dolphins (-5.8) <span class="trend-down">▼</span></div><div class="blurb">Full rebuild: new HC, OC, and DC, plus the league's thinnest WR room after trading Waddle.</div><div class="prior">2025: #3</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>AFC North</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <p class="summary">Bengals and Steelers are separated by less than a point — and both division leaders carry real injury risk.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Bengals (-0.4) <span class="trend-up">▲</span></div><div class="blurb">Full continuity and a fixed defense, but the lead runs through Burrow's own recent injury history.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Steelers (-2.9) <span class="trend-down">▼</span></div><div class="blurb">The league's highest Downside score (8) — this ranking assumes a 42-year-old Rodgers holds up all year.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Ravens (-2.9) <span class="trend-down">▼</span></div><div class="blurb">Lost All-Pro center Linderbaum to the Raiders; replacements are career backups. Full staff overhaul.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Browns (-8.8)</div><div class="blurb">QB has been the defining issue for decades, still unresolved — now a 4-way open competition.</div><div class="prior">2025: #4</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>AFC South</h3><span class="badge badge-low">Low Confidence</span></div>
+    <p class="summary">Texans vs. Jaguars is a literal coin flip — 0.9 points apart with real continuity on both sides.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Texans (+8.1) <span class="trend-up">▲</span></div><div class="blurb">Fewest roster issues in the AFC and zero coaching turnover — the division's steadiest team.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Jaguars (+7.2) <span class="trend-down">▼</span></div><div class="blurb">Best 2nd-half team in the league last year, running it back with full staff continuity.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Colts (+3.4)</div><div class="blurb">Real WR2 hole after trading Pittman, offset by a Daniel Jones extension resolving QB uncertainty.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Titans (-5.5)</div><div class="blurb">Last place, but two players (Ward, Helm) made the league's All-Breakout Team — real ceiling underneath.</div><div class="prior">2025: #4</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>AFC West</h3><span class="badge badge-high">High Confidence</span></div>
+    <p class="summary">Broncos have no real competition. Chiefs' picture got materially worse this week — Mahomes' Week 1 status is genuinely uncertain.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Broncos (+8.4)</div><div class="blurb">Least roster turnover in the league. Only a minor TE gap on an otherwise complete roster.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Chargers (+1.6)</div><div class="blurb">Offensive guard remains a real weak link despite heavy investment there.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Chiefs (-2.3)</div><div class="blurb">UPDATE: Mahomes tore his ACL+LCL in Week 15 2025 and Week 1 2026 availability is genuinely uncertain despite ahead-of-schedule rehab reports — a real, acute concern, not just an aging-core narrative.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Raiders (-8.9)</div><div class="blurb">Full staff overhaul and no legitimate WR1 — but Jeanty is a real regression-to-the-mean buy-low case.</div><div class="prior">2025: #4</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>NFC East</h3><span class="badge badge-low">Low Confidence</span></div>
+    <p class="summary">Eagles survive losing a superstar — barely. The cushion over Dallas is down to 1.1 points.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Eagles (+4.5)</div><div class="blurb">Traded away A.J. Brown and lost their starting safety — real subtractions, saved by zero coaching turnover.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Cowboys (+3.4)</div><div class="blurb">A rare drama-free summer and major defensive investment — but Dallas carries real risk on Overshown's knee recovery.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Giants (+1.0) <span class="trend-up">▲</span></div><div class="blurb">Full staff overhaul, but GM/Harbaugh "did an excellent job" patching most other holes per reporting.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Commanders (-5.2) <span class="trend-down">▼</span></div><div class="blurb">WR2 opposite McLaurin never addressed — a real risk to Daniels' development as he returns from injury.</div><div class="prior">2025: #3</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>NFC North</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <p class="summary">Packers fell behind Vikings this week — Parsons' recovery is now reported to likely cost him much of the season. Lions' secondary situation got worse too.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Bears (+4.3)</div><div class="blurb">Interior DL got "zero improvement" — the one real hole on an otherwise ascending, healthy young roster.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Vikings (+1.7) <span class="trend-up">▲</span></div><div class="blurb">The QB competition between Murray and McCarthy is still genuinely unresolved entering camp.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Packers (+0.8) <span class="trend-down">▼</span></div><div class="blurb">UPDATE: Parsons' ACL+meniscus recovery is now reported to likely sideline him for much of the regular season — not cleared for practice until September at the earliest, targeting a postseason return.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Lions (-2.4)</div><div class="blurb">UPDATE: S Kerby Joseph's status is "team does not know when or if he will return" per HC Dan Campbell — worse than a recovery-timeline question, on top of the Achilles tear and the arrest.</div><div class="prior">2025: #4</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>NFC South</h3><span class="badge badge-low">Low Confidence</span></div>
+    <p class="summary">The Saints aren't a dark horse anymore — they're the favorite. Panthers' division win last year ran hotter than their point differential earned.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Saints (+5.3) <span class="trend-up">▲</span></div><div class="blurb">Drafted Tyson 8th overall to pair with Olave, while Shough's emergence solved QB for free. Zero coaching turnover.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Panthers (+4.3) <span class="trend-down">▼</span></div><div class="blurb">Real defensive investment (Phillips, Lloyd), but one of the more fortunate teams in football last year — some correction is due.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Buccaneers (-0.6) <span class="trend-down">▼</span></div><div class="blurb">Fired their OC and hired Zac Robinson — real scheme risk — with the league's least productive TE room still unaddressed.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Falcons (-3.4) <span class="trend-down">▼</span></div><div class="blurb">Both starting interior DL starters departed. Penix's ACL recovery is unresolved and Pearce Jr. faces felony charges.</div><div class="prior">2025: #3</div></div>
+    </div>
+  </div>
+
+  <div class="deep-dive">
+    <div class="deep-dive-head"><h3>NFC West</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <p class="summary">Rams are the best team in football. Cardinals have the widest range of outcomes in the league.</p>
+    <div class="deep-dive-teams">
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Rams (+8.2) <span class="trend-up">▲</span></div><div class="blurb">Traded for reigning DPOY Myles Garrett on an already "most complete roster in the league." Zero coaching turnover.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Seahawks (+5.4) <span class="trend-down">▼</span></div><div class="blurb">Reigning Super Bowl champions with real WR-depth concerns behind JSN and an aging Kupp.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">49ers (+0.6)</div><div class="blurb">No reliable free safety, and the Brandon Aiyuk trade saga remains unresolved and contentious.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Cardinals (-7.7)</div><div class="blurb">No reliable starting QB through the whole season — but Walter Nolen III's Pro Bowl-caliber flashes make this a real boom-or-bust roster.</div><div class="prior">2025: #4</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pr-section" id="fantasy">
+  <div class="section-eyebrow">Fantasy Football Tidbits</div>
+  <h2>Storylines &amp; Sleepers</h2>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:12px;">Storylines Still Developing</h3>
+  <div class="card-grid" style="margin-bottom:32px;">
+    <div class="card"><h4>Unsigned veterans <span class="badge badge-moderate">Developing</span></h4><p>Stefon Diggs, Deebo Samuel, Jadeveon Clowney, and Joey Bosa all remain unsigned as camp approaches.</p></div>
+    <div class="card"><h4>Baker Mayfield's contract <span class="badge badge-moderate">Developing</span></h4><p>Standoff with Tampa Bay could still get done before the soft deadline of training camp.</p></div>
+    <div class="card"><h4>Aaron Rodgers' farewell tour <span class="badge badge-moderate">Developing</span></h4><p>He's said 2026 will be his last ride — but the football world isn't fully convinced.</p></div>
+    <div class="card"><h4>Brandon Aiyuk / 49ers <span class="badge badge-moderate">Developing</span></h4><p>Trade saga remains unresolved and contentious — voided guarantees, no resolution yet.</p></div>
+    <div class="card"><h4>Rashee Rice's status <span class="badge badge-moderate">Developing</span></h4><p>Kansas City's slot weapon carries real suspension risk for off-field conduct.</p></div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:12px;">QB &amp; RB Storylines to Draft Around</h3>
+  <div class="card-grid" style="margin-bottom:32px;">
+    <div class="card"><h4>QB: avoid the crowded rooms</h4><p>Browns and Cardinals QBs are streaming risks at best — no clarity into Week 1, let alone a full season.</p></div>
+    <div class="card"><h4>QB: buy the trajectory-model winners</h4><p>Bengals, Titans (Cam Ward), and Saints (Tyler Shough) all scored well in our model — more offensive volume likely follows.</p></div>
+    <div class="card"><h4>RB: rookie roles are real</h4><p>Jeremiyah Love (Cardinals) and Jadarian Price (Seahawks) both step into legitimate lead-back opportunities as Day 1 starters.</p></div>
+    <div class="card"><h4>RB: Ashton Jeanty regression-up case</h4><p>Scouts flag his rookie efficiency as unlucky, not unskilled — a buy-low breakout candidate in Year 2.</p></div>
+    <div class="card"><h4>RB: Chargers backfield muddled</h4><p>Offensive line question marks (a real Need-Fill hole in our model) make this a lower-confidence RB room league-wide.</p></div>
+  </div>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:12px;">WR/TE Sleepers &amp; Draft Notes</h3>
+  <div class="card-grid">
+    <div class="card"><h4>Luther Burden III (WR, Bears)</h4><p>Tied A.J. Brown's rookie efficiency record; DJ Moore's departure opens real target share.</p></div>
+    <div class="card"><h4>A.J. Brown (WR, Patriots)</h4><p>Fresh landing spot in New England after the Eagles trade — a full offense built around him now.</p></div>
+    <div class="card"><h4>Jordyn Tyson (WR, Saints)</h4><p>Drafted 8th overall to pair with Olave in an ascending, model-favorite offense.</p></div>
+    <div class="card"><h4>AJ Barner (TE, Seahawks)</h4><p>Real "discount Kittle" breakout case per scouts — an every-down complete tight end.</p></div>
+    <div class="card"><h4>Jalen McMillan (WR, Buccaneers)</h4><p>Best positioned for outside-WR snaps behind Egbuka — injury history is the real risk, not talent.</p></div>
+  </div>
+  <p class="dek" style="margin-top:16px;">This section is directional, built from research already gathered for the model — not a full ranked draft board.</p>
+</section>
+
+<section class="pr-section" id="appendix">
+  <div class="section-eyebrow">Appendix</div>
+  <h2>Methodology &amp; Sources</h2>
+
+  <h3 style="font:700 15px var(--font-sans);margin-bottom:12px;">Methodology at a Glance</h3>
+  <div class="methodology-grid" style="margin-bottom:32px;">
+    <div class="formula-card"><h4>Trajectory Score</h4><code>Need-Fill + Scheme Continuity + Stability</code></div>
+    <div class="formula-card"><h4>Baseline Score</h4><code>(2025 Wins − 8.5) × 2</code></div>
+    <div class="formula-card"><h4>Regression Score</h4><code>−(Actual Wins − Pythagorean Expected Wins) × 3</code></div>
+    <div class="formula-card"><h4>Power Score</h4><code>(0.45 × Baseline) + (0.35 × Trajectory) + (0.20 × Regression)</code></div>
+    <div class="formula-card"><h4>Cone of Uncertainty</h4><code>Power Score ± (Upside/Downside, scored 0–10 each)</code></div>
+    <div class="formula-card"><h4>Confidence Rating</h4><code>Gap(#1 vs #2) − Avg. Volatility(#1,#2) ÷ 6</code></div>
+  </div>
+  <p class="dek">Full model — all 32 teams, every formula live and adjustable — is in the companion Excel workbook.</p>
+
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Sources &amp; Notes</h3>
+  <ul class="source-list">
+    <li>NFL.com — Matt Okada, "Biggest remaining roster issue for every AFC/NFC team" (Jul 16, 2026)</li>
+    <li>Pro-Football-Reference.com — 2025 NFL Standings &amp; Team Stats</li>
+    <li>ESPN — Ben Solak, "Picking breakout candidates for all 32 teams" (Jul 8, 2026)</li>
+    <li>Fox Sports (Bucky Brooks) — 2026 positional value ranking; Over The Cap — positional market-value analysis</li>
+    <li>Official team staff announcements (all 32 teams, individually confirmed)</li>
+    <li>Bleacher Report, CBS Sports, Yahoo Sports, PhillyVoice, Sharp Football Analysis — composite rankings &amp; offseason drama reporting</li>
+  </ul>
+  <p class="dek" style="margin-top:16px;">Model built and scored mid-July 2026, before training camp battles, preseason games, or further roster moves. A snapshot, not a live feed.</p>
+</section>
+
+<footer class="pr-footer">
+  Weaver Analytics · 2026 NFL Preseason Pre-Read
+</footer>
+
+</body>
+</html>

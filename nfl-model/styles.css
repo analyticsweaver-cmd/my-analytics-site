@@ -1,0 +1,72 @@
+/* Flattened from dashboard-redesign-with-branding's design system tokens
+   (colors.css, fonts.css, typography.css, spacing.css) + the .dc.html base
+   reset, so this app renders with the exact same tokens as the design file. */
+
+@font-face{font-family:'Archivo';src:url('assets/fonts/Archivo-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Archivo';src:url('assets/fonts/Archivo-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap;}
+@font-face{font-family:'Archivo';src:url('assets/fonts/Archivo-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Archivo';src:url('assets/fonts/Archivo-900.woff2') format('woff2');font-weight:900;font-style:normal;font-display:swap;}
+
+:root{
+--ink:#14171B;
+--paper:#F7F4EC;
+--surface:#FFFFFF;
+--steel:#7E9BC0;
+--brass:#C9A24C;
+--green:#3F7A62;
+--green-light:#5FA98A;
+--red:#8E4230;
+--red-light:#C15C42;
+--neutral-tan:#B9B4A6;
+--ring-pink:#FFA2D1;
+--ink-muted:#5B5F66;
+--ink-faint:#8C8F93;
+--hairline:#E3DECE;
+--text-primary:var(--ink);
+--text-inverse:var(--paper);
+--text-muted:var(--ink-muted);
+--text-faint:var(--ink-faint);
+--surface-page:var(--paper);
+--surface-card:var(--surface);
+--surface-dark:var(--ink);
+--accent-primary:var(--steel);
+--accent-highlight:var(--brass);
+--value-positive:var(--green);
+--value-positive-light:var(--green-light);
+--value-risk:var(--red);
+--value-risk-light:var(--red-light);
+--value-neutral:var(--neutral-tan);
+--border-hairline:var(--hairline);
+--link:var(--steel);
+--link-hover:#688aad;
+
+--font-sans:'Archivo',sans-serif;
+--weight-regular:400;
+--weight-semibold:600;
+--weight-bold:700;
+--weight-black:900;
+--text-eyebrow:12px;
+--text-caption:13px;
+--text-body:19px;
+--text-data:18px;
+--text-headline:30px;
+--text-display-sm:48px;
+--text-display-lg:88px;
+--tracking-eyebrow:0.09em;
+--leading-tight:1.05;
+--leading-snug:1.3;
+--leading-normal:1.5;
+
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;--space-9:56px;--space-10:72px;
+--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-pill:999px;
+--card-padding:28px;
+--shadow-card:0 1px 2px rgba(20,23,27,.05),0 8px 24px rgba(20,23,27,.06);
+}
+
+html,body{height:100%;margin:0}
+body{font-family:var(--font-sans);}
+#root{min-height:100%}
+a{color:var(--link)}
+a:hover{color:var(--link-hover)}
+input[type=file]{display:none}
+button{font-family:var(--font-sans)}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Happens To A Prediction When The Quarterback Gets Hurt — Weaver Analytics</title>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="../assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="site-nav">
+    <a href="../index.html">Home</a>
+    <a href="../cfb-model/index.html">CFB Model</a>
+    <a href="../nfl-model/index.html">NFL Model</a>
+    <a href="../pre-read/index.html">Pre-Read</a>
+    <a href="../dashboards/index.html">Dashboards</a>
+    <a href="index.html" class="active">Blog</a>
+  </nav>
+</header>
+
+<main class="site-main">
+  <div class="post-body">
+    <a class="back" href="index.html">← Back to Blog</a>
+    <h1>What Happens To A Prediction When The Quarterback Gets Hurt</h1>
+    <div class="meta">July 24, 2026</div>
+    <p>Every NFL power score in The Weaver Blitz is built the same way: 45% baseline (last year's win total, rescaled so 8.5 wins is zero), 35% trajectory (a hand-scored read on roster needs, coaching continuity, and off-field stability), and 20% regression (a check on whether a team's record matched how good they actually looked, based on point differential). Add those together and you get one number per team meant to say how good they really are.</p>
+    <p>That number gets backtested, not just trusted. Run it against three seasons of actual outcomes and it correlates with real wins at r = 0.352, a real, if modest, relationship, not a coin flip. That's the kind of number you want to see before building anything else on top of a model.</p>
+    <p>The more interesting layer sits above the power score: a Monte Carlo simulation that plays out 20,000 versions of the season per team to build a win-total range instead of a single guess. It turns out the simple math version of "how uncertain is this number" was too confident. The simulated ranges came back about 1.65 times wider than the naive calculation. Football has more variance than a spreadsheet wants to admit.</p>
+    <p>That variance gets a face with Key-Person Dependency: what a team's power score becomes if one specific flagged player, usually the quarterback, goes down. Aaron Rodgers turns 42 this season, and the Steelers' whole projection currently assumes he holds up for a full year. The result is a specific recalculated power score for a Rodgers-less Steelers team, run through the same formula as everyone else's, not just a risk label tacked on after the fact.</p>
+    <p>The honest limit: baseline, trajectory, and regression combine by formula, but trajectory itself is still built from judgment calls about roster and coaching, backed by cited research rather than raw stats. That's on purpose. Some things, like a locker room or a scheme fit, genuinely aren't in the box score yet. The backtest number is the actual check on whether that judgment is worth anything, and for now, it says yes, a little.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  Weaver Analytics — a personal project.
+</footer>
+
+</body>
+</html>
