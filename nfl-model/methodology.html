@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology &amp; Technical Audit — The Weaver Blitz</title>
+<meta name="description" content="How the NFL Team Trajectory Model works, how it's been validated, and the results of a full technical audit and correction round.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .page{max-width:840px;margin:0 auto;padding:0 40px 100px;}
+  .lede{font:400 19px/1.6 var(--font-sans);color:var(--ink-muted);max-width:66ch;margin:6px 0 0;}
+  .updated{font:700 12px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:14px;}
+  h1.page-title{font:900 40px/1.1 var(--font-sans);color:var(--ink);margin:18px 0 0;letter-spacing:-.01em;}
+  h2.section{font:900 24px var(--font-sans);color:var(--ink);margin:56px 0 6px;padding-top:22px;border-top:1px solid var(--hairline);}
+  h2.section .eyebrow{display:block;font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--accent-primary);margin-bottom:6px;}
+  h3{font:700 17px var(--font-sans);color:var(--ink);margin:26px 0 8px;}
+  p{font:400 17px/1.65 var(--font-sans);color:var(--ink-muted);max-width:68ch;margin:12px 0;}
+  ul,ol{font:400 17px/1.65 var(--font-sans);color:var(--ink-muted);max-width:66ch;padding-left:22px;}
+  li{margin:6px 0;}
+  strong{color:var(--ink);font-weight:700;}
+  code{font:600 15px/1.4 ui-monospace, "SF Mono", Consolas, monospace;background:#EFEAD9;color:var(--ink);padding:2px 6px;border-radius:5px;}
+  a{color:var(--link);text-decoration:none;font-weight:700;}
+  a:hover{color:var(--link-hover);text-decoration:underline;}
+  .card{background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);margin:20px 0;}
+  .card.good{border-left:4px solid var(--green);}
+  .card.risk{border-left:4px solid var(--red);}
+  .card .tag{display:block;font:700 11px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px;}
+  .card.good .tag{color:var(--green);}
+  .card.risk .tag{color:var(--red);}
+  .card p:first-of-type{margin-top:0;}
+  .tblwrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:var(--radius-sm);}
+  table{border-collapse:collapse;width:100%;font:400 15px var(--font-sans);background:var(--surface-card);}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--hairline);white-space:nowrap;}
+  th{font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr:last-child td{border-bottom:none;}
+  .stat-row{display:flex;gap:32px;flex-wrap:wrap;margin:18px 0 8px;}
+  .stat .v{font:900 28px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;}
+  .stat .k{font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:2px;}
+  .pill{display:inline-block;font:700 10px var(--font-sans);padding:3px 10px;border-radius:999px;letter-spacing:.03em;text-transform:uppercase;}
+  .pill.done{background:var(--green-light);color:#0E2A20;}
+  .pill.open{background:var(--neutral-tan);color:#3A362C;}
+  footer.page-footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--hairline);font:400 13px var(--font-sans);color:var(--ink-faint);max-width:66ch;}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:var(--surface-page);display:flex;flex-direction:column;">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:26px 40px 0;">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <a href="../index.html" style="display:flex;align-items:center;gap:16px;text-decoration:none;">
+        <img src="assets/logo-lockup-transparent.png" style="height:44px;" alt="Weaver Analytics">
+      </a>
+      <h1 style="font:900 22px var(--font-sans);color:var(--ink);margin:0;white-space:nowrap;flex-shrink:0;">The Weaver Blitz</h1>
+      <nav style="display:flex;gap:16px;flex-wrap:wrap;margin-left:8px;">
+        <a href="../index.html" style="font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;">Home</a>
+        <a href="index.html" style="font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;">Dashboard</a>
+        <a href="methodology.html" style="font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-primary);text-decoration:none;">Methodology</a>
+        <a href="../cfb-model/index.html" style="font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;">CFB Model</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="page">
+    <span class="updated">Methodology &amp; Technical Audit — Updated 2026-07-24</span>
+    <h1 class="page-title">How the model works, and how it's been checked</h1>
+    <p class="lede">This page replaces the old inline validation blurb with the real thing: how Power Score is built, every backtest that's been run against it, and a full independent audit — including a correction that shipped, and a second correction that was investigated and deliberately <em>not</em> shipped once it turned out to be unnecessary.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="v">r = 0.382</div><div class="k">Power Score vs. actual wins (n=96)</div></div>
+      <div class="stat"><div class="v">0.2375</div><div class="k">Win-probability Brier score (naive: 0.2497)</div></div>
+      <div class="stat"><div class="v">3 seasons</div><div class="k">2023–2025, leave-one-season-out backtested</div></div>
+    </div>
+
+    <h2 class="section"><span class="eyebrow">How it works</span>Power Score, in plain terms</h2>
+    <p>Every team gets a single <strong>Power Score</strong>, built from three pieces:</p>
+    <ul>
+      <li><strong>Baseline (45%)</strong> — last season's win total, rescaled so 8.5 wins (.500) is zero.</li>
+      <li><strong>Trajectory (35%)</strong> — hand-scored Need-Fill (did the team fix its biggest roster hole?) and Stability (QB certainty, health, off-field risk). Coaching continuity (Scheme) is scored and shown on the dashboard too, but as of this audit no longer counts toward Power Score — see below.</li>
+      <li><strong>Regression (20%)</strong> — a luck adjustment: teams that won more games than their point differential says they "should have" get pulled back toward the mean, and vice versa.</li>
+    </ul>
+    <p>Power Score differences convert directly to predicted point spreads (plus a fixed 2-point home-field edge), which feed a win-probability curve, a 20,000-season Monte Carlo simulation for win-total ranges, and a full playoff bracket simulation for division/conference/Super Bowl odds.</p>
+
+    <h2 class="section"><span class="eyebrow">Validation</span>What's actually been tested</h2>
+    <p>Three full seasons (2023–2025) were rebuilt as if the model were run each of those preseasons, then checked against what actually happened — pooled to 96 team-seasons for real statistical power. Every structural change to the formula since then (alternate weight splits, adding real offensive/defensive efficiency data, special teams, strength of schedule) was tested the same disciplined way: <strong>fit on two seasons, validate on the third, rotate</strong> — so a change only ships if it holds up on data it never saw. Three of four attempted additions were rejected this way, including one whose raw correlation looked like the strongest signal found anywhere in the project before a deeper check showed it was just re-detecting information the model already had.</p>
+
+    <div class="tblwrap"><table>
+      <tr><th>Check</th><th>Result</th></tr>
+      <tr><td>Power Score vs. actual wins (pooled, n=96)</td><td class="num">r = 0.382, r² = 0.146, p &lt; 0.001</td></tr>
+      <tr><td>Win-probability calibration (816 real games, Brier score)</td><td class="num">0.2375 (naive always-50%: 0.2497)</td></tr>
+      <tr><td>Simulated vs. simple-math win-total uncertainty</td><td class="num">Simulated ranges are ~1.6x wider — the simple math understated it</td></tr>
+      <tr><td>Playoff seeding logic vs. real 2023–2024 seasons</td><td class="num">AFC matched 100%; NFC misses trace to real 3-plus-way ties the model doesn't try to resolve</td></tr>
+    </table></div>
+
+    <h2 class="section"><span class="eyebrow">Audit correction</span>What changed on 2026-07-24, and why</h2>
+    <p>An independent technical audit ran a full statistical review — architecture, weight sensitivity, a new spread-calibration regression against real historical games, and a residual analysis looking for patterns the model was missing. It found two things worth acting on, and — just as important — <strong>caught a third thing before it shipped that would have made the model worse.</strong></p>
+
+    <div class="card good">
+      <span class="tag">Shipped</span>
+      <p><strong>Coaching continuity ("Scheme") no longer counts toward Power Score.</strong> Three independent checks agreed it was quietly hurting accuracy: removing it from the formula improved the season-level correlation from r=0.352 to r=0.382; a separate check (controlling for how many wins a team already had) found Scheme's apparent effect was really just re-detecting that struggling teams both fire coaches <em>and</em> bounce back some regardless of who's coaching; and a new game-by-game check found the same backwards pattern on both sides of the ball. The likely story: coaching changes cluster after bad seasons, and bad seasons partly recover on their own — Scheme's "continuity is good" read was partly just re-measuring information the model already had elsewhere. Scheme is still scored and still shown on team pages — it just no longer moves the number.</p>
+    </div>
+
+    <div class="card risk">
+      <span class="tag">Investigated, not shipped</span>
+      <p><strong>A separate fix to how Power Score converts to a point spread was tested and deliberately left alone.</strong> The audit's first pass found that one Power Score point was predicting about 50% too many real scoreboard points — a real, measurable pattern. But before shipping that fix, it was re-checked <em>after</em> the coaching-continuity fix above — and the spread problem had already disappeared on its own. Coaching continuity's oddly wide scoring range had been distorting Power Score's scale; fixing that fixed the spread conversion as a side effect. Shipping both fixes together would have overcorrected, making every predicted spread too conservative. This is exactly the kind of check that's easy to skip under time pressure, and skipping it here would have made the model measurably worse while looking like an improvement in isolation.</p>
+    </div>
+
+    <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the pipeline's own README.</p>
+
+    <h2 class="section"><span class="eyebrow">Known limits</span>What this model doesn't do</h2>
+    <ul>
+      <li><strong>It's a preseason snapshot, not a weekly-updated model.</strong> It doesn't ingest betting lines, in-season injury news, or live roster changes the way a market price does — Vegas closing lines, checked against this model on the same 816 real games, are noticeably more accurate, which is expected: they price in everything up to kickoff, this model only knows what was true before Week 1.</li>
+      <li><strong>Need-Fill, Stability, and (still-displayed) Scheme are hand-scored judgment, not formulas.</strong> They're backed by written research citations, but two analysts reading the same news could reasonably land on adjacent scores.</li>
+      <li><strong>Key-Person Dependency (the "what if the starting QB goes down" number) is only fully trustworthy for QB.</strong> The same league-wide method applied to Edge/Safety/LB came back unreliable for diagnosed reasons (modern substitution packages make "missed the game" hard to isolate from "coach called for a different personnel package") — reported honestly with a confidence flag, not smoothed over.</li>
+      <li><strong>The 45/35/20 Baseline/Trajectory/Regression weight split hasn't been re-tested since coaching continuity was removed from Trajectory.</strong> It was validated against the old 3-part version; re-running that check against the new 2-part version is flagged as real follow-up work, not done yet.</li>
+    </ul>
+
+    <footer class="page-footer">
+      Every number on this page is backtested or measured against real historical data (nflverse game results and closing lines, 2023–2025) — nothing here is an estimate standing in for something unmeasured. Full technical detail, regression tables, and file-level code citations live in the pipeline repository's README.
+    </footer>
+  </div>
+</div>
+</body>
+</html>

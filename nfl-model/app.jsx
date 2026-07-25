@@ -42,7 +42,7 @@ function teamColor(team) { return (TEAM_COLORS[team] && TEAM_COLORS[team].primar
 
 const GLOSSARY_TERMS = [
   { term: 'Baseline', def: 'Prior-season win total, rescaled ((wins − 8.5) × 2) so an 8.5-win team scores zero — the model\'s starting point before any judgment adjustments.' },
-  { term: 'Trajectory', def: 'Need-Fill + Scheme Continuity + Stability combined — the hand-scored judgment layer covering roster needs, coaching turnover, and off-field risk.' },
+  { term: 'Trajectory', def: 'Need-Fill + Stability — the hand-scored judgment layer covering roster needs and off-field risk. Scheme Continuity (coaching turnover) is scored and shown elsewhere but no longer feeds this number as of a 2026-07-24 audit correction — see Model Validation below.' },
   { term: 'Regression', def: "A Pythagorean-wins luck adjustment: how much a team's point differential says they should have won vs. what they actually won. Teams that overperformed their point differential get pulled back down, and vice versa." },
   { term: 'Power Score', def: '45% Baseline + 35% Trajectory + 20% Regression — the model\'s single overall team-strength number, backtest-validated across 3 seasons (see Model Validation below).' },
   { term: 'Upside / Downside', def: "The Power Score cone's judgment-based bounds — the model's own estimate of how much better (Upside) or worse (Downside) a team could plausibly play than its Power Score, driven by specific flagged players or situations." },
@@ -54,9 +54,10 @@ const GLOSSARY_TERMS = [
 ];
 
 const VALIDATION_STATS = [
-  { headline: 'Power Score vs. actual wins: r = 0.352 (p < 0.001, n = 96)', gloss: '3 seasons (2023–2025) of leave-one-season-out backtesting — the strongest, most confident result in this whole project. Power Score reliably tracks how teams actually perform.' },
-  { headline: 'Simulated win-total uncertainty is ~1.65x wider than simple math suggests', gloss: "A 20,000-run Monte Carlo season simulation showed the analytical (non-simulated) confidence intervals understate real uncertainty. This dashboard's Cone of Certainty uses the wider, simulation-based numbers." },
-  { headline: 'Win-probability calibration improved: Brier score 0.2408 → 0.2388', gloss: 'Games predicted as heavy favorites/underdogs were overconfident at the extremes; simulating uncertainty rather than using a single point estimate pulled those predictions back toward reality.' },
+  { headline: 'Power Score vs. actual wins: r = 0.382 (p < 0.001, n = 96)', gloss: '3 seasons (2023–2025) of leave-one-season-out backtesting — the strongest, most confident result in this whole project. Power Score reliably tracks how teams actually perform.' },
+  { headline: 'Simulated win-total uncertainty is ~1.6x wider than simple math suggests', gloss: "A 20,000-run Monte Carlo season simulation showed the analytical (non-simulated) confidence intervals understate real uncertainty. This dashboard's Cone of Certainty uses the wider, simulation-based numbers." },
+  { headline: 'Win-probability calibration improved: Brier score 0.2375 → 0.2372', gloss: 'Games predicted as heavy favorites/underdogs were overconfident at the extremes; simulating uncertainty rather than using a single point estimate pulled those predictions back toward reality.' },
+  { headline: 'A 2026-07-24 audit correction removed Scheme Continuity from Power Score', gloss: 'Three independent tests found it was quietly hurting accuracy, not helping — full methodology, evidence, and a documented correction (including a fix that turned out to be unnecessary once this one was applied) in the full audit.', link: { href: 'methodology.html', label: 'Read the full technical audit →' } },
 ];
 
 // ----------------------------------------------------------------------
@@ -189,6 +190,7 @@ function App() {
 
     matchupWeek: null,
     weekInput: '',
+    expandedMatchup: null,
 
     selectedTeam: null,
     pinnedTeam: null,
@@ -263,6 +265,9 @@ function App() {
         <div key={v.headline}>
           <div style={st('font:700 16px var(--font-sans);color:var(--ink);margin-bottom:4px')}>{v.headline}</div>
           <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{v.gloss}</div>
+          {v.link && (
+            <a href={v.link.href} style={st('display:inline-block;margin-top:6px;font:700 14px var(--font-sans);color:var(--accent-primary)')}>{v.link.label}</a>
+          )}
         </div>
       ))}
     </div>
@@ -446,6 +451,7 @@ function App() {
           <h1 style={st('font:900 22px var(--font-sans);color:var(--ink);margin:0;white-space:nowrap;flex-shrink:0')}>The Weaver Blitz</h1>
           <nav style={st('display:flex;gap:16px;flex-wrap:wrap;margin-left:8px')}>
             <a href="../index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Home</a>
+            <a href="methodology.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Methodology</a>
             <a href="../cfb-model/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>CFB Model</a>
             <a href="../pre-read/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Pre-Read</a>
             <a href="../blog/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Blog</a>
