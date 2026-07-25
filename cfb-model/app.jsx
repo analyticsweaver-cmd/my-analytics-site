@@ -180,16 +180,37 @@ const PINNED_ACCENT = 'brass'; // 'brass' | 'steel'
 const TOP_N = 25;
 
 function App() {
+  // Deep-linkable team profile: read ?tab=&team= once on load so a URL like
+  // cfb-model/index.html?tab=team&team=Ohio+State opens straight to that
+  // team's profile - the "no shareable URL" gap the design-system audit
+  // flagged. Falls back to the normal defaults if either param is absent
+  // or the team name doesn't match anything (validated for real once
+  // `teams` loads, same as any other selectedTeam value).
+  function readURLState() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      const teamParam = params.get('team');
+      return {
+        tab: tabParam || 'rankings',
+        selectedTeam: teamParam ? decodeURIComponent(teamParam) : DEFAULT_PINNED_TEAM,
+      };
+    } catch (e) {
+      return { tab: 'rankings', selectedTeam: DEFAULT_PINNED_TEAM };
+    }
+  }
+  const initialURLState = readURLState();
+
   const [s, setStateRaw] = useState({
     chartHover: null,
-    tab: 'rankings',
+    tab: initialURLState.tab,
     powerRows: [],
     matchupRows: [],
     historyRows: [],
     sortKey: 'POWER_RATING_SHRUNK',
     sortDir: 'desc',
     expandedMatchup: null,
-    selectedTeam: DEFAULT_PINNED_TEAM,
+    selectedTeam: initialURLState.selectedTeam,
     pinnedTeam: DEFAULT_PINNED_TEAM,
     glossaryOpen: false,
     weekInput: '',
@@ -247,6 +268,20 @@ function App() {
   const pinnedAccentColor = PINNED_ACCENT === 'steel' ? 'var(--accent-primary)' : 'var(--brass)';
   const topN = TOP_N;
   const { powerRows, matchupRows, historyRows, tab, sortKey, sortDir, expandedMatchup, selectedTeam, glossaryOpen, pinnedTeam } = s;
+
+  // Keep the URL in sync with tab/team so the current view is always
+  // bookmarkable/shareable (replaceState, not pushState - this shouldn't
+  // spam the back button every time someone picks a different team).
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (tab && tab !== 'rankings') params.set('tab', tab); else params.delete('tab');
+      if (tab === 'team' && selectedTeam) params.set('team', selectedTeam); else params.delete('team');
+      const query = params.toString();
+      const newURL = window.location.pathname + (query ? `?${query}` : '');
+      window.history.replaceState(null, '', newURL);
+    } catch (e) { /* no-op if history API is unavailable */ }
+  }, [tab, selectedTeam]);
 
   const togglePin = (team) => setState((prev) => {
     const willPin = prev.pinnedTeam !== team;
@@ -478,6 +513,28 @@ function App() {
   const leanMarkerStyle = `position:absolute;top:-3px;bottom:-3px;left:${leanPct}%;width:14px;height:18px;transform:translateX(-50%);background:var(--accent-primary);border-radius:4px;border:2px solid var(--surface-card)`;
   const fragilityRaw = hasPowerData ? (activeRankRow.fragility_type || '') : '';
   const fragilityLabel = fragilityRaw ? fragilityRaw.charAt(0).toUpperCase() + fragilityRaw.slice(1) : '—';
+
+  // Team DNA (shared component, team-dna.js) - identity, not grades: "what
+  // kind of team is this," not "how good are they." Every dimension below
+  // reuses a field the pipeline already computes (no new data work) - see
+  // percentileRank() in team-dna.js for how raw values become 0-100 bars.
+  const dnaValues = (field) => rankRows.map((r) => Number(r[field]));
+  const dnaPct = (field) => hasPowerData ? percentileRank(dnaValues(field), Number(activeRankRow[field])) : null;
+  const dnaPctInverted = (field) => {
+    const p = dnaPct(field);
+    return p === null ? null : 100 - p;
+  };
+  const coachContinuityPct = !hasPowerData ? null : (coachIsNew ? Math.min(15, dnaPct('coaching_prior_z') ?? 15) : dnaPct('coaching_prior_z'));
+  const teamDNADimensions = [
+    { label: 'Talent', pct: dnaPct('talent_z') },
+    { label: 'Rushing Offense', pct: dnaPct('adj_off_rush_success') },
+    { label: 'Passing Offense', pct: dnaPct('adj_off_pass_success') },
+    { label: 'Explosiveness', pct: dnaPct('adj_off_explosiveness') },
+    { label: 'Defensive Strength', pct: dnaPctInverted('adj_def_success_rate') },
+    { label: 'Disruption (Havoc)', pct: dnaPct('adj_def_havoc') },
+    { label: 'Roster Continuity', pct: dnaPct('returning_production_z') },
+    { label: 'Coaching Continuity', pct: coachContinuityPct },
+  ];
   const personnelScale = 2.2;
   const personnelBars = [
     { label: 'Talent', value: hasPowerData ? (Number(activeRankRow.talent_z) || 0) : 0 },
@@ -750,7 +807,10 @@ function App() {
               {teamOptions.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
             </select>
             {delta !== null && <span style={st(`font:700 15px var(--font-sans);color:${trendDeltaColor}`)}>{trendDeltaLabel}</span>}
+            <button style={st(glossaryButtonStyle)} onClick={toggleGlossary}>What do these mean? {glossaryArrow}</button>
           </div>
+
+          {glossaryPanel}
 
           {activeTeam !== pinnedTeam && (
             <div style={st(snapshotBoxStyle)}>
@@ -764,6 +824,14 @@ function App() {
                 ))}
               </div>
               <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{oneLiner}</div>
+            </div>
+          )}
+
+          {hasPowerData && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team DNA</div>
+              <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>What kind of team this is, not how good they are — each bar is this team's percentile among all {rankRows.length} teams on that dimension.</div>
+              <TeamDNA st={st} dimensions={teamDNADimensions} />
             </div>
           )}
 
