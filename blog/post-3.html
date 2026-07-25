@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside the Trajectory Score, and How We Landed on the Power Score Split — Weaver Analytics</title>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="../assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="site-nav">
+    <a href="../index.html">Home</a>
+    <a href="../cfb-model/index.html">CFB Model</a>
+    <a href="../nfl-model/index.html">NFL Model</a>
+    <a href="../pre-read/index.html">Pre-Read</a>
+    <a href="../dashboards/index.html">Dashboards</a>
+    <a href="index.html" class="active">Blog</a>
+  </nav>
+</header>
+
+<main class="site-main">
+  <div class="post-body">
+    <a class="back" href="index.html">← Back to Blog</a>
+    <h1>Inside the Trajectory Score, and How We Landed on the Power Score Split</h1>
+    <div class="meta">July 24, 2026</div>
+    <p>Every team's Power Score in The Weaver Blitz comes from three pieces: Baseline, Trajectory, and Regression, combined as 45% + 35% + 20%. Trajectory itself used to be three separate judgment calls added together, until a same-day audit found one of them was quietly making the model worse and pulled it out. Here's what's actually in Trajectory now, and the real story behind why the weights landed where they did.</p>
+    <h2 style="font-size:20px;margin:32px 0 4px;">Trajectory's ingredients</h2>
+    <p>Need-Fill is the simplest to explain and the hardest to score well. Every position gets a fixed importance number (QB counts the most, at 10; WR, offensive tackle, and edge rusher are 7s; running back is the least, at 2), and a team's score reflects whether its real roster hole at that position got addressed this offseason: zero if fixed, half credit if partially fixed, the full negative number if it's still open. Cincinnati has been historically bad against tight ends for three years running and did nothing about it, which is most of why their Need-Fill sits at -6.</p>
+    <p>Stability is the catch-all for off-field risk: injuries, age, legal situations, unresolved QB competitions. This is where Aaron Rodgers turning 42 actually shows up in the numbers. Pittsburgh's Stability score is -4 for exactly that reason.</p>
+    <p>Add Need-Fill and Stability together and that's Trajectory. A third piece, Scheme Continuity (how much a team's coaching staff turned over), is still scored and still shown on the site, but as of a recent audit it no longer counts toward Trajectory or Power Score. Here's why: three separate checks all pointed the same direction. Removing Scheme from the formula improved how well Power Score tracks real wins. A second check found that once you account for how many games a team already won the year before, Scheme's apparent effect on win change basically disappears; coaching changes cluster after bad seasons, and bad seasons partly bounce back on their own the next year regardless of who's calling plays. A third check, looking game by game instead of season by season, found Scheme correlating with prediction error in the wrong direction on both sides of the ball. Three different ways of checking the same idea, same conclusion: "new coach, new coordinator" wasn't telling the model much that Baseline (last year's record) didn't already know.</p>
+    <h2 style="font-size:20px;margin:32px 0 4px;">How the 45/35/20 Power Score split actually got picked</h2>
+    <p>Baseline gets the most weight because it's the largest sample available, a full prior season. Trajectory is the judgment layer. Regression, a luck adjustment checking whether a team's record matched how good their point differential said they actually were, gets the smallest cut as a correcting factor.</p>
+    <p>That's the reasoning going in. The actual test came later: every reasonable weight combination got tried, each one scored on a season it hadn't seen, rotating through all three backtested seasons so nothing got credit for memorizing the answer. The current 45/35/20 split won two of the three tests outright, and even where an alternative technically scored a hair better, the winning combination was different every single time, one test liked 60/30/10, another liked 60/0/40, a third liked 50/35/15. A split that changes completely depending on which season gets left out isn't a real pattern, it's the test grabbing at noise. 45/35/20 stayed, and after Scheme got pulled out of Trajectory, the same test was run again on the new formula: this time 45/35/20 won more decisively than before, not less.</p>
+    <p>One more honest wrinkle: Regression's weight (0.20) and an internal scale factor (×3) turned out to matter only as a pair, not separately, changing one number while adjusting the other to compensate produces the exact same Power Score. So the scale stays fixed at 3 purely so the Regression number reads on a similar range to Baseline and Trajectory in a table, and the real tuning happens through the weight alone.</p>
+    <p>None of this makes the model more certain than it is. Need-Fill and Stability are still research-backed judgment calls, not something pulled from a stat sheet, and the overall Power Score's real track record, after the Scheme fix, is a real r = 0.382 across three seasons, up from 0.352 before. That's the number that's actually earned trust here. Each ingredient underneath it is still being watched, and this post itself is proof the watching is ongoing: it went out of date within a day of being published, and this is the corrected version.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  Weaver Analytics — a personal project.
+</footer>
+
+</body>
+</html>

@@ -16,8 +16,8 @@
     <a href="../index.html">Home</a>
     <a href="../cfb-model/index.html">CFB Model</a>
     <a href="../nfl-model/index.html">NFL Model</a>
-    <a href="../dashboards/index.html">Dashboards</a>
     <a href="index.html" class="active">Pre-Read</a>
+    <a href="../dashboards/index.html">Dashboards</a>
     <a href="../blog/index.html">Blog</a>
   </nav>
 </header>
@@ -54,7 +54,7 @@
       <div class="note">Teams with a genuinely wide-open QB competition entering camp.</div>
     </div>
     <div class="stat-card">
-      <div class="num">4</div>
+      <div class="num">3</div>
       <div class="label">Toss-Up Divisions</div>
       <div class="note">Rated a true toss-up by our confidence model (AFC South, NFC East, NFC South).</div>
     </div>
@@ -68,6 +68,15 @@
       <div class="label">Rams – Cardinals Power Swing</div>
       <div class="note">Point swing between the Rams (best Power Score) and the Cardinals (worst).</div>
     </div>
+  </div>
+</section>
+
+<section class="pr-section" id="how-to-read" style="padding-top:0;padding-bottom:32px;">
+  <div class="card" style="max-width:820px;">
+    <h4 style="margin-bottom:10px;">How to read this page</h4>
+    <p style="margin-bottom:8px;">Every prediction here comes from one number per team, the <strong>Power Score</strong> — built from three pieces: <strong>Baseline</strong> (last year's record), <strong>Trajectory</strong> (a hand-scored read on roster needs, coaching continuity, and off-field stability), and <strong>Regression</strong> (a check on whether a team's record matched how good their point differential said they actually were).</p>
+    <p style="margin-bottom:8px;">Every team also gets a <strong>Cone of Certainty</strong> — a projected win-total range, not just a single guess — and every division gets a <strong>Confidence Rating</strong> for how close the race at the top actually is.</p>
+    <p>Full formulas and sources are in the Methodology &amp; Sources section at the bottom. The <a href="../nfl-model/index.html">NFL dashboard</a> also has a glossary covering every term used there in more depth.</p>
   </div>
 </section>
 
@@ -184,11 +193,11 @@
     </div>
     <div class="card">
       <h4>Shedeur Sanders — 2025 Rookie</h4>
-      <p>Colorado. 2025 draft: Round 5, Pick 144. 120/212, 1,400 yds, 7 TD, 10 INT, 3-4 as a starter, 18.8 QBR.<br><br><strong>Superpower:</strong> deep-ball accuracy and big-play ability — four 50+-yard completions in his first three starts.<br><strong>Weakness:</strong> turnover-prone; holds the ball too long against NFL pass rush.</p>
+      <p>Colorado. 2025 draft: Round 5, Pick 144. 120/212, 1,400 yds, 7 TD, 10 INT, 3-4 as a starter, 18.8 QBR (ESPN's 0–100 quarterback rating — above 50 is roughly average).<br><br><strong>Superpower:</strong> deep-ball accuracy and big-play ability — four 50+-yard completions in his first three starts.<br><strong>Weakness:</strong> turnover-prone; holds the ball too long against NFL pass rush.</p>
     </div>
     <div class="card">
       <h4>Dillon Gabriel — 2025 Rookie</h4>
-      <p>Oregon. 2025 draft: Round 3, Pick 94; FBS all-time leader in total TDs (189). 110/185, 937 yds, 7 TD, 2 INT, 1-5 as a starter, 80.8 rating.<br><br><strong>Superpower:</strong> ball security — lowest INT rate of the three; most career starts in FBS history.<br><strong>Weakness:</strong> lacks downfield explosiveness — among the league's lowest EPA/dropback in 2025.</p>
+      <p>Oregon. 2025 draft: Round 3, Pick 94; FBS all-time leader in total TDs (189). 110/185, 937 yds, 7 TD, 2 INT, 1-5 as a starter, 80.8 rating.<br><br><strong>Superpower:</strong> ball security — lowest INT rate of the three; most career starts in FBS history.<br><strong>Weakness:</strong> lacks downfield explosiveness — among the league's lowest EPA/dropback in 2025 (a per-play efficiency stat — higher is better).</p>
     </div>
     <div class="card">
       <h4>Taylen Green — 2026 Rookie</h4>
@@ -287,9 +296,9 @@
     <tr><td>NFC South</td><td>Saints</td><td>Panthers</td><td>1.0</td><td><span class="badge badge-low">Low</span></td></tr>
     <tr><td>NFC West</td><td>Rams</td><td>Seahawks</td><td>2.8</td><td><span class="badge badge-medium">Medium</span></td></tr>
   </table>
-  <p class="dek" style="margin-top:-16px;">Confidence = gap between the #1 and #2 team's Power Score, minus their average Volatility ÷ 6.</p>
+  <p class="dek" style="margin-top:-16px;">Confidence = gap between the #1 and #2 team's Power Score, minus their average Volatility ÷ 6. (Volatility = a team's Upside score plus its Downside score added together — how wide its total range of outcomes is, regardless of direction.)</p>
 
-  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Cone of Uncertainty, by Division</h3>
+  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Cone of Certainty, by Division</h3>
   <p class="dek">Power Score ± Upside/Downside range.</p>
   <table class="pr-table" style="margin-bottom:32px;">
     <tr><th>Division</th><th>#1</th><th>Range</th><th>#2</th><th>Range</th><th>#3</th><th>Range</th><th>#4</th><th>Range</th></tr>
@@ -326,7 +335,7 @@
   <p class="dek" style="margin-top:12px;">Full 1–32 order for every team is in the Composite Power Ranking table below.</p>
 
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">The Team Risk Map</h3>
-  <p class="dek">X = Power Score (prediction). Y = Stability (inverse of Upside + Downside range). Ringed dots are the judgment calls below.</p>
+  <p class="dek">X = Power Score (prediction). Y = Consistency (inverse of Upside + Downside range — higher means a narrower total range of outcomes; this is a different quantity from the "Stability" sub-score inside Trajectory). Ringed dots are the judgment calls below.</p>
   <figure class="chart-figure">
     <img src="assets/charts/risk-map.svg" alt="Team risk map scatter plot" style="max-width:640px;">
   </figure>
@@ -501,7 +510,7 @@
     <div class="formula-card"><h4>Baseline Score</h4><code>(2025 Wins − 8.5) × 2</code></div>
     <div class="formula-card"><h4>Regression Score</h4><code>−(Actual Wins − Pythagorean Expected Wins) × 3</code></div>
     <div class="formula-card"><h4>Power Score</h4><code>(0.45 × Baseline) + (0.35 × Trajectory) + (0.20 × Regression)</code></div>
-    <div class="formula-card"><h4>Cone of Uncertainty</h4><code>Power Score ± (Upside/Downside, scored 0–10 each)</code></div>
+    <div class="formula-card"><h4>Cone of Certainty</h4><code>Power Score ± (Upside/Downside, scored 0–10 each)</code></div>
     <div class="formula-card"><h4>Confidence Rating</h4><code>Gap(#1 vs #2) − Avg. Volatility(#1,#2) ÷ 6</code></div>
   </div>
   <p class="dek">Full model — all 32 teams, every formula live and adjustable — is in the companion Excel workbook.</p>

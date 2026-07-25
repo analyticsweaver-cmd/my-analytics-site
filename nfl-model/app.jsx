@@ -56,7 +56,7 @@ const GLOSSARY_TERMS = [
 const VALIDATION_STATS = [
   { headline: 'Power Score vs. actual wins: r = 0.382 (p < 0.001, n = 96)', gloss: '3 seasons (2023–2025) of leave-one-season-out backtesting — the strongest, most confident result in this whole project. Power Score reliably tracks how teams actually perform.' },
   { headline: 'Simulated win-total uncertainty is ~1.6x wider than simple math suggests', gloss: "A 20,000-run Monte Carlo season simulation showed the analytical (non-simulated) confidence intervals understate real uncertainty. This dashboard's Cone of Certainty uses the wider, simulation-based numbers." },
-  { headline: 'Win-probability calibration improved: Brier score 0.2375 → 0.2372', gloss: 'Games predicted as heavy favorites/underdogs were overconfident at the extremes; simulating uncertainty rather than using a single point estimate pulled those predictions back toward reality.' },
+  { headline: 'Win-probability calibration improved: Brier score 0.2375 → 0.2372', gloss: 'Brier score measures how well-calibrated a set of predicted probabilities is (0 = perfect, 0.25 = no better than always guessing 50/50) — games predicted as heavy favorites/underdogs were overconfident at the extremes; simulating uncertainty rather than using a single point estimate pulled those predictions back toward reality.' },
   { headline: 'A 2026-07-24 audit correction removed Scheme Continuity from Power Score', gloss: 'Three independent tests found it was quietly hurting accuracy, not helping — full methodology, evidence, and a documented correction (including a fix that turned out to be unnecessary once this one was applied) in the full audit.', link: { href: 'methodology.html', label: 'Read the full technical audit →' } },
 ];
 
@@ -360,10 +360,32 @@ function App() {
     const key = `${g.home_team}-${g.away_team}-${g._origIdx}`;
     const homeColor = teamColor(g.home_team), awayColor = teamColor(g.away_team);
     const homeWinPct = g.win_prob != null ? g.win_prob * 100 : 50;
+    const expanded = s.expandedMatchup === key;
+
+    // "Why this spread" breakdown: Power Score = 0.45*Baseline + 0.35*Trajectory + 0.20*Regression,
+    // and spread = (home_power - away_power) + hfa_adj (POWER_TO_POINTS_SLOPE is 1.0 in the live
+    // model, so no separate scale factor). Applying the same three weights to each side's raw
+    // Baseline/Trajectory/Regression difference decomposes the spread into where it actually comes
+    // from, the four terms sum back to the displayed spread almost exactly (small rounding only).
+    const homeRow = power.find((r) => r.team === g.home_team);
+    const awayRow = power.find((r) => r.team === g.away_team);
+    let contributionBars = [];
+    if (homeRow && awayRow) {
+      contributionBars = [
+        { label: 'Baseline (prior record)', value: 0.45 * ((Number(homeRow.baseline) || 0) - (Number(awayRow.baseline) || 0)) },
+        { label: 'Trajectory (roster/coaching/stability)', value: 0.35 * ((Number(homeRow.trajectory) || 0) - (Number(awayRow.trajectory) || 0)) },
+        { label: 'Regression (luck adjustment)', value: 0.20 * ((Number(homeRow.regression) || 0) - (Number(awayRow.regression) || 0)) },
+        { label: 'Home field', value: Number(g.hfa_adj) || 0 },
+      ];
+    }
+    const contributionScale = Math.max(1, ...contributionBars.map((b) => Math.abs(b.value)));
+
     return {
       key, ...g,
       cardStyle: `border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card);border:${g._isPinnedGame ? `2px solid ${pinnedAccentColor}` : '1px solid var(--hairline)'}`,
-      homeColor, awayColor, homeWinPct,
+      homeColor, awayColor, homeWinPct, expanded,
+      onToggle: () => setState({ expandedMatchup: expanded ? null : key }),
+      contributionBars, contributionScale,
       spreadLabel: g.spread != null ? `${g.home_team} ${signed(g.spread, 1)}` : '—',
       hfaNote: g.neutral_site ? 'Neutral site — no home field adjustment' : `Home field adjustment: ${signed(g.hfa_adj, 1)} pts`,
     };
@@ -454,6 +476,7 @@ function App() {
             <a href="methodology.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Methodology</a>
             <a href="../cfb-model/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>CFB Model</a>
             <a href="../pre-read/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Pre-Read</a>
+            <a href="../dashboards/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Dashboards</a>
             <a href="../blog/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Blog</a>
           </nav>
         </div>
@@ -544,7 +567,7 @@ function App() {
             )}
             {matchupList.map((g) => (
               <div key={g.key} style={st(g.cardStyle)}>
-                <div style={st('padding:18px 22px;background:var(--surface-card);display:flex;flex-direction:column;gap:14px')}>
+                <button onClick={g.onToggle} style={st('width:100%;text-align:left;border:none;background:var(--surface-card);cursor:pointer;padding:18px 22px;display:flex;flex-direction:column;gap:14px')}>
                   <div style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px')}>
                     <span style={st('font:700 18px var(--font-sans);color:var(--ink)')}>{g.away_team} <span style={st('color:var(--ink-muted);font-weight:400')}>at</span> {g.home_team}{g.neutral_site && <span style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-left:8px')}>Neutral site</span>}</span>
                     <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{g.spreadLabel}</span>
@@ -552,8 +575,9 @@ function App() {
                   <div style={st('display:flex;align-items:center;gap:10px')}>
                     <span style={st('width:90px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted);text-align:right')}>{g.away_team}</span>
                     <div style={{ flex: 1, height: 14, borderRadius: 4, overflow: 'hidden', display: 'flex' }}>
-                      <div style={{ width: `${100 - g.homeWinPct}%`, background: g.awayColor }} />
-                      <div style={{ width: `${g.homeWinPct}%`, background: g.homeColor }} />
+                      <div style={{ width: `calc(${100 - g.homeWinPct}% - 4px)`, background: g.awayColor }} />
+                      <div style={{ width: 8, flexShrink: 0, background: `linear-gradient(to right, transparent, white, transparent)` }} />
+                      <div style={{ width: `calc(${g.homeWinPct}% - 4px)`, background: g.homeColor }} />
                     </div>
                     <span style={st('width:90px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{g.home_team}</span>
                   </div>
@@ -561,8 +585,21 @@ function App() {
                     <span>{pct(1 - (g.win_prob || 0.5))} win</span>
                     <span>{pct(g.win_prob || 0.5)} win</span>
                   </div>
-                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.hfaNote} · {g.away_team} power {num(g.away_power, 2)}, {g.home_team} power {num(g.home_power, 2)}</div>
-                </div>
+                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.hfaNote} · {g.away_team} power {num(g.away_power, 2)}, {g.home_team} power {num(g.home_power, 2)} · {g.expanded ? 'Hide' : 'Show'} spread breakdown</div>
+                </button>
+                {g.expanded && (
+                  <div style={st('padding:6px 22px 20px;background:var(--surface-page);display:flex;flex-direction:column;gap:12px')}>
+                    <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px')}>Why this spread</div>
+                    {g.contributionBars.map((b) => (
+                      <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
+                        <span style={st('width:220px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
+                        <SignedBar value={b.value} scaleMax={g.contributionScale} width={140} />
+                        <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{signed(b.value, 1)}</span>
+                      </div>
+                    ))}
+                    <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Positive favors {g.home_team} (home); negative favors {g.away_team} (away). These four add up to the spread above.</div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -644,24 +681,24 @@ function App() {
             </div>
           )}
 
-          {activeKeyPerson.length > 0 && (
-            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
-              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
-              {activeKeyPerson.map((k) => (
-                <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
-                  <div>
-                    <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
-                    <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>{k.confidence}</div>
-                  </div>
-                  <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
-                    <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
-                    <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
-                    <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
-                  </div>
+          <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
+            <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
+            {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => (
+              <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
+                <div>
+                  <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
+                  <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>{k.confidence}</div>
                 </div>
-              ))}
-            </div>
-          )}
+                <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
+                  <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
+                  <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
+                  <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
+                </div>
+              </div>
+            )) : (
+              <div style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
+            )}
+          </div>
 
           {activePlayoff && (
             <div style={st('display:flex;gap:20px;flex-wrap:wrap')}>
@@ -701,7 +738,7 @@ function App() {
               <DataTable columns={playoffColumns()} rows={afcRows} />
               <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-top:12px')}>NFC</div>
               <DataTable columns={playoffColumns()} rows={nfcRows} />
-              <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>From a 5,000-season Monte Carlo simulation with a documented tiebreaker simplification (win% → head-to-head for clean 2-way ties → division/conference record → Power Score fallback) — see the model's Team Trajectory README for scope details.</div>
+              <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>From a 5,000-season Monte Carlo simulation with a documented tiebreaker simplification (win% → head-to-head for clean 2-way ties → division/conference record → Power Score fallback) — see the <a href="methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a> for scope details.</div>
             </>
           )}
         </div>

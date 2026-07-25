@@ -572,6 +572,7 @@ function App() {
             <a href="../index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Home</a>
             <a href="../nfl-model/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>NFL Model</a>
             <a href="../pre-read/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Pre-Read</a>
+            <a href="../dashboards/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Dashboards</a>
             <a href="../blog/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Blog</a>
           </nav>
         </div>
@@ -590,6 +591,11 @@ function App() {
               </select>
             ) : (
               <span style={st('font:600 14px var(--font-sans);color:var(--ink-faint)')}>—</span>
+            )}
+            {s.availableWeeks.length > 0 && (
+              <span style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')} title="This is a hand-run snapshot pipeline, not a live weekly feed — new weeks get added as they're generated, so gaps between them are expected, not missing data.">
+                Snapshots so far: {s.availableWeeks.map((w) => `Wk ${w}`).join(', ')}
+              </span>
             )}
           </div>
           <div style={st('display:flex;align-items:center;gap:14px')}>
@@ -643,6 +649,10 @@ function App() {
           </div>
 
           {glossaryPanel}
+
+          <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:16px 20px;font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>
+            <strong style={st('color:var(--ink)')}>Model validation status:</strong> this model is backtested against one completed season (2025) — a walk-forward test with a recency/shrinkage grid search, reported as MAE/RMSE. That's less rigorous than the NFL sibling model's 3-season, statistically-tested validation (see its <a href="../nfl-model/methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a>). Multi-season backtesting and a win-probability calibration layer for this model are planned, not done yet.
+          </div>
 
           <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
             {sortPills.map((p) => (
