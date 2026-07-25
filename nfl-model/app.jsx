@@ -60,6 +60,42 @@ const VALIDATION_STATS = [
   { headline: 'A 2026-07-24 audit correction removed Scheme Continuity from Power Score', gloss: 'Three independent tests found it was quietly hurting accuracy, not helping — full methodology, evidence, and a documented correction (including a fix that turned out to be unnecessary once this one was applied) in the full audit.', link: { href: 'methodology.html', label: 'Read the full technical audit →' } },
 ];
 
+// Team Profile narrative content (TEAM_PROFILE_DESIGN_SYSTEM.md) — hand-authored
+// per team, not derived from the data pipeline. Teams without an entry here just
+// get today's Team Detail tab unchanged; this is deliberately sparse rather than
+// templated from data thresholds, since the site's voice rules treat that kind of
+// generic auto-generated narrative as worse than no narrative at all.
+const TEAM_PROFILES = {
+  Chiefs: {
+    headline: 'Chiefs: Contention on Hold',
+    oneLiner: "The Chiefs' 2026 outlook comes down to one question: how much of Patrick Mahomes comes back from a torn ACL and LCL.",
+    execSummary: [
+      "A reigning-dynasty franchise coming off a rare losing season — 6-11 in 2025 — driven almost entirely by Mahomes tearing his ACL and LCL in Week 15.",
+      "Power Score sits at -4.71, well back of a dominant Broncos team (+8.4) atop the AFC West. The model's Key-Person Dependency data shows a 3.21-point swing between a healthy Mahomes (-4.71, the number already baked into the Power Score above) and a hobbled one (-7.92) — the same swing size the model applies to any starting-caliber QB, but for the Chiefs specifically it's a live, unresolved situation, not a hypothetical.",
+      'Rehab reports have him "ahead of schedule," and Kansas City added Kenneth Walker III to reduce pressure on his return — but Week 1 availability is genuinely uncertain.',
+    ],
+    fiveQuestions: [
+      'How much of Mahomes returns from the ACL+LCL tear, and how fast?',
+      'Does "ahead of schedule" rehab hold up through Week 1, or slip into the season?',
+      "Is Kenneth Walker III enough of a hedge if Mahomes isn't full-strength early?",
+      'Even with a healthy Mahomes, can the Chiefs close an 8-to-10-point Power Score gap on a dominant Broncos team in one offseason?',
+      "How much of the 6-11 finish was Mahomes' injury specifically, versus a broader decline the model hasn't fully separated out yet?",
+    ],
+    changeOurMind: {
+      pessimisticIf: [
+        'Mahomes returns for Week 1 and looks like his pre-injury self, not just "active."',
+        'Kansas City is competitive with Denver or the Chargers head-to-head, not blown out.',
+        'The 3.21-point key-person cliff never materializes because the hedge and backup plan hold.',
+      ],
+      lowerIf: [
+        "Mahomes' return slips past Week 1, or he's limited/inconsistent once back.",
+        "The Power Score gap to Denver doesn't close even after Mahomes is fully healthy, suggesting 2025's decline wasn't just about the QB.",
+        'A setback in the ACL/LCL rehab becomes public before the season.',
+      ],
+    },
+  },
+};
+
 // ----------------------------------------------------------------------
 // Small helpers (ported verbatim from cfb-model/app.jsx)
 // ----------------------------------------------------------------------
@@ -462,6 +498,7 @@ function App() {
   const activeMC = monteCarlo.find((r) => r.team === activeTeam);
   const activePlayoff = playoff.find((r) => r.team === activeTeam);
   const activeKeyPerson = keyPerson.filter((r) => r.team === activeTeam);
+  const profile = TEAM_PROFILES[activeTeam];
   const snapshotBg = teamColor(activeTeam);
   const snapshotTextColor = readableTextColor(snapshotBg);
 
@@ -777,6 +814,49 @@ function App() {
 
           {!activeRow && (
             <p style={st('font:400 16px var(--font-sans);color:var(--ink-muted)')}>No power rating data for {activeTeam || 'this team'} yet.</p>
+          )}
+
+          {profile && (
+            <div style={st('display:flex;flex-direction:column;gap:22px')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px')}>
+                <div>
+                  <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)')}>Team Profile</span>
+                  <h2 style={st('font:900 26px var(--font-sans);margin:6px 0 4px;color:var(--ink)')}>{profile.headline}</h2>
+                  <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{profile.oneLiner}</p>
+                </div>
+                {profile.execSummary.map((p, i) => (
+                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0')}>{p}</p>
+                ))}
+              </div>
+
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
+                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
+                  {profile.fiveQuestions.map((q, i) => (
+                    <li key={i} style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink)')}>{q}</li>
+                  ))}
+                </ol>
+              </div>
+
+              <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
+                <div style={st('background:var(--surface-card);border-left:3px solid var(--value-positive);border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:8px')}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--value-positive)')}>Model is probably too pessimistic if…</div>
+                  <ul style={st('margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
+                    {profile.changeOurMind.pessimisticIf.map((t, i) => (
+                      <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div style={st('background:var(--surface-card);border-left:3px solid var(--value-risk);border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:8px')}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--value-risk)')}>Expectations should be lowered if…</div>
+                  <ul style={st('margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
+                    {profile.changeOurMind.lowerIf.map((t, i) => (
+                      <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           )}
 
           <div style={st('display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start')}>
