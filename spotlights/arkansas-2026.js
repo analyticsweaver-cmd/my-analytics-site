@@ -109,9 +109,9 @@
   // (transfer+signee) totals in one place.
   const SK = {
     vbW: 900, vbH: 560, padY: 30, nodeGap: 6,
-    leftX: 140, leftW: 14,
+    leftX: 120, leftW: 30,
     midX: 430, midW: 24,
-    rightX: 746, rightW: 14,
+    rightX: 750, rightW: 30,
   };
   const RED = "var(--red)", GREEN = "var(--green)", BRASS = "var(--brass)";
 
@@ -125,14 +125,25 @@
       return { key: g.group, departed, returning, transfer, signee, incoming: transfer + signee };
     });
 
-    const totalDeparted = groups.reduce((s, g) => s + g.departed, 0);
-    const totalReturning = groups.reduce((s, g) => s + g.returning, 0);
-    const totalTransfer = groups.reduce((s, g) => s + g.transfer, 0);
-    const totalSignee = groups.reduce((s, g) => s + g.signee, 0);
-    const leftTotal = totalDeparted + totalReturning;
-    const rightTotal = totalReturning + totalTransfer + totalSignee;
-    const midTotal = totalDeparted + totalReturning + totalTransfer + totalSignee;
-    const scale = bandH / Math.max(leftTotal, rightTotal, midTotal);
+    // Roster-wide totals, split by what actually happened to each departed
+    // player (portal / draft / graduation) rather than by position — matches
+    // WEAVER_ANALYTICS_LAB_VISION.md's own Sankey example (2025 Roster ->
+    // Stayed/Transferred/Drafted/Graduated -> 2026 Roster). The incoming side
+    // (Portal Additions, HS Signees) isn't in that doc's shorthand example,
+    // but is kept — dropping it would mean "2026 Roster" undercounts by the
+    // 50 incoming players, and "who's walking in the door" is core to the
+    // mission statement in both governing docs.
+    const allDeparted = positionGroups.flatMap((g) => g.departed);
+    const stayed = groups.reduce((s, g) => s + g.returning, 0);
+    const transferred = allDeparted.filter((p) => p.status === "portal").length;
+    const drafted = allDeparted.filter((p) => p.status === "draft").length;
+    const graduated = allDeparted.filter((p) => p.status === "graduated").length;
+    const portalIn = groups.reduce((s, g) => s + g.transfer, 0);
+    const signees = groups.reduce((s, g) => s + g.signee, 0);
+    const roster2025 = stayed + transferred + drafted + graduated;
+    const roster2026 = stayed + portalIn + signees;
+    const midTotal = roster2025 + portalIn + signees;
+    const scale = bandH / Math.max(roster2025, roster2026, midTotal);
 
     function stack(items, x, w) {
       const totalH = items.reduce((s, it) => s + it.value * scale, 0) + SK.nodeGap * (items.length - 1);
@@ -145,15 +156,18 @@
       });
     }
 
-    const leftNodes = stack(groups.map((g) => ({ key: g.key, label: g.key, value: g.departed + g.returning, color: "var(--ink-faint)" })), SK.leftX, SK.leftW);
-    const rightNodes = stack(groups.map((g) => ({ key: g.key, label: g.key, value: g.returning + g.incoming, color: "var(--ink-faint)" })), SK.rightX, SK.rightW);
+    const leftNodes = stack([{ key: "roster2025", label: "2025 Roster", value: roster2025, color: "var(--ink-faint)" }], SK.leftX, SK.leftW);
+    const rightNodes = stack([{ key: "roster2026", label: "2026 Roster", value: roster2026, color: "var(--ink-faint)" }], SK.rightX, SK.rightW);
     const midNodes = stack([
-      { key: "departed", label: "Departed", value: totalDeparted, color: RED },
-      { key: "returning", label: "Returning", value: totalReturning, color: GREEN },
-      { key: "transfer", label: "Transfer Portal", value: totalTransfer, color: BRASS },
-      { key: "signee", label: "HS Signees", value: totalSignee, color: BRASS },
+      { key: "stayed", label: "Stayed", value: stayed, color: GREEN },
+      { key: "transferred", label: "Transferred", value: transferred, color: RED },
+      { key: "graduated", label: "Graduated", value: graduated, color: RED },
+      { key: "drafted", label: "Drafted", value: drafted, color: RED },
+      { key: "portal_in", label: "Portal Additions", value: portalIn, color: BRASS },
+      { key: "signees", label: "HS Signees", value: signees, color: BRASS },
     ], SK.midX, SK.midW);
     const mid = Object.fromEntries(midNodes.map((n) => [n.key, n]));
+    const left = leftNodes[0], right = rightNodes[0];
 
     const links = [];
     function link(a, b, value, color, tip) {
@@ -165,19 +179,13 @@
       links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip });
     }
 
-    groups.forEach((g, i) => {
-      link(leftNodes[i], mid.departed, g.departed, RED, `${g.key}: ${g.departed} departed`);
-      link(leftNodes[i], mid.returning, g.returning, GREEN, `${g.key}: ${g.returning} returning`);
-    });
-    groups.forEach((g, i) => {
-      link(mid.returning, rightNodes[i], g.returning, GREEN, `${g.key}: ${g.returning} returning`);
-    });
-    groups.forEach((g, i) => {
-      link(mid.transfer, rightNodes[i], g.transfer, BRASS, `${g.key}: ${g.transfer} transfer additions`);
-    });
-    groups.forEach((g, i) => {
-      link(mid.signee, rightNodes[i], g.signee, BRASS, `${g.key}: ${g.signee} HS signees`);
-    });
+    link(left, mid.stayed, stayed, GREEN, `${stayed} stayed on the roster`);
+    link(left, mid.transferred, transferred, RED, `${transferred} transferred out (portal)`);
+    link(left, mid.graduated, graduated, RED, `${graduated} graduated`);
+    link(left, mid.drafted, drafted, RED, `${drafted} drafted to the NFL`);
+    link(mid.stayed, right, stayed, GREEN, `${stayed} returning in 2026`);
+    link(mid.portal_in, right, portalIn, BRASS, `${portalIn} transfer portal additions`);
+    link(mid.signees, right, signees, BRASS, `${signees} HS signees`);
 
     return { leftNodes, midNodes, rightNodes, links };
   }
@@ -199,21 +207,21 @@
 
     const nodeRects = allNodes.map((n) => {
       const isSideNode = n.color === "var(--ink-faint)";
-      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${isSideNode ? "var(--ink-muted)" : n.color}" data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}"></rect>`;
+      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${isSideNode ? "var(--ink)" : n.color}" data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}"></rect>`;
     }).join("");
 
     const leftLabels = sk.leftNodes.map((n) => `
-      <text class="sankey-label side" x="${SK.leftX - 10}" y="${n.y + n.h / 2}" text-anchor="end" dy="0.35em">${n.label}</text>`).join("");
+      <text class="sankey-label mid-name" x="${SK.leftX - 10}" y="${n.y + n.h / 2 - 6}" text-anchor="end">${n.label}</text>
+      <text class="sankey-label mid-count" x="${SK.leftX - 10}" y="${n.y + n.h / 2 + 12}" text-anchor="end">${n.value}</text>`).join("");
     const rightLabels = sk.rightNodes.map((n) => `
-      <text class="sankey-label side" x="${SK.rightX + SK.rightW + 10}" y="${n.y + n.h / 2}" text-anchor="start" dy="0.35em">${n.label}</text>`).join("");
+      <text class="sankey-label mid-name" x="${SK.rightX + SK.rightW + 10}" y="${n.y + n.h / 2 - 6}" text-anchor="start">${n.label}</text>
+      <text class="sankey-label mid-count" x="${SK.rightX + SK.rightW + 10}" y="${n.y + n.h / 2 + 12}" text-anchor="start">${n.value}</text>`).join("");
     const midLabels = sk.midNodes.map((n) => `
       <text class="sankey-label mid-name" x="${SK.midX + SK.midW + 10}" y="${n.y + n.h / 2 - 6}" text-anchor="start">${n.label}</text>
       <text class="sankey-label mid-count" x="${SK.midX + SK.midW + 10}" y="${n.y + n.h / 2 + 12}" text-anchor="start">${n.value}</text>`).join("");
 
     const colHeads = `
-      <text class="sankey-col-head" x="${SK.leftX + SK.leftW / 2}" y="14" text-anchor="middle">2025 ROSTER</text>
-      <text class="sankey-col-head" x="${SK.midX + SK.midW / 2}" y="14" text-anchor="middle">STATUS</text>
-      <text class="sankey-col-head" x="${SK.rightX + SK.rightW / 2}" y="14" text-anchor="middle">2026 ROSTER</text>`;
+      <text class="sankey-col-head" x="${SK.midX + SK.midW / 2}" y="14" text-anchor="middle">WHAT HAPPENED</text>`;
 
     wrap.innerHTML = `
       <svg viewBox="0 0 ${SK.vbW} ${SK.vbH}" width="100%" height="${SK.vbH}" style="display:block">
