@@ -94,6 +94,286 @@ const TEAM_PROFILES = {
       ],
     },
   },
+    Cowboys: {
+      headline: "Cowboys: The Defense Is the Story, Not the Record",
+      oneLiner: "A 7-9-1 finish undersells what Dallas built on defense this offseason — the model's Trajectory score (+7) is doing more to lift the Cowboys than any other team's is doing for them.",
+      execSummary: [
+        "Dallas finished 7-9-1 in 2025, but the roster building since then reads nothing like a rebuild — the defense got major additions on a new defensive coordinator, and cornerback depth is the only real hole left unaddressed.",
+        "Power Score sits at 1.66, the highest in a genuinely competitive NFC East (Eagles at 0.97, Giants at -0.45, Commanders at -5.24) — and almost all of that number comes from Trajectory (+7), not Baseline (-2.0, still dragged down by last year's record). The model is betting on the roster more than the past.",
+        "The one real swing factor is DeMarvion Overshown, still working back from a severe multi-ligament knee injury — the data on his impact is thin (low confidence), but if he's not right, that's the clearest single risk on an otherwise “rare drama-free summer.”",
+      ],
+      fiveQuestions: [
+        "Does the defensive overhaul translate to actual results, or is Trajectory (+7) pricing in more improvement than a new DC alone can deliver?",
+        "How much is Overshown able to play, and at what level, coming off a severe multi-ligament knee injury?",
+        "Is a thin cornerback room the one hole that keeps this defense from taking the next step?",
+        "Can Dallas actually hold off Philadelphia for the division, or does experience and talent close a 0.69-point Power Score gap?",
+        "Does a 7-9-1 baseline undersell a genuinely retooled roster, or was last year's record closer to the team's real level than Trajectory assumes?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The defense performs like a top-half unit early, validating the Trajectory bet.",
+          "Overshown returns at anything close to his pre-injury level.",
+          "Dallas beats Philadelphia and/or other strong competition, not just weaker NFC East opponents.",
+        ],
+        lowerIf: [
+          "Cornerback depth gets exposed by good passing offenses.",
+          "Overshown's recovery stalls or he's limited/inactive for a real stretch.",
+          "The defensive rebuild looks more like scheme change than actual improvement.",
+        ],
+      },
+    },
+    Eagles: {
+      headline: "Eagles: Trading Away the Farm, Betting on What's Left",
+      oneLiner: "Philadelphia is the rare 11-6 team the model has cooling off — real subtractions (A.J. Brown traded away, a starting safety lost) outweighing an otherwise stable, zero-turnover coaching staff.",
+      execSummary: [
+        "The Eagles won 11 games in 2025, but the offseason wasn't a stand-pat victory lap — Philadelphia traded away A.J. Brown and lost its starting safety, both real subtractions from a roster that just went to the mat in a strong season.",
+        "Power Score sits at 0.97, second in the NFC East behind Dallas's 1.66. Baseline (+5.0) still reflects last year's strong record, but Trajectory (-2) and Regression (-2.91) both pull the number down — the model reads the subtractions as outweighing full coaching continuity.",
+        "The swing factors both run through health: DeVonta Smith Jr. and Jalen Hunt are real breakout candidates if Smith's recurring triceps injury stays managed, but an aging core is genuinely closer to the end of its title window than the start of one.",
+      ],
+      fiveQuestions: [
+        "Does trading A.J. Brown get replaced in the passing game, or is that hole as real as Trajectory suggests?",
+        "How much does losing the starting safety show up on defense before it's fixed?",
+        "Is Smith Jr.'s recurring triceps injury a season-long limiter or a non-issue once camp starts?",
+        "Is this core aging out of its window now, or is 2026 still inside it?",
+        "Can Philadelphia hold off Dallas in a division where the gap is only 0.69 points, or does last year's record flatter Philadelphia more than this year's roster earns?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The passing game doesn't miss Brown as much as expected — Smith Jr. and Hunt genuinely break out.",
+          "Smith Jr.'s triceps issue is a non-factor once the season starts.",
+          "The defense doesn't visibly regress despite the safety loss.",
+        ],
+        lowerIf: [
+          "The receiving corps looks thin without Brown in real games, not just on paper.",
+          "Smith Jr. misses time or plays limited.",
+          "Age-related decline shows up somewhere specific and obvious.",
+        ],
+      },
+    },
+    Giants: {
+      headline: "Giants: The Record Says Disaster, the Model Says Otherwise",
+      oneLiner: "A 4-13 season was about as bad as it looks on the scoreboard — but the model's own luck adjustment says New York was closer to a .500 team than that record shows, and thinks the roster fixes were real.",
+      execSummary: [
+        "New York finished 4-13 in 2025, the worst record on this shortlist — but “most other holes excellently patched” after a full, well-reviewed coaching staff overhaul is not the offseason of a team resigned to another bottom-five finish.",
+        "Power Score comes in at -0.45 — well ahead of where a 4-13 record alone would put a team. Baseline (-9.0) reflects the actual record, but Regression (+9.26), the model's Pythagorean luck adjustment, is doing enormous work: New York's point differential says they should have won meaningfully more games than they did. Trajectory (+5) backs that up with real roster improvement.",
+        "Center remains a weak link, and the defensive-line and scheme rebuild risk is already priced into the Scheme score rather than sitting as an open question — this reads as a team the model thinks was unlucky, not bad.",
+      ],
+      fiveQuestions: [
+        "Does a +9.26 luck adjustment actually show up as more wins in 2026, or was 4-13 closer to the truth than Regression assumes?",
+        "Is center the one hole that keeps an otherwise “excellently patched” roster from taking a real step forward?",
+        "Does the full coaching staff overhaul translate on the field, not just look good on paper?",
+        "How much does the defensive-line and scheme rebuild risk, already priced in, actually cost them in-season?",
+        "Is Darius Alexander's role opportunity enough of a real contribution to matter, or just a depth note?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "New York's record improves significantly even without a marquee offseason addition — the luck-adjustment bet pays off.",
+          "Center is a non-issue once the season starts.",
+          "The new coaching staff's results match the well-reviewed offseason buzz.",
+        ],
+        lowerIf: [
+          "The record stays bad even accounting for better luck, suggesting 4-13 was closer to their real level than the model thinks.",
+          "Center struggles are visible and costly.",
+          "The D-line and scheme rebuild looks more like a step back than the model's pricing assumed.",
+        ],
+      },
+    },
+    Commanders: {
+      headline: "Commanders: Last in the Division, First in Schedule Difficulty",
+      oneLiner: "Washington's 2026 outlook comes down to two things outside anyone's control: how much of Jayden Daniels stays healthy, and a schedule the model rates as the toughest in the league.",
+      execSummary: [
+        "The Commanders finished 5-12 in 2025 and enter 2026 last in the NFC East by Power Score (-5.24) — the only team in the division still in negative Baseline and negative Trajectory territory at the same time.",
+        "The offense never got a real answer at WR2 opposite Terry McLaurin, and the model rates Washington's 2026 schedule as the hardest of any team on this list — strength-of-schedule rank #1, meaning no other team's average opponent is projected stronger. A tough schedule on top of a below-average roster is a difficult combination.",
+        "Everything about the offense's ceiling runs through Jayden Daniels' health — McLaurin has a real explicit career-year case in a new offensive scheme (OC and DC both changed, head coach retained), but that all depends on Daniels staying on the field.",
+      ],
+      fiveQuestions: [
+        "Does McLaurin's real career-year case materialize in the new offensive scheme?",
+        "How much of the season does Jayden Daniels actually play, and at what level?",
+        "Does the WR2 hole opposite McLaurin get addressed in-season, or does it cap the passing game all year?",
+        "Does the league's hardest projected schedule turn a mediocre roster into a genuinely bad record?",
+        "Is retaining the head coach while changing both coordinators enough continuity to show real improvement, or too much churn to matter?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Daniels stays healthy for close to a full season.",
+          "McLaurin has the career year the model's Upside case describes.",
+          "Washington is competitive even against the league's hardest schedule, not blown out by it.",
+        ],
+        lowerIf: [
+          "Daniels misses real time or plays through injury at a diminished level.",
+          "The WR2 hole is exposed and never fixed.",
+          "The tough schedule produces the kind of results a #1 SOS rank would predict for a below-average roster.",
+        ],
+      },
+    },
+    Saints: {
+      headline: "Saints: From 6-11 to Division Favorite, on the Back of a Rookie QB Find",
+      oneLiner: "New Orleans' turnaround case rests on one thing: whether Tyler Shough's rookie-year emergence at QB was real, or a one-year sample the model is trusting too much.",
+      execSummary: [
+        "The Saints finished 6-11 in 2025, but the model has them projected as the strongest team in the NFC South for 2026 — Power Score 1.77, ahead of Carolina, Tampa Bay, and Atlanta — on the back of the largest Trajectory jump (+11) of any team on this list.",
+        "Two things are doing the work: Shough's emergence “solved QB for free” after New Orleans also drafted Tyson 8th overall, and the model rates New Orleans' 2026 schedule as the easiest in the league (SOS rank 32nd of 32). A weak schedule inflates the raw win total some, but the underlying roster bet — zero coaching turnover, real mid-round finds in Riley and Sanker — is what's actually driving the Power Score.",
+        "The obvious risk is right there in the numbers: Shough is a one-year-sample rookie QB, and “solved QB for free” is exactly the kind of call that either ages very well or doesn't hold up to a second look from opposing defenses.",
+      ],
+      fiveQuestions: [
+        "Does Shough's rookie emergence hold up over a full season, or was it a small-sample honeymoon?",
+        "How much of the projected win total is really the easiest schedule in the league doing the work, versus genuine roster strength?",
+        "Does the Tyson pick (8th overall) pan out fast enough to matter in 2026?",
+        "Do Riley and Sanker's mid-round finds hold up as full-season starters, not just camp standouts?",
+        "Is zero coaching turnover an underrated stabilizer here, or does it mean no real answer for whatever didn't work in a 6-11 season?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Shough performs like a legitimate starting QB against a full slate of NFL defenses, not just early flashes.",
+          "New Orleans is competitive even against tougher opponents, not just padding the record against a weak schedule.",
+          "Riley and Sanker hold up as real full-season contributors.",
+        ],
+        lowerIf: [
+          "Shough regresses once defenses have a full season of tape on him.",
+          "The weak schedule turns out to be doing most of the work, and results against good teams specifically are poor.",
+          "The 6-11 record turns out to be closer to the roster's true level than an +11 Trajectory jump suggests.",
+        ],
+      },
+    },
+    Raiders: {
+      headline: "Raiders: A Full Rebuild, Not a Retool",
+      oneLiner: "Las Vegas isn't dressing up a bad season as a step forward — the model reads this as an honest, full rebuild, from an unresolved WR1 hole to an unproven rookie QB succession plan.",
+      execSummary: [
+        "The Raiders finished 3-14 in 2025 and the model doesn't see a quick turnaround: Power Score sits at -7.85, last in the AFC West and the lowest of any team profiled here. Baseline (-11) and Trajectory (-9) are both deeply negative — this isn't a team papering over one bad year.",
+        "There's no legitimate WR1 or true X-receiver on the roster, and the coaching staff saw a full overhaul. The one real bright spot the model flags is Ashton Jeanty, viewed as a genuine buy-low, regression-to-mean case rather than a name attached for hype.",
+        "The clearest long-term risk is the QB succession plan — unproven and unresolved — layered on top of an otherwise full rebuild. This is a team the model expects to be building for the future as much as competing in 2026.",
+      ],
+      fiveQuestions: [
+        "Does a legitimate WR1 emerge from the current room, or does the passing game stay capped all year?",
+        "How much does Ashton Jeanty's regression-to-mean case actually show up in per-game production?",
+        "Is the new coaching staff able to install its system fast enough to matter in Year 1?",
+        "How does the unproven QB succession plan actually play out once the season starts?",
+        "Is a -9 Trajectory a fair read on a full rebuild, or does the model risk underrating young talent that hasn't shown up in the data yet?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Jeanty's regression-to-mean case is real and shows up immediately.",
+          "A legitimate WR1 emerges, even unexpectedly, from the current room.",
+          "The new coaching staff's system is competitive out of the gate, not a Year 1 struggle.",
+        ],
+        lowerIf: [
+          "The WR1 hole stays unresolved and visibly caps the offense.",
+          "QB play is a clear, costly weakness rather than a manageable question mark.",
+          "The rebuild looks more like -9 Trajectory suggests than like a quick turnaround.",
+        ],
+      },
+    },
+    Broncos: {
+      headline: "Broncos: The Model's Overall Favorite, With One Real Caveat",
+      oneLiner: "Denver enters 2026 as the model's strongest team in this group — but the same Pythagorean math that flags other teams' bad luck flags the Broncos for good luck, which is the one thing keeping this from being a totally clean bill of health.",
+      execSummary: [
+        "Denver went 14-3 in 2025 and returns the least roster turnover in the league — full continuity, a minor gap at tight end aside. Power Score leads the AFC West at 4.89, comfortably ahead of the Chargers, Chiefs, and Raiders.",
+        "Baseline (+11) is the highest of any team profiled here, and Trajectory (+5) adds more on top. The one number working against Denver is Regression (-9.04) — the model's largest single luck adjustment in either direction on this list, reflecting that the Broncos' point differential in 2025 didn't fully back up a 14-3 record. Some regression toward the mean is baked into the Power Score already.",
+        "The model's own language calls this “the most complete, healthiest roster in the league — lowest risk in the AFC.” That's a genuine strength, but it also means there's very little hidden upside left to find — the swing factors here are more about how much regression actually shows up than about any single injury or personnel question.",
+      ],
+      fiveQuestions: [
+        "How much does the -9.04 Regression adjustment actually show up as fewer wins in 2026?",
+        "Does the tight end gap become a real problem, or stay a minor note?",
+        "Is a soft 2026 schedule propping up the projection, or is Denver good enough that it wouldn't matter either way?",
+        "Can a team already rated as low-risk find any real upside beyond what's already priced in?",
+        "Does the AFC West gap to Kansas City and Las Vegas hold, or does one of them close it faster than expected?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Denver's results don't show meaningful regression — 2025's point-differential gap turns out to not matter.",
+          "The tight end position is a non-issue.",
+          "Denver is competitive even in a tougher stretch of the schedule than its SOS rank suggests.",
+        ],
+        lowerIf: [
+          "The -9.04 Regression adjustment plays out as real, visible schedule-adjusted underperformance.",
+          "Injuries erode the “healthiest roster in the league” framing.",
+          "The AFC West race tightens because a divisional competitor closes the gap faster than the model expects.",
+        ],
+      },
+    },
+    Rams: {
+      headline: "Rams: One Trade Away From the Model's Second-Best Team",
+      oneLiner: "The Garrett trade is doing real work in the Rams' number — the model rates this as an elite, well-built roster with only two soft spots: WR3 depth and a 37-year-old quarterback.",
+      execSummary: [
+        "Los Angeles went 12-5 in 2025 and enters 2026 with the model's second-highest Power Score in this group at 4.72 — trailing only Denver. Zero coaching turnover and a major boost from the Garrett trade are the headline additions to an already strong roster.",
+        "Baseline (+7.0) and Trajectory (+4) both point the same direction, and Scheme sits at the maximum score in the dataset (+10). Stewart now has a real complementary role with Garrett aboard, and the only roster hole the model flags is WR3 depth — a minor concern on what's described as “an otherwise elite roster.”",
+        "The one real long-term risk is obvious and not hidden: this is a deep, talented, but aging core led by a 37-plus-year-old Stafford. The Power Score reflects the team the Rams are right now, not necessarily the team they'll be if Stafford's play or availability slips.",
+      ],
+      fiveQuestions: [
+        "How much does the Garrett trade actually change the defense's ceiling in real games, not just on paper?",
+        "Is WR3 depth ever actually tested, or does the passing game not need a third option this year?",
+        "How much does Stafford's age show up in 2026 — arm strength, durability, or neither?",
+        "Does zero coaching turnover translate to a faster start than teams with new systems to install?",
+        "Is this Rams roster genuinely the second-best team in the model's eyes, or does the gap to Denver close or widen?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The Garrett trade's impact shows up immediately and clearly on defense.",
+          "Stafford plays at or near his established level for a full season.",
+          "WR3 depth is never actually a problem.",
+        ],
+        lowerIf: [
+          "Stafford's age shows up as declining arm strength, durability, or both.",
+          "WR3 depth gets exposed by injury elsewhere in the receiving corps.",
+          "The defense doesn't show the boost the Garrett trade was supposed to provide.",
+        ],
+      },
+    },
+    Steelers: {
+      headline: "Steelers: Division Leader by a Coin Flip, One Injury From a Cliff",
+      oneLiner: "Pittsburgh's 2026 outlook comes down to one number: what happens to a 42-year-old Aaron Rodgers, whose Key-Person cliff (3.21 points) is almost identical in size to the Chiefs' Mahomes situation — just driven by age instead of a torn ACL.",
+      execSummary: [
+        "The Steelers went 10-7 in 2025 and hold the AFC North's top spot by the thinnest possible margin — Power Score -1.85 to Baltimore's -1.87, a gap of two-hundredths of a point. This is as close to a coin-flip division race as the model produces anywhere.",
+        "Trajectory (-7) reflects real turmoil: a full coaching staff overhaul and an unsettled right guard spot protecting the league's most closely watched age-risk starter. The model's Key-Person Dependency data makes it explicit and high-confidence: Pittsburgh's Power Score is -1.85 with a healthy Rodgers and -5.06 if he goes down — a 3.21-point swing, essentially the same size cliff the model assigns the Chiefs for a healthy-vs-hobbled Mahomes.",
+        "Regression (-3.73) adds a second headwind: the model reads Pittsburgh as having overperformed its point differential in 2025, meaning some pullback toward the mean is already priced into the number, on top of the Rodgers risk.",
+      ],
+      fiveQuestions: [
+        "Does Aaron Rodgers, at 42, hold up for a full season, or does the 3.21-point cliff become a live in-season problem the way it did for the Chiefs and Mahomes?",
+        "Does an unsettled right guard spot actually cost Rodgers protection in a way that shows up in results?",
+        "Is the full coaching staff overhaul a net positive by midseason, or does the -7 Trajectory number hold up?",
+        "Does the AFC North race stay a coin flip with Baltimore all year, or does one team pull away?",
+        "How much of 2025's 10-7 record was overperformance the model expects to correct in 2026?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Rodgers plays a full, healthy season at a level close to his career norm.",
+          "Zach Frazier and the interior line hold up better than the “unsettled” framing suggests.",
+          "Pittsburgh separates from Baltimore in the AFC North, rather than the race staying a coin flip.",
+        ],
+        lowerIf: [
+          "Rodgers' 3.21-point cliff materializes — injury, decline, or both.",
+          "The right guard spot is a real, visible liability in protection.",
+          "2025's overperformance shows up as a real step back in the standings.",
+        ],
+      },
+    },
+    Patriots: {
+      headline: "Patriots: 14-3 and Still Have Real Question Marks",
+      oneLiner: "New England's turnaround under a new coaching staff is real by the record — but the model still flags an unaddressed pass-rush hole and bakes in some pullback from an overperforming 2025.",
+      execSummary: [
+        "The Patriots went 14-3 in 2025 and lead the AFC East by a wide margin — Power Score 2.63, well clear of Buffalo's 1.96. Baseline sits at +11.0, tied for the highest of any team profiled here, a direct reflection of that record.",
+        "Two things pull the number back down from where the raw record alone would put it. Trajectory (-4) reflects a real, unaddressed hole at edge rusher, offset only partly by acquiring A.J. Brown (traded away by Philadelphia). Regression (-4.62) adds a second pullback: the model reads 2025 as somewhat better than New England's underlying point differential supports, meaning some regression toward the mean is already priced in for 2026.",
+        "The genuine bright spot in the model's own language: no major star-injury flag on the downside case. This isn't a team with one obvious cliff the way Pittsburgh or Kansas City have — the risk here is more diffuse, spread across an unaddressed pass-rush need and an expected step back from an overperforming record.",
+      ],
+      fiveQuestions: [
+        "Does the edge rusher hole get addressed in-season, or is it a full-year weakness?",
+        "How much does A.J. Brown's arrival actually offset the hole at edge rusher?",
+        "Does 2025's record hold up, or does the Regression pullback show up as real, visible decline?",
+        "Is Jared Wilson's modest breakout case enough to matter, or just a depth note?",
+        "Can New England hold off Buffalo by a wide-enough margin to make the AFC East a non-race?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The pass rush performs better than an unaddressed-hole framing suggests, even without a marquee addition.",
+          "2025's record holds up with minimal regression — the point-differential gap the model flags doesn't show up as fewer wins.",
+          "New England pulls away from Buffalo rather than the AFC East tightening.",
+        ],
+        lowerIf: [
+          "The edge rusher hole is visibly exploited by good offensive lines.",
+          "The Regression pullback materializes as a real step back in results.",
+          "Buffalo, or another AFC East team, closes the gap faster than the model's current spread suggests.",
+        ],
+      },
+    },
 };
 
 // ----------------------------------------------------------------------
