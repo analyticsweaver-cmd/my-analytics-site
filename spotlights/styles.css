@@ -58,6 +58,19 @@ a{color:var(--steel);}
 .legend-dot.returning{background:var(--green);}
 .legend-dot.departed{background:var(--red);}
 .legend-dot.incoming{background:var(--brass);}
+/* Presumed/unconfirmed departures (e.g. "graduated" - inferred from senior
+   eligibility + absence from portal/draft data, not a confirmed signal the
+   way a portal entry or draft pick is) get their own hatched treatment
+   everywhere departed does, rather than sharing solid --red with confirmed
+   departures. */
+.legend-dot.presumed{border-radius:50%;background:repeating-linear-gradient(45deg,var(--red) 0 2px,transparent 2px 4px);border:1px solid var(--red);}
+
+.unconfirmed-badge{display:inline-block;margin-left:6px;font:700 9px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);border-radius:999px;padding:1px 6px;vertical-align:middle;}
+
+.observation-list,.five-questions-list{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:12px;max-width:760px;}
+.observation-list li,.five-questions-list li{font:400 17px/1.5 var(--font-sans);color:var(--ink);}
+.observation-list{list-style:disc;}
+.five-questions-list{list-style:decimal;}
 
 .caveat{border-left:3px solid var(--brass);background:#FBF6E9;border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 18px;font:400 13px/1.55 var(--font-sans);color:var(--ink-muted);}
 .caveat strong{color:var(--ink);}

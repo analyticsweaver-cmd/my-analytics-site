@@ -23,9 +23,14 @@
     const bar = p.usage_pct !== null
       ? usageBar(p.usage_pct * 100, `${pct(p.usage_pct)} snap share, ${p.prev_season_label || "last season"}`)
       : usageBar(null, "No snap-share data on record");
+    // "graduated" is inferred (senior eligibility + absent from portal/draft
+    // data), not a confirmed signal the way a portal entry or draft pick is
+    // - flag it visibly here rather than only in the page-level caveat text.
+    const presumed = p.status === "graduated";
+    const badge = presumed ? `<span class="unconfirmed-badge">Unconfirmed</span>` : "";
     return `
-      <div class="player-row">
-        <div class="p-top"><span class="p-name">${p.name}</span><span class="p-pos">${p.position}</span></div>
+      <div class="player-row${presumed ? " presumed" : ""}">
+        <div class="p-top"><span class="p-name">${p.name}${badge}</span><span class="p-pos">${p.position}</span></div>
         <div class="p-detail">${p.detail}</div>
         ${bar}
       </div>`;
@@ -161,7 +166,11 @@
     const midNodes = stack([
       { key: "stayed", label: "Stayed", value: stayed, color: GREEN },
       { key: "transferred", label: "Transferred", value: transferred, color: RED },
-      { key: "graduated", label: "Graduated", value: graduated, color: RED },
+      // "Graduated" is a presumed/inferred bucket (senior eligibility, absent
+      // from portal/draft data), not a confirmed status the way Transferred
+      // or Drafted are - gets its own hatched fill (see renderSankey) so the
+      // diagram doesn't visually claim more certainty than the data has.
+      { key: "graduated", label: "Presumed Departed", value: graduated, color: RED, presumed: true },
       { key: "drafted", label: "Drafted", value: drafted, color: RED },
       { key: "portal_in", label: "Portal Additions", value: portalIn, color: BRASS },
       { key: "signees", label: "HS Signees", value: signees, color: BRASS },
@@ -170,18 +179,18 @@
     const left = leftNodes[0], right = rightNodes[0];
 
     const links = [];
-    function link(a, b, value, color, tip) {
+    function link(a, b, value, color, tip, presumed) {
       if (value <= 0) return;
       const y0 = a.outCursor, y1 = b.inCursor;
       const w = value * scale;
       a.outCursor += w;
       b.inCursor += w;
-      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip });
+      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip, presumed: !!presumed });
     }
 
     link(left, mid.stayed, stayed, GREEN, `${stayed} stayed on the roster`);
     link(left, mid.transferred, transferred, RED, `${transferred} transferred out (portal)`);
-    link(left, mid.graduated, graduated, RED, `${graduated} graduated`);
+    link(left, mid.graduated, graduated, RED, `${graduated} presumed departed (graduated - senior eligibility, unconfirmed)`, true);
     link(left, mid.drafted, drafted, RED, `${drafted} drafted to the NFL`);
     link(mid.stayed, right, stayed, GREEN, `${stayed} returning in 2026`);
     link(mid.portal_in, right, portalIn, BRASS, `${portalIn} transfer portal additions`);
@@ -203,11 +212,13 @@
 
     const linkPaths = sk.links.map((l, i) => `
       <path class="sankey-link-hit" d="${sankeyLinkPath(l)}" fill="none" stroke="transparent" stroke-width="${Math.max(l.w, 10)}" data-tip="${l.tip}"></path>
-      <path class="sankey-link" d="${sankeyLinkPath(l)}" fill="none" stroke="${l.color}" stroke-width="${l.w}" pointer-events="none"></path>`).join("");
+      <path class="sankey-link" d="${sankeyLinkPath(l)}" fill="none" stroke="${l.presumed ? "url(#presumedHatch)" : l.color}" stroke-width="${l.w}" pointer-events="none"></path>`).join("");
 
     const nodeRects = allNodes.map((n) => {
       const isSideNode = n.color === "var(--ink-faint)";
-      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${isSideNode ? "var(--ink)" : n.color}" data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}"></rect>`;
+      const fill = n.presumed ? "url(#presumedHatch)" : (isSideNode ? "var(--ink)" : n.color);
+      const tipSuffix = n.presumed ? " (presumed, unconfirmed)" : "";
+      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${fill}" ${n.presumed ? `stroke="${RED}" stroke-width="1"` : ""} data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}${tipSuffix}"></rect>`;
     }).join("");
 
     const leftLabels = sk.leftNodes.map((n) => `
@@ -225,6 +236,12 @@
 
     wrap.innerHTML = `
       <svg viewBox="0 0 ${SK.vbW} ${SK.vbH}" width="100%" height="${SK.vbH}" style="display:block">
+        <defs>
+          <pattern id="presumedHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+            <rect width="6" height="6" fill="${RED}" fill-opacity="0.35"></rect>
+            <line x1="0" y1="0" x2="0" y2="6" stroke="${RED}" stroke-width="3"></line>
+          </pattern>
+        </defs>
         ${colHeads}
         <g class="sankey-links">${linkPaths}</g>
         <g class="sankey-nodes">${nodeRects}</g>
@@ -245,6 +262,63 @@
     wrap.addEventListener("mouseleave", () => { tip.style.display = "none"; });
   }
 
+  // Three observations (WEAVER_ANALYTICS_LAB_VISION.md's own Arkansas example
+  // calls for this step between the Sankey and the stat grid) - computed from
+  // the same real numbers as the rest of the page, not copied verbatim from
+  // the vision doc's illustrative text, so this stays accurate if the roster
+  // data is regenerated later in the cycle.
+  function buildObservations(data) {
+    const h = data.headline || {};
+    const c = data.summary_counts;
+    const totalPrev = c.returning + c.departed;
+    const turnoverPct = Math.round((c.departed / totalPrev) * 100);
+    const secGroup = data.position_groups.find((g) => g.group === "Secondary");
+    const talentBeatsReturning = (h.talent_z || 0) > (h.returning_production_z || 0);
+
+    const obs = [];
+    obs.push(`${turnoverPct}% of last year's roster turned over — ${c.departed} of ${totalPrev} spots, replaced by ${c.incoming_transfer} transfers and ${c.incoming_recruit} incoming signees.`);
+    if (secGroup) {
+      const secTotal = secGroup.departed.length + secGroup.returning.length;
+      const secPct = secTotal ? Math.round((secGroup.departed.length / secTotal) * 100) : null;
+      if (secPct !== null) {
+        obs.push(`The secondary was hit hardest of any position group: ${secPct}% of the room is gone, leaving just ${secGroup.returning.length} defensive back${secGroup.returning.length === 1 ? "" : "s"} back from last season.`);
+      }
+    }
+    obs.push(`Incoming talent (${fmtZ(h.talent_z)} z) ${talentBeatsReturning ? "outpaces" : "trails"} returning production (${fmtZ(h.returning_production_z)} z) — on paper, ${talentBeatsReturning ? "what's walking in the door rates stronger than what walked out" : "the roster lost more on-field value than it's replaced so far"}.`);
+    return obs;
+  }
+
+  // Five Questions (called for at the bottom of the page, same section the
+  // vision doc's Arkansas example specs) - the framing is hand-authored
+  // (which storylines actually matter is a judgment call, same as the NFL/CFB
+  // Team Profile narrative sections), but names/counts are pulled live from
+  // the roster data so the questions don't go stale if it's regenerated.
+  function buildFiveQuestions(data) {
+    const h = data.headline || {};
+    const byGroup = Object.fromEntries(data.position_groups.map((g) => [g.group, g]));
+    const qb = byGroup["QB"], sec = byGroup["Secondary"], dl = byGroup["DL"], ol = byGroup["OL"];
+    const qs = [];
+
+    if (qb) {
+      const names = qb.returning.map((p) => p.name).join(" or ");
+      qs.push(`Can ${names || "a returning QB"}, or one of the incoming transfers, actually win and hold the starting job now that last year's starter is in the NFL?`);
+    }
+    if (sec) {
+      const secTotal = sec.departed.length + sec.returning.length;
+      qs.push(`Do ${sec.incoming.length} new defensive backs — mostly transfers — gel fast enough to replace a secondary that lost ${sec.departed.length} of ${secTotal} players?`);
+    }
+    if (dl) {
+      const dlTotal = dl.departed.length + dl.returning.length;
+      qs.push(`Can a defensive line that returns only ${dl.returning.length} of ${dlTotal} players find a real pass rush with its transfer reinforcements?`);
+    }
+    if (ol) {
+      const olTotal = ol.departed.length + ol.returning.length;
+      qs.push(`Does an offensive line that kept ${ol.returning.length} of ${olTotal} spots provide enough continuity to protect whoever wins the QB job?`);
+    }
+    qs.push(`Is a run-reliant offense (Reliance ${fmtZ(h.reliance_z)}) the right identity while learning a new starting QB, or does that reliance become a liability if the run game stalls?`);
+    return qs;
+  }
+
   function render(data) {
     renderSankey(data);
     const h = data.headline || {};
@@ -263,6 +337,12 @@
     document.getElementById("stat-turnover-note").textContent =
       `${c.departed} of last season's ${c.returning + c.departed} roster spots turned over — replaced by ${c.incoming_transfer} portal transfers and ${c.incoming_recruit} incoming signees.`;
 
+    document.getElementById("observation-list").innerHTML =
+      buildObservations(data).map((o) => `<li>${o}</li>`).join("");
+
+    document.getElementById("five-questions-list").innerHTML =
+      buildFiveQuestions(data).map((q) => `<li>${q}</li>`).join("");
+
     document.getElementById("roster-groups").innerHTML =
       data.position_groups.map(renderGroup).join("");
 
@@ -274,7 +354,10 @@
     .then((r) => r.json())
     .then(render)
     .catch((err) => {
-      document.getElementById("roster-groups").innerHTML =
-        `<div class="card"><p>Couldn't load roster data (${err}). Run cfb_roster_turnover.py --team Arkansas to regenerate assets/data/arkansas-2026.json.</p></div>`;
+      const errMsg = `<div class="card"><p>Couldn't load roster data (${err}). Run cfb_roster_turnover.py --team Arkansas to regenerate assets/data/arkansas-2026.json.</p></div>`;
+      document.getElementById("sankey-wrap").innerHTML = errMsg;
+      document.getElementById("observation-list").outerHTML = errMsg;
+      document.getElementById("five-questions-list").outerHTML = errMsg;
+      document.getElementById("roster-groups").innerHTML = errMsg;
     });
 })();
