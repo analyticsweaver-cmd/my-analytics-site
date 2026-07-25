@@ -258,7 +258,7 @@ function App() {
   const TAB_DEFS = [
     { id: 'rankings', label: 'Season Power Rankings', tone: 'var(--ink)', textOn: 'var(--paper)' },
     { id: 'matchup', label: 'Matchup Breakdown', tone: 'var(--accent-primary)', textOn: 'var(--paper)' },
-    { id: 'trend', label: 'Team Overview', tone: 'var(--brass)', textOn: 'var(--ink)' },
+    { id: 'team', label: 'Team Overview', tone: 'var(--brass)', textOn: 'var(--ink)' },
   ];
   const tabsList = TAB_DEFS.map((t) => {
     const active = tab === t.id;
@@ -681,6 +681,9 @@ function App() {
               ? `Week ${s.matchupWeek} — sorted by |model edge| — ${pinnedTeam || 'pinned team'}'s games pinned to the top.`
               : `Sorted by |model edge| — ${pinnedTeam || 'pinned team'}'s games pinned to the top.`}
           </div>
+          <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint)')}>
+            Positive numbers favor the home team, negative favor the away team — for both "Model" and "Market." Expand any card to see the full breakdown.
+          </div>
 
           <div style={st('display:flex;flex-direction:column;gap:14px')}>
             {matchupList.length === 0 && (
@@ -734,7 +737,7 @@ function App() {
         </div>
       )}
 
-      {tab === 'trend' && (
+      {tab === 'team' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:22px')}>
 
           <div style={st('display:flex;align-items:center;gap:16px;flex-wrap:wrap')}>
@@ -918,7 +921,7 @@ function App() {
               <div style={st('flex:0 1 220px;min-width:200px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;justify-content:center')}>
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>Home Field Edge</div>
                 <div style={st('font:900 30px var(--font-sans);color:var(--ink)')}>{homeEdgeLabel}</div>
-                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:4px')}>Points added at home, based on this team's historical performance.</div>
+                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:4px')}>Adjustment to this team's predicted margin when playing at home — can be negative for teams with a poor home track record.</div>
               </div>
             </div>
           )}

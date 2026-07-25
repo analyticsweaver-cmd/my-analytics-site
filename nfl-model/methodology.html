@@ -113,7 +113,7 @@
       <p><strong>The 45%/35%/20% Baseline/Trajectory/Regression weight split was re-tested against the new, coaching-continuity-excluded formula — and came back more solid than before, not less.</strong> This split was originally validated years' worth of testing ago against the old 3-part Trajectory; re-running the identical fit-on-two-seasons-validate-on-the-third check against the new 2-part version, the current weights now win 2 of 3 test folds outright (previously they'd only clearly won 1 of 3). The best alternative found by searching all the data at once beat the current weights by less than the normal season-to-season noise — the same signature that ruled out changing them the first time. No change made.</p>
     </div>
 
-    <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the pipeline's own README.</p>
+    <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the project's internal notes.</p>
 
     <h2 class="section"><span class="eyebrow">In-season updates</span>The preseason call, permanently preserved — then updated weekly</h2>
     <p>As of 2026-07-24 this model is no longer preseason-only. The preseason call is frozen the moment it's made and never overwritten again — that's the permanent starting point you'll always see on the <a href="index.html">Season Trend tab</a>, however the year goes. From there, re-running the pipeline during the season blends real results in:</p>
@@ -125,7 +125,7 @@
     <p>Found and fixed along the way: three teams (Seahawks, Titans, Vikings) were previously showing 0.0% across every playoff-odds column — not because of anything about those teams, but because of a real bug in how the season simulator counted games, which surfaced while double-checking this feature's own math. All three now show real, sane odds.</p>
     <p>Weekly runs stay a manual step, matching how the rest of this pipeline (and the sibling CFB model) already works — re-run the pipeline, review the numbers, redeploy. No auto-updating in the background.</p>
 
-    <h2 class="section"><span class="eyebrow">Known limits</span>What this model doesn't do</h2>
+    <h2 class="section" id="known-limits"><span class="eyebrow">Known limits</span>What this model doesn't do</h2>
     <ul>
       <li><strong>It doesn't ingest betting lines or live injury news the way a market price does.</strong> Vegas closing lines, checked against this model on 816 real games, are noticeably more accurate — expected, since they price in everything up to kickoff and this model only updates when the pipeline is re-run by hand.</li>
       <li><strong>Need-Fill, Stability, and (still-displayed) Scheme are hand-scored judgment, not formulas.</strong> They're backed by written research citations, but two analysts reading the same news could reasonably land on adjacent scores.</li>
@@ -134,7 +134,7 @@
     </ul>
 
     <footer class="page-footer">
-      Every number on this page is backtested or measured against real historical data (nflverse game results and closing lines, 2023–2025) — nothing here is an estimate standing in for something unmeasured. Full technical detail, regression tables, and file-level code citations live in the pipeline repository's README.
+      Every number on this page is backtested or measured against real historical data (nflverse game results and closing lines, 2023–2025) — nothing here is an estimate standing in for something unmeasured. Full technical detail, regression tables, and file-level code citations live in the project's internal notes.
     </footer>
   </div>
 </div>

@@ -84,6 +84,7 @@ function num(v, d = 1) {
 }
 
 function signed(v, d = 1) {
+  if (v === null || v === undefined || v === '') return '—';
   const n = Number(v);
   if (Number.isNaN(n)) return '—';
   return (n > 0 ? '+' : '') + n.toFixed(d);
@@ -129,6 +130,16 @@ function confidenceColor(confidence) {
   if (confidence.startsWith('high')) return 'var(--value-positive)';
   if (confidence.startsWith('low')) return 'var(--value-risk)';
   return 'var(--ink-faint)';
+}
+
+// A couple of Key-Person Dependency entries (non-QB positions) have a
+// known-bad "cliff" number - the pipeline's own data flags this with a raw
+// dev note ("wrong-signed, see docstring") that isn't reader-facing copy.
+// Translate to plain language here rather than showing the dev string, and
+// suppress the nonsensical cliff number for those specific entries (methodology.html's
+// "Known limits" section already explains why in reader-friendly terms).
+function isUnreliableKeyPerson(confidence) {
+  return typeof confidence === 'string' && confidence.includes('wrong-signed');
 }
 
 // ----------------------------------------------------------------------
@@ -433,7 +444,12 @@ function App() {
       onToggle: () => setState({ expandedMatchup: expanded ? null : key }),
       contributionBars, contributionScale,
       isFinal, finalScoreLabel, finalWinnerNote,
-      spreadLabel: g.spread != null ? `${g.home_team} ${signed(g.spread, 1)}` : '—',
+      // Sportsbook convention: the favorite gets the minus, the underdog
+      // gets the plus. g.spread is the home team's predicted margin (positive
+      // = home favored), which is the OPPOSITE sign relationship - negate it
+      // for display so "Bills +8.1" doesn't read as "Bills are 8.1-pt dogs"
+      // when the model actually favors them by 8.1.
+      spreadLabel: g.spread != null ? `${g.home_team} ${signed(-g.spread, 1)}` : '—',
       hfaNote: g.neutral_site ? 'Neutral site — no home field adjustment' : `Home field adjustment: ${signed(g.hfa_adj, 1)} pts`,
     };
   });
@@ -613,8 +629,8 @@ function App() {
           <h1 style={st('font:900 22px var(--font-sans);color:var(--ink);margin:0;white-space:nowrap;flex-shrink:0')}>The Weaver Blitz</h1>
           <nav style={st('display:flex;gap:16px;flex-wrap:wrap;margin-left:8px')}>
             <a href="../index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Home</a>
-            <a href="methodology.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Methodology</a>
             <a href="../cfb-model/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>CFB Model</a>
+            <a href="methodology.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Methodology</a>
             <a href="../pre-read/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Pre-Read</a>
             <a href="../dashboards/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Dashboards</a>
             <a href="../blog/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Blog</a>
@@ -854,19 +870,30 @@ function App() {
 
           <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
             <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
-            {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => (
+            {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => {
+              const unreliable = isUnreliableKeyPerson(k.confidence);
+              return (
               <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
                 <div>
                   <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
-                  <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>{k.confidence}</div>
+                  <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>
+                    {unreliable ? (
+                      <>low — unreliable for this position (see <a href="methodology.html#known-limits" style={st('color:inherit;text-decoration:underline')}>Known Limits</a>)</>
+                    ) : k.confidence}
+                  </div>
                 </div>
                 <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
                   <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
                   <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
-                  <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
+                  {unreliable ? (
+                    <span style={st('color:var(--ink-faint)')}>Cliff: <b>not reliable for this position</b></span>
+                  ) : (
+                    <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
+                  )}
                 </div>
               </div>
-            )) : (
+              );
+            }) : (
               <div style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
             )}
           </div>
