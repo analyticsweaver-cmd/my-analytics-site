@@ -11,12 +11,6 @@
 </head>
 <body>
 <div id="root"></div>
-<div id="debugerr" style="white-space:pre-wrap;font-family:monospace;font-size:12px;padding:20px;color:red;"></div>
-<script>
-window.addEventListener('error', function(e) {
-  document.getElementById('debugerr').textContent += 'ERROR: ' + e.message + '\n' + (e.error && e.error.stack || '') + '\n\n';
-});
-</script>
 <script type="text/babel" data-presets="react" src="app.jsx"></script>
 </body>
 </html>

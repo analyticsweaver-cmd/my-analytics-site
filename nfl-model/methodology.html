@@ -115,11 +115,22 @@
 
     <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the pipeline's own README.</p>
 
+    <h2 class="section"><span class="eyebrow">In-season updates</span>The preseason call, permanently preserved — then updated weekly</h2>
+    <p>As of 2026-07-24 this model is no longer preseason-only. The preseason call is frozen the moment it's made and never overwritten again — that's the permanent starting point you'll always see on the <a href="index.html">Season Trend tab</a>, however the year goes. From there, re-running the pipeline during the season blends real results in:</p>
+    <ul>
+      <li><strong>Baseline and Regression blend toward the season-to-date record</strong> as real games are played, gradually outweighing last year's record the same way a smart preseason bettor would update — backtested against three real seasons to pick the blending speed, not guessed at. Bye weeks are handled automatically since the blend is driven by games actually played, not the calendar.</li>
+      <li><strong>Trajectory (roster needs, stability) stays frozen at its preseason value all season.</strong> That's deliberate — it's the preseason judgment call being graded, not a number that should quietly change its own answer. Real in-season events (an injury, a lost starter) show up through the Key-Person Dependency card and the injury watch list instead.</li>
+      <li><strong>Played games count as played, not simulated.</strong> The Cone of Certainty and playoff odds credit real results directly and only simulate what's left — checked against the entire, already-completed 2025 season: simulated final win totals matched the real standings exactly for 30 of 32 teams, and the other 2 were off by exactly half a win, fully explained by the one real tie game that season.</li>
+    </ul>
+    <p>Found and fixed along the way: three teams (Seahawks, Titans, Vikings) were previously showing 0.0% across every playoff-odds column — not because of anything about those teams, but because of a real bug in how the season simulator counted games, which surfaced while double-checking this feature's own math. All three now show real, sane odds.</p>
+    <p>Weekly runs stay a manual step, matching how the rest of this pipeline (and the sibling CFB model) already works — re-run the pipeline, review the numbers, redeploy. No auto-updating in the background.</p>
+
     <h2 class="section"><span class="eyebrow">Known limits</span>What this model doesn't do</h2>
     <ul>
-      <li><strong>It's a preseason snapshot, not a weekly-updated model.</strong> It doesn't ingest betting lines, in-season injury news, or live roster changes the way a market price does — Vegas closing lines, checked against this model on the same 816 real games, are noticeably more accurate, which is expected: they price in everything up to kickoff, this model only knows what was true before Week 1.</li>
+      <li><strong>It doesn't ingest betting lines or live injury news the way a market price does.</strong> Vegas closing lines, checked against this model on 816 real games, are noticeably more accurate — expected, since they price in everything up to kickoff and this model only updates when the pipeline is re-run by hand.</li>
       <li><strong>Need-Fill, Stability, and (still-displayed) Scheme are hand-scored judgment, not formulas.</strong> They're backed by written research citations, but two analysts reading the same news could reasonably land on adjacent scores.</li>
       <li><strong>Key-Person Dependency (the "what if the starting QB goes down" number) is only fully trustworthy for QB.</strong> The same league-wide method applied to Edge/Safety/LB came back unreliable for diagnosed reasons (modern substitution packages make "missed the game" hard to isolate from "coach called for a different personnel package") — reported honestly with a confidence flag, not smoothed over.</li>
+      <li><strong>The 45%/35%/20% weight split hasn't been re-checked for a world where Baseline updates mid-season.</strong> It was re-validated when coaching continuity was removed from Trajectory, but not yet for this.</li>
     </ul>
 
     <footer class="page-footer">
