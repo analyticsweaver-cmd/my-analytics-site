@@ -204,9 +204,20 @@ def main():
     power = records(os.path.join(src, "nfl_power_ratings.csv"))
     win_projections = records(os.path.join(src, "nfl_win_projections.csv"))
     monte_carlo = records(os.path.join(src, "nfl_monte_carlo_comparison.csv"))
+    monte_carlo_histogram = records(os.path.join(src, "nfl_monte_carlo_histogram.csv"))
     playoff = records(os.path.join(src, "nfl_playoff_probabilities.csv"))
     key_person = records(os.path.join(src, "nfl_key_person_dependency.csv"))
     schedule_win_prob = records(os.path.join(src, "nfl_schedule_win_prob.csv"))
+
+    # in-season-updates plan, Phase E: week-over-week trend data (running
+    # history, appended once per weekly pipeline run - nfl_model.py) and
+    # the permanently-frozen preseason call (never overwritten after the
+    # first run - see nfl_model.py/nfl_win_probability.py's write-once
+    # snapshot logic). Both absent (empty list) until the pipeline has
+    # been run at least once under the new code - handled gracefully by
+    # records()'s existing "file not found -> []" behavior.
+    history = records(os.path.join(src, "nfl_ratings_history.csv"))
+    preseason_power = records(os.path.join(src, "nfl_power_ratings_preseason_2026.csv"))
 
     schedule_path = os.path.join(src, "parsed_schedule_final.json")
     matchup_by_week = {}
@@ -224,11 +235,14 @@ def main():
         "power": power,
         "win_projections": win_projections,
         "monte_carlo": monte_carlo,
+        "monte_carlo_histogram": monte_carlo_histogram,
         "playoff": playoff,
         "key_person": key_person,
         "matchup_by_week": matchup_by_week,
         "team_schedule": team_schedule,
         "available_weeks": weeks,
+        "history": history,
+        "preseason_power": preseason_power,
         "generated_at": datetime.date.today().isoformat(),
     }
 
@@ -241,7 +255,9 @@ def main():
     total_games = sum(len(v) for v in matchup_by_week.values())
     print(f"Wrote {out_path}")
     print(f"  power rows: {len(power)}, win_projections: {len(win_projections)}, "
-          f"monte_carlo: {len(monte_carlo)}, playoff: {len(playoff)}, key_person: {len(key_person)}")
+          f"monte_carlo: {len(monte_carlo)}, monte_carlo_histogram: {len(monte_carlo_histogram)}, "
+          f"playoff: {len(playoff)}, key_person: {len(key_person)}")
+    print(f"  history rows: {len(history)}, preseason_power rows: {len(preseason_power)}")
     print(f"  weeks: {weeks}, total games across all weeks: {total_games}")
     print("Next: git add -A && git commit -m 'refresh nfl data' && git push")
 

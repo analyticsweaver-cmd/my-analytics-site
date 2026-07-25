@@ -188,6 +188,7 @@ const TABS = [
   { id: 'rankings', label: 'Power Rankings', tone: 'var(--ink)', textOn: 'var(--paper)' },
   { id: 'matchup', label: 'Schedule & Matchups', tone: 'var(--accent-primary)', textOn: 'var(--paper)' },
   { id: 'team', label: 'Team Detail', tone: 'var(--brass)', textOn: 'var(--ink)' },
+  { id: 'trend', label: 'Season Trend', tone: 'var(--green-light)', textOn: 'var(--ink)' },
   { id: 'playoff', label: 'Playoff Picture', tone: 'var(--value-positive)', textOn: 'var(--paper)' },
 ];
 
@@ -201,6 +202,7 @@ function App() {
     keyPerson: [],
     matchupByWeek: {},
     availableWeeks: [],
+    historyRows: [],
     generatedAt: null,
     loaded: false,
     pipelineError: null,
@@ -235,11 +237,13 @@ function App() {
         power: data.power || [],
         winProjections: data.win_projections || [],
         monteCarlo: data.monte_carlo || [],
+        monteCarloHistogram: data.monte_carlo_histogram || [],
         playoff: data.playoff || [],
         keyPerson: data.key_person || [],
         matchupByWeek: data.matchup_by_week || {},
         teamSchedule: data.team_schedule || {},
         availableWeeks: weeks,
+        historyRows: data.history || [],
         matchupWeek: weeks.length ? weeks[0] : null,
         weekInput: weeks.length ? String(weeks[0]) : '',
         generatedAt: data.generated_at || null,
@@ -251,7 +255,7 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, playoff, keyPerson, matchupByWeek, teamSchedule, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
+  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
 
   const pinnedAccentColor = pinnedTeam ? teamColor(pinnedTeam) : 'var(--brass)';
   const togglePin = (team) => setState((prev) => {
@@ -409,12 +413,24 @@ function App() {
     }
     const contributionScale = Math.max(1, ...contributionBars.map((b) => Math.abs(b.value)));
 
+    // FINAL badge (in-season-updates plan, Phase E): `played`/scores are
+    // present on matchup rows once the pipeline has been re-run with real
+    // results (Phase D); absent (undefined) on any snapshot generated
+    // before that, so this degrades gracefully to the predicted-spread-only
+    // display that's always been here.
+    const isFinal = !!g.played;
+    const finalScoreLabel = isFinal ? `${g.away_team} ${g.away_score}, ${g.home_team} ${g.home_score}` : null;
+    const finalWinnerNote = isFinal
+      ? (g.winner ? `${g.winner} won` : 'Final — tie')
+      : null;
+
     return {
       key, ...g,
       cardStyle: `border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card);border:${g._isPinnedGame ? `2px solid ${pinnedAccentColor}` : '1px solid var(--hairline)'}`,
       homeColor, awayColor, homeWinPct, expanded,
       onToggle: () => setState({ expandedMatchup: expanded ? null : key }),
       contributionBars, contributionScale,
+      isFinal, finalScoreLabel, finalWinnerNote,
       spreadLabel: g.spread != null ? `${g.home_team} ${signed(g.spread, 1)}` : '—',
       hfaNote: g.neutral_site ? 'Neutral site — no home field adjustment' : `Home field adjustment: ${signed(g.hfa_adj, 1)} pts`,
     };
@@ -462,6 +478,83 @@ function App() {
   const coneMax = coneRows.length ? Math.min(17, Math.max(...coneRows.map((r) => r.high)) + 0.5) : 17;
   const coneChartW = 460, coneRowH = 56, coneLabelW = 90, conePadR = 30;
   const coneX = (v) => coneLabelW + ((v - coneMin) / ((coneMax - coneMin) || 1)) * (coneChartW - coneLabelW - conePadR);
+
+  // Win-total distribution: the actual shape of the 20,000-season Monte
+  // Carlo simulation, not just its mean/SD/CI90 summary (those three
+  // numbers are already in the Cone of Certainty above). One bar per
+  // possible win total (0-17), height = fraction of simulated seasons
+  // that landed there.
+  const activeMCHist = monteCarloHistogram.find((r) => r.team === activeTeam);
+  const histBars = [];
+  if (activeMCHist) {
+    for (let w = 0; w <= 17; w++) {
+      const v = Number(activeMCHist[`wins_${w}`]);
+      if (!Number.isNaN(v)) histBars.push({ wins: w, prob: v });
+    }
+  }
+  const histMax = Math.max(0.01, ...histBars.map((b) => b.prob));
+  const histChartW = 460, histChartH = 160, histBarGap = 3;
+  const histBarW = histBars.length ? (histChartW - histBarGap * (histBars.length - 1)) / histBars.length : 0;
+  const histY = (p) => histChartH - (p / histMax) * (histChartH - 20);
+
+  // ---------------- Season Trend tab (in-season-updates plan, Phase E) ----------------
+  // Ported from the CFB dashboard's own trend tab (seriesFor/buildGeom/scaleY
+  // pattern), adapted to this model's history columns - Power Score is the
+  // one series charted (CFB's offense/defense sub-charts don't have an NFL
+  // equivalent; wins_to_date/games_played surface in the table below instead).
+  const trendSeriesFor = (teamName) => (historyRows || [])
+    .filter((r) => r.team === teamName)
+    .sort((a, b) => (Number(a.week) || 0) - (Number(b.week) || 0) || new Date(a.date_pulled) - new Date(b.date_pulled))
+    .map((r) => ({
+      week: Number(r.week) || 0, power_score: Number(r.power_score), date: r.date_pulled,
+      games_played: Number(r.games_played) || 0, wins_to_date: Number(r.wins_to_date) || 0,
+      baseline_blended: Number(r.baseline_blended), regression_blended: Number(r.regression_blended),
+      trajectory: Number(r.trajectory),
+    }));
+
+  const trendSeries = trendSeriesFor(activeTeam);
+  const trendRatings = trendSeries.map((p) => p.power_score).filter((v) => !Number.isNaN(v));
+  const trendMin = trendRatings.length ? Math.min(...trendRatings, 0) : -0.1;
+  const trendMax = trendRatings.length ? Math.max(...trendRatings, 0) : 0.1;
+  const trendRange = (trendMax - trendMin) || 0.001;
+  const trendChartW = 620, trendChartH = 300, trendPadL = 54, trendPadR = 16, trendPadT = 16, trendPadB = 34;
+  const trendInnerH = trendChartH - trendPadT - trendPadB;
+  const trendScaleY = (v) => trendPadT + ((trendMax - v) / trendRange) * trendInnerH;
+  const trendTickCount = 4;
+  const trendYTicks = [];
+  for (let i = 0; i < trendTickCount; i++) {
+    const v = trendMax - (i * trendRange) / (trendTickCount - 1);
+    const y = trendScaleY(v);
+    trendYTicks.push({ y, label: num(v, 2), style: `position:absolute;left:0;top:${y}px;transform:translateY(-50%);width:${trendPadL - 10}px;text-align:right;font:11px var(--font-sans);color:var(--ink-muted)` });
+  }
+  const trendGeom = (() => {
+    const n = trendSeries.length;
+    if (!n) return { path: '', dots: [] };
+    const stepX = n > 1 ? (trendChartW - trendPadL - trendPadR) / (n - 1) : 0;
+    const dots = trendSeries.map((p, i) => {
+      const cx = trendPadL + i * stepX, cy = trendScaleY(p.power_score);
+      return {
+        cx, cy, label: `Wk ${p.week}`, value: num(p.power_score, 2),
+        xLabelStyle: `position:absolute;left:${(cx / trendChartW) * 100}%;top:${trendChartH - 8}px;transform:translate(-50%,0);font:11px var(--font-sans);color:var(--ink-muted);white-space:nowrap`,
+      };
+    });
+    const path = dots.map((d, i) => `${i === 0 ? 'M' : 'L'}${d.cx},${d.cy}`).join(' ');
+    return { path, dots };
+  })();
+  const trendZeroY = (trendMin < 0 && trendMax > 0) ? trendScaleY(0) : null;
+  const trendDelta = trendSeries.length >= 2
+    ? trendSeries[trendSeries.length - 1].power_score - trendSeries[trendSeries.length - 2].power_score : null;
+  const trendDeltaLabel = trendDelta !== null ? `${trendDelta >= 0 ? '▲' : '▼'} ${num(Math.abs(trendDelta), 2)} vs. last snapshot` : '';
+  const trendDeltaColor = trendDelta !== null ? (trendDelta >= 0 ? 'var(--value-positive)' : 'var(--value-risk)') : 'var(--ink-muted)';
+  const trendTeamOptions = teams.map((t) => ({ value: t, label: t }));
+  const trendTableColumns = [
+    { key: 'week', label: 'Week' },
+    { key: 'power_score', label: 'Power Score', render: (r) => num(r.power_score, 2) },
+    { key: 'baseline_blended', label: 'Baseline', render: (r) => num(r.baseline_blended, 2) },
+    { key: 'trajectory', label: 'Trajectory', render: (r) => num(r.trajectory, 2) },
+    { key: 'regression_blended', label: 'Regression', render: (r) => num(r.regression_blended, 2) },
+    { key: 'wins_to_date', label: 'Wins', render: (r) => `${r.wins_to_date}-${r.games_played - r.wins_to_date}` },
+  ];
 
   // ---------------- Playoff Picture tab ----------------
   const PLAYOFF_SORT_FIELDS = [
@@ -538,7 +631,7 @@ function App() {
       )}
 
       <div style={st('padding:10px 40px 0')}>
-        <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>Power ratings, schedule projections, win-total uncertainty, and playoff odds — a preseason snapshot, not a weekly-updated live model. Pin any team to keep it visible across every tab.</p>
+        <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>Power ratings, schedule projections, win-total uncertainty, and playoff odds — starts from a permanently preserved preseason call, then updates weekly as real results come in. Pin any team to keep it visible across every tab.</p>
       </div>
 
       <div style={st('margin:24px 40px 0;background:var(--surface-dark);border-radius:var(--radius-md);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px')}>
@@ -614,8 +707,8 @@ function App() {
               <div key={g.key} style={st(g.cardStyle)}>
                 <button onClick={g.onToggle} style={st('width:100%;text-align:left;border:none;background:var(--surface-card);cursor:pointer;padding:18px 22px;display:flex;flex-direction:column;gap:14px')}>
                   <div style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px')}>
-                    <span style={st('font:700 18px var(--font-sans);color:var(--ink)')}>{g.away_team} <span style={st('color:var(--ink-muted);font-weight:400')}>at</span> {g.home_team}{g.neutral_site && <span style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-left:8px')}>Neutral site</span>}</span>
-                    <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{g.spreadLabel}</span>
+                    <span style={st('font:700 18px var(--font-sans);color:var(--ink)')}>{g.away_team} <span style={st('color:var(--ink-muted);font-weight:400')}>at</span> {g.home_team}{g.neutral_site && <span style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-left:8px')}>Neutral site</span>}{g.isFinal && <span style={st('font:700 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--paper);background:var(--value-positive);border-radius:4px;padding:2px 8px;margin-left:8px')}>Final</span>}</span>
+                    <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{g.isFinal ? g.finalScoreLabel : g.spreadLabel}</span>
                   </div>
                   <div style={st('display:flex;align-items:center;gap:10px')}>
                     <span style={st('width:90px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted);text-align:right')}>{g.away_team}</span>
@@ -627,10 +720,10 @@ function App() {
                     <span style={st('width:90px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{g.home_team}</span>
                   </div>
                   <div style={st('display:flex;justify-content:space-between;font:600 12px var(--font-sans);color:var(--ink-faint)')}>
-                    <span>{pct(1 - (g.win_prob || 0.5))} win</span>
-                    <span>{pct(g.win_prob || 0.5)} win</span>
+                    <span>{g.isFinal ? (g.winner === g.away_team ? 'Won' : g.winner ? 'Lost' : 'Tied') : `${pct(1 - (g.win_prob || 0.5))} win`}</span>
+                    <span>{g.isFinal ? (g.winner === g.home_team ? 'Won' : g.winner ? 'Lost' : 'Tied') : `${pct(g.win_prob || 0.5)} win`}</span>
                   </div>
-                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.hfaNote} · {g.away_team} power {num(g.away_power, 2)}, {g.home_team} power {num(g.home_power, 2)} · {g.expanded ? 'Hide' : 'Show'} spread breakdown</div>
+                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.isFinal ? `${g.finalWinnerNote} · Model predicted ${g.spreadLabel}` : g.hfaNote} · {g.away_team} power {num(g.away_power, 2)}, {g.home_team} power {num(g.home_power, 2)} · {g.expanded ? 'Hide' : 'Show'} spread breakdown</div>
                 </button>
                 {g.expanded && (
                   <div style={st('padding:6px 22px 20px;background:var(--surface-page);display:flex;flex-direction:column;gap:12px')}>
@@ -737,6 +830,26 @@ function App() {
             </div>
           )}
 
+          {histBars.length > 0 && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Win-total distribution — all 20,000 simulated seasons</div>
+              <svg viewBox={`0 0 ${histChartW} ${histChartH + 24}`} width="100%" height={histChartH + 24} style={{ display: 'block' }}>
+                {histBars.map((b, i) => {
+                  const x = i * (histBarW + histBarGap);
+                  const y = histY(b.prob);
+                  const inRange = activeMC && b.wins >= Math.round(activeMC.sim_ci90_low) && b.wins <= Math.round(activeMC.sim_ci90_high);
+                  return (
+                    <React.Fragment key={b.wins}>
+                      <rect x={x} y={y} width={histBarW} height={histChartH - y} fill={inRange ? 'var(--brass)' : 'var(--hairline)'} rx="2" />
+                      <text x={x + histBarW / 2} y={histChartH + 16} style={{ font: '600 10px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{b.wins}</text>
+                    </React.Fragment>
+                  );
+                })}
+              </svg>
+              <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Each bar is a win total (0-17); height is how often that exact total came up across 20,000 simulated seasons. Gold bars mark the 90% confidence range shown in the Cone of Certainty above — the grey bars are real possibilities too, just less likely ones.</div>
+            </div>
+          )}
+
           <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
             <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
             {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => (
@@ -803,6 +916,63 @@ function App() {
           </div>
 
           </div>
+        </div>
+      )}
+
+      {tab === 'trend' && (
+        <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:22px')}>
+          {explainerButtons}
+          {glossaryPanel}
+          {validationPanel}
+
+          <div style={st('display:flex;align-items:center;gap:16px;flex-wrap:wrap')}>
+            <span style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team</span>
+            <select
+              value={activeTeam || ''}
+              onChange={(e) => setState({ selectedTeam: e.target.value })}
+              style={st('font:600 15px var(--font-sans);padding:10px 16px;border-radius:var(--radius-sm);border:1px solid var(--hairline);background:var(--surface-card);color:var(--ink)')}
+            >
+              {trendTeamOptions.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+            </select>
+            {trendDelta !== null && <span style={st(`font:700 15px var(--font-sans);color:${trendDeltaColor}`)}>{trendDeltaLabel}</span>}
+          </div>
+
+          {trendSeries.length <= 1 && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);font:400 16px/1.5 var(--font-sans);color:var(--ink-muted)')}>
+              Only the preseason snapshot exists so far — this tab fills in with one point per week once the pipeline is re-run during the season. The preseason call itself is preserved permanently and never overwritten, so it'll always be the first point on this chart, however the season goes.
+            </div>
+          )}
+
+          {trendSeries.length > 1 && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
+              <div style={st('display:grid;grid-template-columns:55% 45%;gap:28px;align-items:stretch')}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px')}>Power Score over the season</div>
+                  <div style={{ position: 'relative', width: '100%', overflow: 'visible' }}>
+                    <svg viewBox={`0 0 ${trendChartW} ${trendChartH}`} width="100%" height={trendChartH} preserveAspectRatio="none" style={{ display: 'block' }}>
+                      {trendYTicks.map((tick, i) => <line key={i} x1={trendPadL - 8} y1={tick.y} x2={trendChartW} y2={tick.y} stroke="var(--hairline)" />)}
+                      {trendZeroY !== null && <line x1={trendPadL - 8} y1={trendZeroY} x2={trendChartW} y2={trendZeroY} stroke="var(--ink-faint)" strokeDasharray="4 4" />}
+                      <path d={trendGeom.path} fill="none" stroke={pinnedAccentColor} strokeWidth="3" />
+                      {trendGeom.dots.map((d, i) => (
+                        <circle key={i} cx={d.cx} cy={d.cy} r="4.5" fill={pinnedAccentColor}>
+                          <title>{d.label} — {activeTeam}: {d.value}</title>
+                        </circle>
+                      ))}
+                    </svg>
+                    {trendYTicks.map((tick, i) => <div key={i} style={st(tick.style)}>{tick.label}</div>)}
+                    {trendGeom.dots.map((d, i) => <div key={i} style={st(d.xLabelStyle)}>{d.label}</div>)}
+                  </div>
+                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:6px;width:100%;text-align:center')}>Week (0 = preseason call)</div>
+                </div>
+                <div style={{ minWidth: 0, overflowX: 'auto' }}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px')}>Week-over-week</div>
+                  <div style={{ minWidth: 420 }}>
+                    <DataTable columns={trendTableColumns} rows={trendSeries} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
