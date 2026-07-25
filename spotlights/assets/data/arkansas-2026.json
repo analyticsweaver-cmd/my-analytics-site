@@ -1,0 +1,1405 @@
+{
+  "team": "Arkansas",
+  "season": 2026,
+  "prev_season": 2025,
+  "generated_at": "2026-07-25T02:10:31.270875+00:00",
+  "headline": {
+    "talent_z": 0.7761786736241296,
+    "returning_production_z": -0.5706572021431789,
+    "portal_net_z": -0.1480810567346597,
+    "reliance_z": 1.4773148964392464,
+    "fragility_type": "run-reliant",
+    "POWER_RATING_SHRUNK": 0.0554127704010001,
+    "conference": "SEC"
+  },
+  "position_groups": [
+    {
+      "group": "QB",
+      "returning": [
+        {
+          "name": "KJ Jackson",
+          "position": "QB",
+          "class_year": 1,
+          "usage_pct": 0.183,
+          "ppa_all": 0.49
+        },
+        {
+          "name": "Brayson McHenry",
+          "position": "QB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Taylen Green",
+          "position": "QB",
+          "class_year": 4,
+          "usage_pct": 0.566,
+          "ppa_all": 0.41,
+          "status": "draft",
+          "detail": "NFL Draft Rd 6, Pick 1 (Cleveland)"
+        },
+        {
+          "name": "Trever Jackson",
+          "position": "QB",
+          "class_year": 1,
+          "usage_pct": 0.013,
+          "ppa_all": -0.22,
+          "status": "portal",
+          "detail": "Transferred to Coastal Carolina"
+        },
+        {
+          "name": "Grayson Wilson",
+          "position": "QB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Boston College"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Braeden Fuller",
+          "position": "QB",
+          "type": "transfer",
+          "origin_team": "Angelo State",
+          "stars": 3,
+          "rating": 0.83,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "AJ Hill",
+          "position": "QB",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": 0.248
+        }
+      ]
+    },
+    {
+      "group": "RB",
+      "returning": [
+        {
+          "name": "Braylen Russell",
+          "position": "RB",
+          "class_year": 2,
+          "usage_pct": 0.1,
+          "ppa_all": 0.15
+        },
+        {
+          "name": "Cam Settles",
+          "position": "RB",
+          "class_year": 1,
+          "usage_pct": 0.041,
+          "ppa_all": 0.01
+        },
+        {
+          "name": "Kyle Thompson",
+          "position": "FB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Markeylin Batton",
+          "position": "RB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Rodney Hill",
+          "position": "RB",
+          "class_year": 3,
+          "usage_pct": 0.048,
+          "ppa_all": -0.01,
+          "status": "portal",
+          "detail": "Transferred to Coastal Carolina"
+        },
+        {
+          "name": "AJ Green",
+          "position": "RB",
+          "class_year": 4,
+          "usage_pct": 0.04,
+          "ppa_all": -0.49,
+          "status": "portal",
+          "detail": "Transferred to Western Michigan"
+        },
+        {
+          "name": "Mike Washington Jr.",
+          "position": "RB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": 0.17,
+          "status": "draft",
+          "detail": "NFL Draft Rd 4, Pick 22 (Las Vegas)"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Terry Hodges",
+          "position": "RB",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 4,
+          "rating": 0.9,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Sutton Smith",
+          "position": "RB",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": 0.152
+        },
+        {
+          "name": "Jasper Parker",
+          "position": "RB",
+          "type": "transfer",
+          "origin_team": "Michigan",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": 0.068
+        }
+      ]
+    },
+    {
+      "group": "WR/TE",
+      "returning": [
+        {
+          "name": "CJ Brown",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": 0.065,
+          "ppa_all": 0.2
+        },
+        {
+          "name": "Jalen Brown",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": 0.057,
+          "ppa_all": 0.74
+        },
+        {
+          "name": "Jaden Platt",
+          "position": "TE",
+          "class_year": 2,
+          "usage_pct": 0.043,
+          "ppa_all": 0.5
+        },
+        {
+          "name": "Courtney Crutchfield",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": 0.015,
+          "ppa_all": 0.51
+        },
+        {
+          "name": "Monte Harrison",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": 0.013,
+          "ppa_all": 0.67
+        },
+        {
+          "name": "Maddox Lassiter",
+          "position": "TE",
+          "class_year": 2,
+          "usage_pct": 0.012,
+          "ppa_all": -0.24
+        },
+        {
+          "name": "Rykar Acebo",
+          "position": "WR",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Walker Catsavis",
+          "position": "WR",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Ismael Cisse",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Antonio Jordan",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Gavin Garretson",
+          "position": "TE",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Jeremiah Beck Jr.",
+          "position": "TE",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Hutson Hendrix",
+          "position": "TE",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Grant Karnes",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "O'Mega Blake",
+          "position": "WR",
+          "class_year": 4,
+          "usage_pct": 0.097,
+          "ppa_all": 0.85,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Raylen Sharpe",
+          "position": "WR",
+          "class_year": 4,
+          "usage_pct": 0.085,
+          "ppa_all": 0.61,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Rohan Jones",
+          "position": "TE",
+          "class_year": 4,
+          "usage_pct": 0.036,
+          "ppa_all": 1.58,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Andy Jean",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": 0.016,
+          "ppa_all": 1.77,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Andreas Paaske",
+          "position": "TE",
+          "class_year": 4,
+          "usage_pct": 0.015,
+          "ppa_all": 1.16,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Krosse Johnson",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": 0.013,
+          "ppa_all": 0.85,
+          "status": "portal",
+          "detail": "Transferred to Coastal Carolina"
+        },
+        {
+          "name": "Kam Shanks",
+          "position": "WR",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": 0.32,
+          "status": "portal",
+          "detail": "Transferred to Wake Forest"
+        },
+        {
+          "name": "Ja'Kayden Ferguson",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Kentucky"
+        },
+        {
+          "name": "Jace Petty",
+          "position": "WR",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Zach Taylor",
+          "position": "WR",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to App State"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Dequane Prevo",
+          "position": "WR",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 4,
+          "rating": 0.9,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Kade Bush",
+          "position": "TE",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Blair Irvin III",
+          "position": "WR",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Donovan Faupel",
+          "position": "WR",
+          "type": "transfer",
+          "origin_team": "New Mexico State",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": 0.118
+        },
+        {
+          "name": "Chris Marshall",
+          "position": "WR",
+          "type": "transfer",
+          "origin_team": "Boise State",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": 0.079
+        },
+        {
+          "name": "Jamari Hawkins",
+          "position": "WR",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": 0.054
+        },
+        {
+          "name": "Jelani Watkins",
+          "position": "WR",
+          "type": "transfer",
+          "origin_team": "LSU",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": 0.038
+        },
+        {
+          "name": "Ty Lockwood",
+          "position": "TE",
+          "type": "transfer",
+          "origin_team": "Boston College",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": 0.019
+        },
+        {
+          "name": "Matt Adcock",
+          "position": "TE",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": 0.017
+        }
+      ]
+    },
+    {
+      "group": "OL",
+      "returning": [
+        {
+          "name": "Tim Dawn",
+          "position": "OL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Caden Kitler",
+          "position": "OL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "JacQawn McRoy",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Brooks Edmonson",
+          "position": "OL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Payton Parks-Smith",
+          "position": "OL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Kavion Broussard",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Kobe Branham",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Aaron Smith",
+          "position": "OL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Kash Courtney",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Jonas Nantze",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Alex Johnson",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Lionel Prudhomme Jr",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Marcus Dumervil",
+          "position": "OL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "E'Marion Harris",
+          "position": "OL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Oklahoma"
+        },
+        {
+          "name": "Corey Robinson II",
+          "position": "OL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Fernando Carmona",
+          "position": "OL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "draft",
+          "detail": "NFL Draft Rd 5, Pick 2 (Tennessee)"
+        },
+        {
+          "name": "Keyshawn Blackstock",
+          "position": "OL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "LJ Prudhomme",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Mississippi State"
+        },
+        {
+          "name": "Blake Cherry",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Wisconsin"
+        },
+        {
+          "name": "Shaq McRoy",
+          "position": "OL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to North Carolina"
+        },
+        {
+          "name": "Bubba Craig",
+          "position": "OL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Old Dominion"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Bryant Williams",
+          "position": "OT",
+          "type": "transfer",
+          "origin_team": "Louisiana",
+          "stars": 4,
+          "rating": 0.93,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Terence Roberson Jr.",
+          "position": "OT",
+          "type": "transfer",
+          "origin_team": "Ouachita Baptist",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Ben Mubenga",
+          "position": "OT",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Tucker Young",
+          "position": "OT",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Malachi Breland",
+          "position": "IOL",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Davion Weatherspoon",
+          "position": "IOL",
+          "type": "transfer",
+          "origin_team": "Ohio",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Hugh Smith",
+          "position": "IOL",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Josiah Clemons",
+          "position": "IOL",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Adam Hawkes",
+          "position": "OT",
+          "type": "transfer",
+          "origin_team": "Oregon State",
+          "stars": 3,
+          "rating": 0.83,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Lucas Possenti",
+          "position": "IOL",
+          "type": "transfer",
+          "origin_team": "Temple",
+          "stars": 3,
+          "rating": 0.8,
+          "usage_pct_prior": null
+        }
+      ]
+    },
+    {
+      "group": "DL",
+      "returning": [
+        {
+          "name": "Quincy Rhodes Jr.",
+          "position": "DL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Reginald Vaughn",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Donovan Whitten",
+          "position": "DL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Keiundre Johnson",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Caleb Bell",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Trent Sellers",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Justus Boone",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Wisconsin"
+        },
+        {
+          "name": "Phillip Lee",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Cameron Ball",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "David Oke",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Ian Geffrard",
+          "position": "DL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Texas"
+        },
+        {
+          "name": "Kaleb James",
+          "position": "DL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Texas State"
+        },
+        {
+          "name": "Charlie Collins",
+          "position": "DL",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Kavion Henderson",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Troy"
+        },
+        {
+          "name": "Ken Talley",
+          "position": "DL",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to UCF"
+        },
+        {
+          "name": "Kevin Oatis",
+          "position": "DL",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Kansas"
+        },
+        {
+          "name": "Danny Saili",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Frank Mulipola",
+          "position": "DL",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Danny Beale",
+          "position": "DL",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 4,
+          "rating": 0.93,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Anthony Kennedy Jr.",
+          "position": "DL",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.89,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Hunter Osborne",
+          "position": "DL",
+          "type": "transfer",
+          "origin_team": "Virginia",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Xadavien Sims",
+          "position": "DL",
+          "type": "transfer",
+          "origin_team": "Oregon",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Carlon Jones",
+          "position": "DL",
+          "type": "transfer",
+          "origin_team": "USC",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Trajen Odom",
+          "position": "DL",
+          "type": "transfer",
+          "origin_team": "Ohio State",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Jamonta Waller",
+          "position": "EDGE",
+          "type": "transfer",
+          "origin_team": "Auburn",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Carnell Jackson",
+          "position": "DL",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        }
+      ]
+    },
+    {
+      "group": "LB",
+      "returning": [
+        {
+          "name": "Andrew Harris",
+          "position": "LB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Bradley Shaw",
+          "position": "LB",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Mason Schueck",
+          "position": "LB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Wyatt Simmons",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Cade Fields",
+          "position": "LB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Preston Davis",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Joseph Whitt",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Stephen Dix Jr.",
+          "position": "LB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Xavian Sorey Jr.",
+          "position": "LB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Trent Whalen",
+          "position": "LB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Tavion Wallace",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Kentucky"
+        },
+        {
+          "name": "Justin Logan",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Tennessee State"
+        },
+        {
+          "name": "JJ Shelton",
+          "position": "LB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Baylor"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Khmori House",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "North Carolina",
+          "stars": 4,
+          "rating": 0.9,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Phoenix Jackson",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "Baylor",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Ben Bogle",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "West Virginia",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Steven Soles Jr.",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "Kentucky",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Ja'Quavion Smith",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "Howard",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Jeremy Evans",
+          "position": "LB",
+          "type": "transfer",
+          "origin_team": "Baylor",
+          "stars": 3,
+          "rating": 0.84,
+          "usage_pct_prior": null
+        }
+      ]
+    },
+    {
+      "group": "Secondary",
+      "returning": [
+        {
+          "name": "Landon Phipps",
+          "position": "DB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        },
+        {
+          "name": "Braylon Watson",
+          "position": "DB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null
+        }
+      ],
+      "departed": [
+        {
+          "name": "Jordan Young",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Kani Walker",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Julian Neal",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "draft",
+          "detail": "NFL Draft Rd 3, Pick 35 (Seattle)"
+        },
+        {
+          "name": "Jaheim Singletary",
+          "position": "DB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Iowa State"
+        },
+        {
+          "name": "Shakur Smalls",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Quentavius Scandrett",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Caleb Wooden",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Miguel Mitchell",
+          "position": "DB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Jaden Allen",
+          "position": "DB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to North Texas"
+        },
+        {
+          "name": "Larry Worth III",
+          "position": "DB",
+          "class_year": 4,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "graduated",
+          "detail": "Presumed departed (senior eligibility, not in portal/draft data - unconfirmed)"
+        },
+        {
+          "name": "Selman Bridges",
+          "position": "DB",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Nevada"
+        },
+        {
+          "name": "Ahkhari Johnson",
+          "position": "DB",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Louisiana Tech"
+        },
+        {
+          "name": "Jabrae Shaw",
+          "position": "DB",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Anton Pierce",
+          "position": "DB",
+          "class_year": 2,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Entered portal"
+        },
+        {
+          "name": "Nigel Pringle",
+          "position": "DB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to Arizona State"
+        },
+        {
+          "name": "Taijh Overton",
+          "position": "DB",
+          "class_year": 1,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to UL Monroe"
+        },
+        {
+          "name": "Keshawn Davila",
+          "position": "DB",
+          "class_year": 3,
+          "usage_pct": null,
+          "ppa_all": null,
+          "status": "portal",
+          "detail": "Transferred to North Texas"
+        }
+      ],
+      "incoming": [
+        {
+          "name": "Jahiem Johnson",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Tulane",
+          "stars": 4,
+          "rating": 0.9,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Tay Lockett",
+          "position": "S",
+          "type": "recruit",
+          "origin_team": null,
+          "stars": 3,
+          "rating": 0.88,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Braydon Lee",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Maryland",
+          "stars": 3,
+          "rating": 0.87,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Carter Stoutmire",
+          "position": "S",
+          "type": "transfer",
+          "origin_team": "Colorado",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Ian Williams",
+          "position": "S",
+          "type": "transfer",
+          "origin_team": "Memphis",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Shelton Lewis",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Clemson",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "La'khi Roland",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Maryland",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Christian Harrison",
+          "position": "S",
+          "type": "transfer",
+          "origin_team": "Cincinnati",
+          "stars": 3,
+          "rating": 0.86,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "John Howse IV",
+          "position": "S",
+          "type": "transfer",
+          "origin_team": "Middle Tennessee",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Tyler Scott",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Georgia State",
+          "stars": 3,
+          "rating": 0.85,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "Kyeaure Magloire",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "West Georgia",
+          "stars": 3,
+          "rating": 0.84,
+          "usage_pct_prior": null
+        },
+        {
+          "name": "LaMarcus Hicks II",
+          "position": "CB",
+          "type": "transfer",
+          "origin_team": "Iowa State",
+          "stars": 3,
+          "rating": 0.83,
+          "usage_pct_prior": null
+        }
+      ]
+    }
+  ],
+  "summary_counts": {
+    "returning": 47,
+    "departed": 60,
+    "incoming_transfer": 39,
+    "incoming_recruit": 11
+  }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arkansas 2026: A Roster Rebuilt — Weaver Analytics</title>
+<link rel="stylesheet" href="styles.css">
+<style>:root{ --steel:#9D2235; }</style>
+</head>
+<body>
+
+<header class="pr-topbar">
+  <div class="brand">
+    <img src="assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="pr-nav">
+    <a href="../index.html">Home</a>
+    <a href="../cfb-model/index.html">CFB Model</a>
+    <a href="../nfl-model/index.html">NFL Model</a>
+    <a href="../pre-read/index.html">Pre-Read</a>
+    <a href="../dashboards/index.html">Dashboards</a>
+    <a href="../blog/index.html">Blog</a>
+  </nav>
+</header>
+
+<section class="pr-cover">
+  <div class="eyebrow">SEC · 2026 Offseason Spotlight</div>
+  <h1>Arkansas: A Roster Rebuilt</h1>
+  <p>Almost the entire two-deep turned over this offseason. This page exists to make that turnover legible, player by player, instead of leaving it as a single z-score in a table.</p>
+</section>
+
+<section class="pr-section" id="headline" style="border-top:none;">
+  <div class="section-eyebrow">The Model's Read, In Five Numbers</div>
+  <h2>How Much of Last Year Is Actually Left</h2>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num" id="stat-turnover-count">—</div>
+      <div class="label">Roster Spots Turned Over</div>
+      <div class="note" id="stat-turnover-note">Loading…</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-returning-prod">—</div>
+      <div class="label">Returning Production (z)</div>
+      <div class="note">Share of last year's on-field production (PPA-weighted) still on the roster, vs. the FBS field. Well below average.</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-portal-net">—</div>
+      <div class="label">Portal Net (z)</div>
+      <div class="note">Incoming transfer talent minus outgoing, weighted by each player's actual prior usage where matched. A slightly negative net swap.</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-talent">—</div>
+      <div class="label">Incoming Talent (z)</div>
+      <div class="note">Blended recruiting/portal talent composite for the players actually walking in the door. Strong on paper.</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-reliance">—</div>
+      <div class="label">Reliance (z)</div>
+      <div class="note" id="stat-reliance-note">Loading…</div>
+    </div>
+  </div>
+</section>
+
+<section class="pr-section" id="how-to-read">
+  <div class="card">
+    <h4>How to read the grid below</h4>
+    <p>Every position group shows three columns pulled straight from CFBD's roster, transfer portal, snap-usage, draft, and recruiting endpoints: who <strong>departed</strong> the 2025 roster, who's <strong>returning</strong>, and who's <strong>incoming</strong> for 2026. The bar under each name is that player's snap-share (or, for incoming high school signees with no college snaps yet, their recruiting rating instead — labeled as such) — so a departed star reads differently than a departed backup.</p>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot returning"></span>Returning</div>
+      <div class="legend-item"><span class="legend-dot departed"></span>Departed (portal / draft / graduated)</div>
+      <div class="legend-item"><span class="legend-dot incoming"></span>Incoming (transfer or signee)</div>
+    </div>
+  </div>
+  <div class="caveat">
+    <strong>Where this is a guess, not a fact:</strong> CFBD doesn't publish next season's roster until closer to fall camp, so "returning" here is reconstructed — last year's roster, minus anyone found in the transfer portal or NFL draft data, minus year-4+ players not accounted for elsewhere (labeled "presumed departed," since a redshirt senior using a 5th year would incorrectly land in that bucket). The transfer-portal match to a player's prior-team snap share is a name match, not a shared ID — a small number of transfers (suffixes, nicknames) fall back to recruiting rating only. Treat single-player details as directionally right, not certified.
+  </div>
+</section>
+
+<section class="pr-section" id="roster-grid">
+  <div class="section-eyebrow">Position-by-Position</div>
+  <h2>The Full Turnover, Grouped by Position</h2>
+  <p class="dek">Departed, returning, and incoming, sorted within each column by snap share (or recruiting rating, for players with no college track record yet).</p>
+  <div class="roster-groups" id="roster-groups">
+    <div class="card"><p>Loading roster data…</p></div>
+  </div>
+</section>
+
+<footer class="pr-footer">
+  <span id="generated-note">Loading…</span><br>
+  Weaver Analytics — a personal project.
+</footer>
+
+<script src="arkansas-2026.js"></script>
+</body>
+</html>
