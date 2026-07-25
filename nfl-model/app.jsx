@@ -48,7 +48,7 @@ const GLOSSARY_TERMS = [
   { term: 'Upside / Downside', def: "The Power Score cone's judgment-based bounds — the model's own estimate of how much better (Upside) or worse (Downside) a team could plausibly play than its Power Score, driven by specific flagged players or situations." },
   { term: 'Cone of Certainty', def: "A team's projected win-total range, from a 20,000-season Monte Carlo simulation — shows both the simple analytical estimate and the (correctly wider) simulated range that accounts for how uncertain the underlying Power Score really is." },
   { term: 'Key-Person Dependency', def: "What a team's Power Score becomes if a specific flagged player (most reliably, the starting QB) goes down — a real, data-derived number, not just a risk label." },
-  { term: 'Spread / Win Probability', def: "The model's predicted point margin and win chance for a given matchup, based on both teams' Power Scores and home field. This model doesn't ingest betting lines, so there's no market comparison — just the model's own number." },
+  { term: 'Spread / Win Probability', def: "The model's predicted point margin and win chance for a given matchup. Power Score converts to spread 1-for-1: subtract the two teams' Power Scores, add a fixed 2-point home-field edge, and that's the predicted margin — no hidden scaling factor. This model doesn't ingest betting lines, so there's no market comparison — just the model's own number." },
   { term: 'HFA (Home Field Adjustment)', def: "Points added to the home team's spread for playing at home; zeroed out for international/neutral-site games." },
   { term: 'Playoff / Super Bowl probability', def: 'From the same season simulation as the Cone of Certainty, carried through a full playoff bracket (with correct re-seeding) 5,000 times per team.' },
 ];
@@ -87,6 +87,28 @@ function signed(v, d = 1) {
   const n = Number(v);
   if (Number.isNaN(n)) return '—';
   return (n > 0 ? '+' : '') + n.toFixed(d);
+}
+
+// Largest-remainder rounding: rounds `parts` to `decimals` places so they sum
+// EXACTLY to `total` rounded to the same precision, instead of each part and
+// the total being rounded independently (which can silently drift by 0.1 —
+// classic "sum of roundings != rounding of sum"). Each part is still rounded
+// as close to its true value as the constraint allows.
+function roundPartsToTotal(parts, total, decimals = 1) {
+  const scale = 10 ** decimals;
+  const targetTenths = Math.round(total * scale);
+  const floors = parts.map((v) => Math.floor(v * scale));
+  let remainder = targetTenths - floors.reduce((a, b) => a + b, 0);
+  const fracs = parts.map((v, i) => v * scale - floors[i]);
+  const result = [...floors];
+  if (remainder > 0) {
+    const order = fracs.map((_, i) => i).sort((a, b) => fracs[b] - fracs[a]);
+    for (let i = 0; i < remainder; i++) result[order[i % order.length]] += 1;
+  } else if (remainder < 0) {
+    const order = fracs.map((_, i) => i).sort((a, b) => fracs[a] - fracs[b]);
+    for (let i = 0; i < -remainder; i++) result[order[i % order.length]] -= 1;
+  }
+  return result.map((v) => v / scale);
 }
 
 function pct(v, d = 1) {
@@ -371,12 +393,18 @@ function App() {
     const awayRow = power.find((r) => r.team === g.away_team);
     let contributionBars = [];
     if (homeRow && awayRow) {
-      contributionBars = [
+      const rawBars = [
         { label: 'Baseline (prior record)', value: 0.45 * ((Number(homeRow.baseline) || 0) - (Number(awayRow.baseline) || 0)) },
         { label: 'Trajectory (roster/coaching/stability)', value: 0.35 * ((Number(homeRow.trajectory) || 0) - (Number(awayRow.trajectory) || 0)) },
         { label: 'Regression (luck adjustment)', value: 0.20 * ((Number(homeRow.regression) || 0) - (Number(awayRow.regression) || 0)) },
         { label: 'Home field', value: Number(g.hfa_adj) || 0 },
       ];
+      // Bars are individually rounded to 1 decimal for display, but constrained
+      // (via largest-remainder rounding) to sum exactly to the displayed spread —
+      // see roundPartsToTotal() above. Fixes a display bug where 4 independently
+      // rounded bars could drift 0.1 from the independently rounded spread.
+      const displayVals = roundPartsToTotal(rawBars.map((b) => b.value), Number(g.spread) || 0, 1);
+      contributionBars = rawBars.map((b, i) => ({ ...b, display: displayVals[i] }));
     }
     const contributionScale = Math.max(1, ...contributionBars.map((b) => Math.abs(b.value)));
 
@@ -594,10 +622,10 @@ function App() {
                       <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
                         <span style={st('width:220px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
                         <SignedBar value={b.value} scaleMax={g.contributionScale} width={140} />
-                        <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{signed(b.value, 1)}</span>
+                        <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{signed(b.display, 1)}</span>
                       </div>
                     ))}
-                    <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Positive favors {g.home_team} (home); negative favors {g.away_team} (away). These four add up to the spread above.</div>
+                    <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Positive favors {g.home_team} (home); negative favors {g.away_team} (away). Power Score converts 1-for-1 into points, so these four always add up exactly to the spread above.</div>
                   </div>
                 )}
               </div>
@@ -649,6 +677,7 @@ function App() {
           {activeRow && (
             <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
               <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Score breakdown</div>
+              <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Shown at full scale — Power Score above applies 45%/35%/20% weights to these three, so they won't sum to it directly.</div>
               {componentBars.map((b) => (
                 <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
                   <span style={st('width:110px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
