@@ -238,6 +238,7 @@ function App() {
         playoff: data.playoff || [],
         keyPerson: data.key_person || [],
         matchupByWeek: data.matchup_by_week || {},
+        teamSchedule: data.team_schedule || {},
         availableWeeks: weeks,
         matchupWeek: weeks.length ? weeks[0] : null,
         weekInput: weeks.length ? String(weeks[0]) : '',
@@ -250,7 +251,7 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, playoff, keyPerson, matchupByWeek, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
+  const { power, winProjections, monteCarlo, playoff, keyPerson, matchupByWeek, teamSchedule, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
 
   const pinnedAccentColor = pinnedTeam ? teamColor(pinnedTeam) : 'var(--brass)';
   const togglePin = (team) => setState((prev) => {
@@ -429,6 +430,22 @@ function App() {
   const activeKeyPerson = keyPerson.filter((r) => r.team === activeTeam);
   const snapshotBg = teamColor(activeTeam);
   const snapshotTextColor = readableTextColor(snapshotBg);
+
+  // Upcoming schedule: today's real date vs. each game's real calendar date
+  // (pulled from nflverse's games.csv by refresh_nfl_data.py), so this list
+  // auto-advances week to week during the season with no manual updates.
+  // Falls back to showing the full season if dates are missing (offseason,
+  // or a handful of late-season games not yet date-locked by the league).
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const fullSchedule = teamSchedule[activeTeam] || [];
+  const upcomingSchedule = fullSchedule.filter((g) => g.bye || !g.date || g.date >= todayISO);
+  const scheduleToShow = upcomingSchedule.length ? upcomingSchedule : fullSchedule;
+
+  // Strength of schedule: win_projections' sos_avg_opp_power ranked against
+  // the other 31 teams (rank 1 = hardest schedule) so the raw Power Score
+  // scale doesn't have to be interpreted on its own.
+  const sosRanked = [...winProjections].sort((a, b) => (b.sos_avg_opp_power || 0) - (a.sos_avg_opp_power || 0));
+  const sosRank = activeProj ? sosRanked.findIndex((r) => r.team === activeTeam) + 1 : null;
 
   const componentBars = activeRow ? [
     { label: 'Baseline', value: Number(activeRow.baseline) || 0 },
@@ -651,6 +668,9 @@ function App() {
             <p style={st('font:400 16px var(--font-sans);color:var(--ink-muted)')}>No power rating data for {activeTeam || 'this team'} yet.</p>
           )}
 
+          <div style={st('display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start')}>
+          <div style={st('flex:2 1 480px;display:flex;flex-direction:column;gap:22px')}>
+
           {activeRow && (
             <div style={st(`background:${snapshotBg};border-radius:var(--radius-md);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px`)}>
               <div style={st('display:flex;gap:24px;flex-wrap:wrap')}>
@@ -669,6 +689,13 @@ function App() {
                   <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.record || '—'}</div>
                   <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>PF {activeRow.pf} / PA {activeRow.pa}</div>
                 </div>
+                {sosRank && (
+                  <div style={{ minWidth: 150 }}>
+                    <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Strength of Schedule</div>
+                    <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{sosRank}</div>
+                    <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Avg. opponent Power Score {num(activeProj.sos_avg_opp_power, 2)} · #1 = hardest schedule</div>
+                  </div>
+                )}
               </div>
               <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{activeRow.rationale}</div>
             </div>
@@ -744,6 +771,38 @@ function App() {
               ))}
             </div>
           )}
+
+          </div>
+
+          <div style={st('flex:1 1 280px;display:flex;flex-direction:column;gap:22px')}>
+            {activeRow && (
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>
+                  {upcomingSchedule.length ? 'Upcoming schedule' : 'Full schedule'}
+                </div>
+                {scheduleToShow.map((g) => (
+                  <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
+                    <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
+                    {g.bye ? (
+                      <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
+                    ) : (
+                      <>
+                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>{g.home ? 'vs' : '@'} {g.opponent}</span>
+                        <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>
+                          {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                ))}
+                <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
+                  {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."}
+                </div>
+              </div>
+            )}
+          </div>
+
+          </div>
         </div>
       )}
 

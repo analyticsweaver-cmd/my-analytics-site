@@ -24,6 +24,75 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(HERE)
 
 
+def build_game_date_lookup(src, season):
+    """
+    {(week, frozenset({team_a, team_b})): "YYYY-MM-DD"} from nflverse_cache/games.csv,
+    keyed by team pair (not home/away) so it's immune to the same neutral-site
+    home-flag quirk build_matchup_by_week already works around. Requires
+    nfl_team_colors.TEAM_ABBR to translate games.csv's abbreviations
+    ("BUF") to the model's full team names ("Bills").
+    """
+    games_path = os.path.join(src, "nflverse_cache", "games.csv")
+    if not os.path.exists(games_path):
+        return {}
+    sys.path.insert(0, src)
+    from nfl_team_colors import TEAM_ABBR
+    abbr_to_name = {v: k for k, v in TEAM_ABBR.items()}
+    abbr_to_name["LA"] = "Rams"  # legacy nflverse code, harmless if unused
+
+    df = pd.read_csv(games_path)
+    df = df[(df["season"] == season) & (df["game_type"] == "REG")]
+    lookup = {}
+    for _, row in df.iterrows():
+        home = abbr_to_name.get(row["home_team"])
+        away = abbr_to_name.get(row["away_team"])
+        if not home or not away:
+            continue
+        lookup[(int(row["week"]), frozenset([home, away]))] = row["gameday"]
+    return lookup
+
+
+def build_team_schedule(schedule_win_prob_rows, schedule, date_lookup):
+    """
+    Per-team ordered schedule (all 18 weeks, BYE included) with real calendar
+    dates attached where available, for the Team Detail "upcoming schedule"
+    column — lets the dashboard filter to "next N games" from today's date
+    instead of showing a flat, undated 18-game list.
+    """
+    team_weeks = build_team_weeks(schedule)
+    rows_by_team = {}
+    for row in schedule_win_prob_rows:
+        rows_by_team.setdefault(row["team"], []).append(row)
+
+    team_schedule = {}
+    for team, entries in schedule.items():
+        weeks = team_weeks.get(team, [])
+        rows = rows_by_team.get(team, [])
+        rows_by_week = {}
+        for entry, row in zip(weeks, rows):
+            rows_by_week[entry["week"]] = row
+
+        games = []
+        for i, entry in enumerate(entries):
+            week = i + 1
+            if entry.get("type") != "GAME":
+                games.append({"week": week, "bye": True})
+                continue
+            row = rows_by_week.get(week)
+            date = date_lookup.get((week, frozenset([team, entry["opponent"]])))
+            games.append({
+                "week": week,
+                "bye": False,
+                "opponent": entry["opponent"],
+                "home": entry["home"],
+                "date": date,
+                "spread": row["spread"] if row else None,
+                "win_prob": row["win_prob"] if row else None,
+            })
+        team_schedule[team] = games
+    return team_schedule
+
+
 def records(path):
     if not os.path.exists(path):
         return []
@@ -91,6 +160,15 @@ def build_matchup_by_week(schedule_win_prob_rows, schedule):
                 continue
             seen_games.add(game_key)
 
+            # played/scores/winner (in-season-updates plan, Phase E): present
+            # on schedule_win_prob rows as of the Phase D pipeline change;
+            # absent (played=False, scores=None) for any snapshot generated
+            # before that change, so this stays backward-compatible with
+            # older CSVs rather than crashing on a missing column.
+            played = bool(row.get("played")) if "played" in row else False
+            home_score = row.get("team_score") if played else None
+            away_score = row.get("opp_score") if played else None
+
             matchup_by_week.setdefault(str(week), []).append({
                 "week": week,
                 "home_team": team,
@@ -101,6 +179,10 @@ def build_matchup_by_week(schedule_win_prob_rows, schedule):
                 "spread": row["spread"],
                 "win_prob": row["win_prob"],
                 "neutral_site": site == "INTL",
+                "played": played,
+                "home_score": home_score,
+                "away_score": away_score,
+                "winner": row.get("winner") if played else None,
             })
 
     for week in matchup_by_week:
@@ -128,12 +210,15 @@ def main():
 
     schedule_path = os.path.join(src, "parsed_schedule_final.json")
     matchup_by_week = {}
+    team_schedule = {}
     weeks = []
     if os.path.exists(schedule_path) and schedule_win_prob:
         with open(schedule_path) as f:
             schedule = json.load(f)
         matchup_by_week = build_matchup_by_week(schedule_win_prob, schedule)
         weeks = sorted(int(w) for w in matchup_by_week.keys())
+        date_lookup = build_game_date_lookup(src, season=2026)
+        team_schedule = build_team_schedule(schedule_win_prob, schedule, date_lookup)
 
     data = {
         "power": power,
@@ -142,6 +227,7 @@ def main():
         "playoff": playoff,
         "key_person": key_person,
         "matchup_by_week": matchup_by_week,
+        "team_schedule": team_schedule,
         "available_weeks": weeks,
         "generated_at": datetime.date.today().isoformat(),
     }
