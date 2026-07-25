@@ -248,6 +248,7 @@ function App() {
     monteCarloHistogram: [],
     playoff: [],
     keyPerson: [],
+    preseasonPower: [],
     matchupByWeek: {},
     teamSchedule: {},
     availableWeeks: [],
@@ -289,6 +290,7 @@ function App() {
         monteCarloHistogram: data.monte_carlo_histogram || [],
         playoff: data.playoff || [],
         keyPerson: data.key_person || [],
+        preseasonPower: data.preseason_power || [],
         matchupByWeek: data.matchup_by_week || {},
         teamSchedule: data.team_schedule || {},
         availableWeeks: weeks,
@@ -304,7 +306,7 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
+  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
 
   const pinnedAccentColor = pinnedTeam ? teamColor(pinnedTeam) : 'var(--brass)';
   const togglePin = (team) => setState((prev) => {
@@ -386,7 +388,7 @@ function App() {
     columns: [
       {
         key: 'team', label: 'Team', render: (r) => (
-          <span title={r.rationale || ''} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span title={(preseasonByTeam[r.team] && preseasonByTeam[r.team].rationale) || ''} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {r.isPinned && <span style={{ width: 7, height: 7, borderRadius: 999, background: pinnedAccentColor, flexShrink: 0, display: 'inline-block' }} />}
             {`${r.rank}. ${r.team}`}
           </span>
@@ -491,6 +493,12 @@ function App() {
   });
 
   // ---------------- Team Detail tab ----------------
+  // Rationale lookup: the 2026-07-25 in-season-updates migration moved the
+  // hand-written rationale paragraph into preseason_power (power rows no
+  // longer carry it) - build a by-team lookup once so both the Power
+  // Rankings tooltip and the Team Detail fallback can pull from it.
+  const preseasonByTeam = {};
+  preseasonPower.forEach((r) => { preseasonByTeam[r.team] = r; });
   const teams = [...new Set(power.map((r) => r.team))].sort();
   const activeTeam = teams.includes(s.selectedTeam) ? s.selectedTeam : (teams[0] || pinnedTeam);
   const activeRow = power.find((r) => r.team === activeTeam);
@@ -499,6 +507,10 @@ function App() {
   const activePlayoff = playoff.find((r) => r.team === activeTeam);
   const activeKeyPerson = keyPerson.filter((r) => r.team === activeTeam);
   const profile = TEAM_PROFILES[activeTeam];
+  // Fallback rationale source (Problem 1 fix) - only teams without a
+  // TEAM_PROFILES entry fall back to this; teams with a profile show the
+  // richer exec-summary prose instead (see kpiTilesJSX/fallbackRationale below).
+  const activePreseasonRow = preseasonByTeam[activeTeam];
   const snapshotBg = teamColor(activeTeam);
   const snapshotTextColor = readableTextColor(snapshotBg);
 
@@ -551,6 +563,116 @@ function App() {
   const histChartW = 460, histChartH = 160, histBarGap = 3;
   const histBarW = histBars.length ? (histChartW - histBarGap * (histBars.length - 1)) / histBars.length : 0;
   const histY = (p) => histChartH - (p / histMax) * (histChartH - 20);
+
+  // Team DNA (shared component, team-dna.js; wired up per NFL-Team-Profile-Narrative-Brief.md
+  // section 3a) - identity, not grades: "what kind of team is this," not "how good are
+  // they." baseline/trajectory/regression reuse the exact fields Score Breakdown already
+  // shows (see componentBars above); need_fill/scheme/stability only exist in
+  // preseason_power (same schema split the rationale fix above deals with), so those
+  // three dimensions gracefully drop out (percentileRank returns null, TeamDNA filters
+  // it) for any team missing a preseason_power row. Only rendered inside the narrative
+  // block below, so this doesn't touch the 31 teams without a TEAM_PROFILES entry yet.
+  const teamDNADimensions = activeRow ? [
+    { label: 'Record Strength', pct: percentileRank(power.map((r) => Number(r.baseline)), Number(activeRow.baseline)) },
+    { label: 'Roster/Coaching Trajectory', pct: percentileRank(power.map((r) => Number(r.trajectory)), Number(activeRow.trajectory)) },
+    { label: 'Recent Form', pct: percentileRank(power.map((r) => Number(r.regression)), Number(activeRow.regression)) },
+    { label: 'Schedule Difficulty', pct: activeProj ? percentileRank(winProjections.map((r) => Number(r.sos_avg_opp_power)), Number(activeProj.sos_avg_opp_power)) : null },
+    { label: 'Roster Needs Addressed', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.need_fill)), Number(activePreseasonRow.need_fill)) : null },
+    { label: 'Scheme Fit', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.scheme)), Number(activePreseasonRow.scheme)) : null },
+    { label: 'Organizational Stability', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.stability)), Number(activePreseasonRow.stability)) : null },
+  ] : [];
+
+  // Plain-language Monte Carlo callout (brief section 3c) - computed per-team from
+  // monteCarloHistogram (histBars above), not hardcoded to any one team's numbers.
+  // Mode = most likely single-win-total outcome; atLeastNinePct = cumulative chance
+  // of a winning-or-better season (9+ of 17 games).
+  let monteCarloCallout = null;
+  if (histBars.length > 0) {
+    const modeBar = histBars.reduce((best, b) => (b.prob > best.prob ? b : best), histBars[0]);
+    const atLeastNinePct = histBars.filter((b) => b.wins >= 9).reduce((sum, b) => sum + b.prob, 0);
+    monteCarloCallout = {
+      modeWins: modeBar.wins,
+      modeProb: modeBar.prob,
+      atLeastNinePct,
+      rangeLow: activeMC ? Math.round(activeMC.sim_ci90_low) : null,
+      rangeHigh: activeMC ? Math.round(activeMC.sim_ci90_high) : null,
+    };
+  }
+
+  // KPI tiles (Power Score / Division / Record / SOS) - a single reusable block so
+  // it can sit inside the Hero Summary for teams with a narrative profile (brief
+  // Problem 2), or in its original standalone position for teams without one yet.
+  const kpiTilesInner = activeRow ? (
+    <div style={st('display:flex;gap:24px;flex-wrap:wrap')}>
+      <div style={{ minWidth: 150 }}>
+        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Power Score</div>
+        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{num(activeRow.power_score, 2)}</div>
+        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Range: {num(activeRow.low_bound, 1)} to {num(activeRow.high_bound, 1)}</div>
+      </div>
+      <div style={{ minWidth: 150 }}>
+        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Division</div>
+        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{activeRow.div_rank}</div>
+        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>{activeRow.division}</div>
+      </div>
+      <div style={{ minWidth: 150 }}>
+        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Record</div>
+        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.record || '—'}</div>
+        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>PF {activeRow.pf} / PA {activeRow.pa}</div>
+      </div>
+      {sosRank && (
+        <div style={{ minWidth: 150 }}>
+          <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Strength of Schedule</div>
+          <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{sosRank}</div>
+          <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Avg. opponent Power Score {num(activeProj.sos_avg_opp_power, 2)} · #1 = hardest schedule</div>
+        </div>
+      )}
+    </div>
+  ) : null;
+  const kpiTilesJSX = activeRow ? (
+    <div style={st(`background:${snapshotBg};border-radius:var(--radius-md);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px`)}>
+      {kpiTilesInner}
+    </div>
+  ) : null;
+  // Fallback rationale (Problem 1 fix, option (b)): only shown for teams without a
+  // TEAM_PROFILES entry, sourced from preseason_power now that `power` no longer
+  // carries it. Teams with a profile skip this - the exec summary supersedes it.
+  const fallbackRationale = activePreseasonRow ? activePreseasonRow.rationale : '';
+
+  // Key-Person Dependency card, extracted so it can be moved up next to Five
+  // Questions for teams with a narrative profile (brief section 3b) while staying
+  // a single implementation - already has its own graceful empty-state fallback,
+  // so it's safe to render unconditionally either place.
+  const keyPersonCardJSX = (
+    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
+      <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
+      {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => {
+        const unreliable = isUnreliableKeyPerson(k.confidence);
+        return (
+        <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
+          <div>
+            <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
+            <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>
+              {unreliable ? (
+                <>low — unreliable for this position (see <a href="methodology.html#known-limits" style={st('color:inherit;text-decoration:underline')}>Known Limits</a>)</>
+              ) : k.confidence}
+            </div>
+          </div>
+          <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
+            <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
+            <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
+            {unreliable ? (
+              <span style={st('color:var(--ink-faint)')}>Cliff: <b>not reliable for this position</b></span>
+            ) : (
+              <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
+            )}
+          </div>
+        </div>
+        );
+      }) : (
+        <div style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
+      )}
+    </div>
+  );
 
   // ---------------- Season Trend tab (in-season-updates plan, Phase E) ----------------
   // Ported from the CFB dashboard's own trend tab (seriesFor/buildGeom/scaleY
@@ -818,15 +940,31 @@ function App() {
 
           {profile && (
             <div style={st('display:flex;flex-direction:column;gap:22px')}>
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px')}>
-                <div>
-                  <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)')}>Team Profile</span>
-                  <h2 style={st('font:900 26px var(--font-sans);margin:6px 0 4px;color:var(--ink)')}>{profile.headline}</h2>
-                  <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{profile.oneLiner}</p>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:6px')}>
+                <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)')}>Team Profile</span>
+                <h2 style={st('font:900 26px var(--font-sans);margin:6px 0 4px;color:var(--ink)')}>{profile.headline}</h2>
+                <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{profile.oneLiner}</p>
+              </div>
+
+              {kpiTilesJSX}
+
+              {teamDNADimensions.length > 0 && (
+                <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team DNA</div>
+                  <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>What kind of team this is, not how good they are — each bar is this team's percentile among all {teams.length} teams on that dimension.</div>
+                  <TeamDNA st={st} dimensions={teamDNADimensions} />
                 </div>
+              )}
+
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px')}>
                 {profile.execSummary.map((p, i) => (
                   <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0')}>{p}</p>
                 ))}
+                {monteCarloCallout && (
+                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink)')}>
+                    Most likely finish: {monteCarloCallout.modeWins} wins ({pct(monteCarloCallout.modeProb, 0)} of simulations). {pct(monteCarloCallout.atLeastNinePct, 0)} chance of at least 9 wins.{monteCarloCallout.rangeLow !== null && ` Simulated 90% range: ${monteCarloCallout.rangeLow} to ${monteCarloCallout.rangeHigh} wins.`}
+                  </div>
+                )}
               </div>
 
               <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
@@ -837,6 +975,8 @@ function App() {
                   ))}
                 </ol>
               </div>
+
+              {keyPersonCardJSX}
 
               <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
                 <div style={st('background:var(--surface-card);border-left:3px solid var(--value-positive);border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:8px')}>
@@ -862,33 +1002,12 @@ function App() {
           <div style={st('display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start')}>
           <div style={st('flex:2 1 480px;display:flex;flex-direction:column;gap:22px')}>
 
-          {activeRow && (
+          {!profile && activeRow && (
             <div style={st(`background:${snapshotBg};border-radius:var(--radius-md);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px`)}>
-              <div style={st('display:flex;gap:24px;flex-wrap:wrap')}>
-                <div style={{ minWidth: 150 }}>
-                  <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Power Score</div>
-                  <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{num(activeRow.power_score, 2)}</div>
-                  <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Range: {num(activeRow.low_bound, 1)} to {num(activeRow.high_bound, 1)}</div>
-                </div>
-                <div style={{ minWidth: 150 }}>
-                  <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Division</div>
-                  <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{activeRow.div_rank}</div>
-                  <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>{activeRow.division}</div>
-                </div>
-                <div style={{ minWidth: 150 }}>
-                  <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Record</div>
-                  <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.record || '—'}</div>
-                  <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>PF {activeRow.pf} / PA {activeRow.pa}</div>
-                </div>
-                {sosRank && (
-                  <div style={{ minWidth: 150 }}>
-                    <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Strength of Schedule</div>
-                    <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{sosRank}</div>
-                    <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Avg. opponent Power Score {num(activeProj.sos_avg_opp_power, 2)} · #1 = hardest schedule</div>
-                  </div>
-                )}
-              </div>
-              <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{activeRow.rationale}</div>
+              {kpiTilesInner}
+              {fallbackRationale && (
+                <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{fallbackRationale}</div>
+              )}
             </div>
           )}
 
@@ -948,35 +1067,7 @@ function App() {
             </div>
           )}
 
-          <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
-            <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
-            {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => {
-              const unreliable = isUnreliableKeyPerson(k.confidence);
-              return (
-              <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
-                <div>
-                  <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
-                  <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>
-                    {unreliable ? (
-                      <>low — unreliable for this position (see <a href="methodology.html#known-limits" style={st('color:inherit;text-decoration:underline')}>Known Limits</a>)</>
-                    ) : k.confidence}
-                  </div>
-                </div>
-                <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
-                  <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
-                  <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
-                  {unreliable ? (
-                    <span style={st('color:var(--ink-faint)')}>Cliff: <b>not reliable for this position</b></span>
-                  ) : (
-                    <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
-                  )}
-                </div>
-              </div>
-              );
-            }) : (
-              <div style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
-            )}
-          </div>
+          {!profile && keyPersonCardJSX}
 
           {activePlayoff && (
             <div style={st('display:flex;gap:20px;flex-wrap:wrap')}>
