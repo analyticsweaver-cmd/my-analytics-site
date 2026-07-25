@@ -105,6 +105,11 @@
       <p><strong>A separate fix to how Power Score converts to a point spread was tested and deliberately left alone.</strong> The audit's first pass found that one Power Score point was predicting about 50% too many real scoreboard points — a real, measurable pattern. But before shipping that fix, it was re-checked <em>after</em> the coaching-continuity fix above — and the spread problem had already disappeared on its own. Coaching continuity's oddly wide scoring range had been distorting Power Score's scale; fixing that fixed the spread conversion as a side effect. Shipping both fixes together would have overcorrected, making every predicted spread too conservative. This is exactly the kind of check that's easy to skip under time pressure, and skipping it here would have made the model measurably worse while looking like an improvement in isolation.</p>
     </div>
 
+    <div class="card good">
+      <span class="tag">Re-validated, same day</span>
+      <p><strong>The 45%/35%/20% Baseline/Trajectory/Regression weight split was re-tested against the new, coaching-continuity-excluded formula — and came back more solid than before, not less.</strong> This split was originally validated years' worth of testing ago against the old 3-part Trajectory; re-running the identical fit-on-two-seasons-validate-on-the-third check against the new 2-part version, the current weights now win 2 of 3 test folds outright (previously they'd only clearly won 1 of 3). The best alternative found by searching all the data at once beat the current weights by less than the normal season-to-season noise — the same signature that ruled out changing them the first time. No change made.</p>
+    </div>
+
     <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the pipeline's own README.</p>
 
     <h2 class="section"><span class="eyebrow">Known limits</span>What this model doesn't do</h2>
@@ -112,7 +117,6 @@
       <li><strong>It's a preseason snapshot, not a weekly-updated model.</strong> It doesn't ingest betting lines, in-season injury news, or live roster changes the way a market price does — Vegas closing lines, checked against this model on the same 816 real games, are noticeably more accurate, which is expected: they price in everything up to kickoff, this model only knows what was true before Week 1.</li>
       <li><strong>Need-Fill, Stability, and (still-displayed) Scheme are hand-scored judgment, not formulas.</strong> They're backed by written research citations, but two analysts reading the same news could reasonably land on adjacent scores.</li>
       <li><strong>Key-Person Dependency (the "what if the starting QB goes down" number) is only fully trustworthy for QB.</strong> The same league-wide method applied to Edge/Safety/LB came back unreliable for diagnosed reasons (modern substitution packages make "missed the game" hard to isolate from "coach called for a different personnel package") — reported honestly with a confidence flag, not smoothed over.</li>
-      <li><strong>The 45/35/20 Baseline/Trajectory/Regression weight split hasn't been re-tested since coaching continuity was removed from Trajectory.</strong> It was validated against the old 3-part version; re-running that check against the new 2-part version is flagged as real follow-up work, not done yet.</li>
     </ul>
 
     <footer class="page-footer">
