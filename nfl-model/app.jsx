@@ -542,6 +542,426 @@ const TEAM_PROFILES = {
         ],
       },
     },
+    Bills: {
+      headline: "Bills: Buffalo's Real Question Is a Full Coaching Turnover",
+      oneLiner: "The Bills won 12 games in 2025, but a full staff turnover — softened only by an internal promotion — and an undisclosed injury in the linebacker room are the two threads the model is actually watching in Buffalo.",
+      execSummary: [
+        "Buffalo went 12-5 in 2025, second in the AFC East behind New England's 2.63 Power Score at 1.96 — a real gap, not a close race.",
+        "Baseline (+7.0) reflects the strong record, and Trajectory (-2) and Regression (-2.45) trim it only modestly — nothing like the double-digit corrections some AFC teams on this list are carrying. The linebacker corps is flagged as a real but moderate weakness, and the model notes it's carrying an undisclosed injury into camp.",
+        "The coaching staff saw full turnover this offseason, softened by an internal promotion rather than a completely outside hire — a real transition, but not as disruptive as a clean-slate rebuild. T.J. Sanders projects as a real rotational piece at defensive tackle.",
+      ],
+      fiveQuestions: [
+        "Does the undisclosed linebacker injury turn out to be significant, or a camp-only concern?",
+        "Does a full coaching staff turnover, softened by internal promotion, install smoothly or cost Buffalo early-season cohesion?",
+        "Is the linebacker corps' weakness ever actually exploited by a good rushing attack?",
+        "Does T.J. Sanders' rotational role at DT turn into more than expected?",
+        "Can Buffalo close a real gap to New England (1.96 to 2.63) in the AFC East, or does the Patriots' margin hold up?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The undisclosed LB injury turns out to be minor or resolved before Week 1.",
+          "The new coaching staff installs cleanly, aided by the internal promotion.",
+          "Buffalo closes the gap to New England rather than trailing all season.",
+        ],
+        lowerIf: [
+          "The LB injury is more significant than currently disclosed.",
+          "The coaching transition is rockier than the internal-promotion framing suggests.",
+          "The gap to New England widens rather than closes.",
+        ],
+      },
+    },
+    Dolphins: {
+      headline: "Dolphins: A Full Rebuild, Starting From the Weakest WR Room the Model Has Seen",
+      oneLiner: "Miami's 2026 outlook is refreshingly blunt in the model's own words — the weakest receiver corps it's ever evaluated, on a roster undergoing a full head-coach-and-both-coordinators rebuild.",
+      execSummary: [
+        "The Dolphins finished 7-10 in 2025, last in the AFC East, and the model's language doesn't soften it: the receiver room is described as the weakest “we've ever seen.” A new head coach and both coordinators are new too — this is a full rebuild, not a retool.",
+        "Trajectory (-9) is deeply negative, reflecting that scale of turnover, while Baseline (-3.0) and Regression (-1.44) are comparatively minor drags — most of Miami's problem is structural, not bad luck.",
+        "Patrick Paul is a real bright spot as an ascending young left tackle, but the model's own downside case is stark: “full teardown, thin depth if anyone goes down” — there's little cushion if injuries hit.",
+      ],
+      fiveQuestions: [
+        "Does the new coaching staff's system show real installation progress by midseason?",
+        "Is there any real answer at receiver, or does the room stay the weakest the model has flagged?",
+        "Does Patrick Paul's development at left tackle continue on pace?",
+        "How much does thin depth actually cost Miami if a starter goes down?",
+        "Is 2026 a true bottom-out year, or does the rebuild show early signs of working?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The receiver room finds real answers, even unexpectedly, during camp or early season.",
+          "The new coaching staff shows quick, visible installation progress.",
+          "Depth holds up even when starters miss time.",
+        ],
+        lowerIf: [
+          "The receiver room performs as poorly as the model's own blunt framing suggests.",
+          "An injury exposes the thin depth the model already flagged.",
+          "The coaching transition is visibly rocky.",
+        ],
+      },
+    },
+    Jets: {
+      headline: "Jets: A 3-14 Record the Model Doesn't Take at Face Value",
+      oneLiner: "New York's actual record was brutal, but Regression (+2.58) and a genuinely productive offseason say the underlying team wasn't quite as bad as 3-14 looks.",
+      execSummary: [
+        "The Jets went 3-14 in 2025, the AFC East's worst record by a wide margin — but Power Score (-4.43) is well ahead of where Baseline (-11.0) alone would put a team that bad, because Regression (+2.58) and neutral Trajectory (0) both work in New York's favor.",
+        "The model calls the offseason “extremely productive” despite an ongoing interior offensive line flaw, and this is full continuity into Year 2 of whatever system is being built — not another coaching reset on top of a bad season.",
+        "T'Vondre Sweat is flagged with real breakout upside at defensive tackle, and the model's own downside case is notably mild for a 3-14 team: “full rebuild, but no major star injury” — nothing catastrophic identified beyond the rebuild itself.",
+      ],
+      fiveQuestions: [
+        "Does the +2.58 Regression correction actually show up as more wins in 2026, or was 3-14 a fair read after all?",
+        "Does the interior offensive line flaw get addressed in-season, or stay a full-year weakness?",
+        "Does T'Vondre Sweat's breakout upside materialize as real production?",
+        "Does Year 2 continuity produce visible systemic improvement over a 3-14 baseline?",
+        "How much does an easy 2026 schedule (one of the softest on this list) flatter New York's win total regardless of underlying improvement?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The Regression correction shows up as real, meaningful win-total improvement.",
+          "The interior offensive line stabilizes.",
+          "Sweat's breakout case proves real.",
+        ],
+        lowerIf: [
+          "The record stays bad even accounting for better luck, suggesting 3-14 was closer to the truth.",
+          "The offensive line remains a costly, exploited weakness.",
+          "Year 2 continuity doesn't translate to visible improvement.",
+        ],
+      },
+    },
+    Bengals: {
+      headline: "Bengals: A Third Team on This List With the Same 3.21-Point QB Cliff",
+      oneLiner: "Cincinnati's season comes down to Joe Burrow's health as directly as Kansas City's comes down to Mahomes — the model assigns the exact same 3.21-point Key-Person cliff to both, on top of a defense that's been bottom-8 three years running.",
+      execSummary: [
+        "The Bengals finished 6-11 in 2025 and enter 2026 with a Power Score of -3.88, third in a weak AFC North. Full continuity carries over from last season, but the defense has been bottom-8 for three straight years and is historically bad against tight ends specifically.",
+        "The model's Key-Person Dependency data is explicit and high-confidence: Cincinnati's Power Score is -3.88 with a healthy Joe Burrow and -7.09 if he goes down — a 3.21-point swing, the same standard cliff size the model applies to any starting-caliber quarterback, and identical to what it assigns Kansas City's Mahomes and Pittsburgh's Rodgers on this same list.",
+        "Erick All Jr. could lead a rebuilt tight end room if he's healthy, but his own ACL history layers directly onto Burrow's recent injury history — two health questions stacked on top of each other at the two positions the model is watching closest.",
+      ],
+      fiveQuestions: [
+        "Does Joe Burrow stay healthy for a full season, avoiding the 3.21-point cliff the model has flagged?",
+        "Does the defense's three-year run as bottom-8 finally turn around, or does it stay the roster's clearest weakness?",
+        "Is Erick All Jr. healthy enough to actually lead the tight end room, given his own ACL history?",
+        "Does the historically bad performance against tight ends specifically get fixed, or does it remain exploitable?",
+        "With a soft 2026 schedule (one of the easiest on this list), does a healthy Burrow alone get Cincinnati back to a winning record?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Burrow plays a full, healthy season.",
+          "The defense shows real improvement after three years at the bottom of the league.",
+          "Erick All Jr. stays healthy and leads a productive tight end room.",
+        ],
+        lowerIf: [
+          "Burrow's 3.21-point cliff materializes — injury takes him off the field for real time.",
+          "The defense's tight-end weakness specifically gets exploited again.",
+          "All's ACL history recurs, leaving the TE room thin again.",
+        ],
+      },
+    },
+    Browns: {
+      headline: "Browns: The QB Question That's Outlasted Decades of Regimes",
+      oneLiner: "Cleveland's Trajectory score (-14) is one of the single worst numbers on this entire list — and the model's own language makes clear why: an unresolved quarterback room that's been “the defining issue for decades.”",
+      execSummary: [
+        "The Browns finished 5-12 in 2025, last in the AFC North, with a Power Score of -7.72 — in the same bottom tier as the Raiders and Cardinals on this list. Baseline (-7.0) reflects the bad record, but Trajectory (-14) is the second-most negative of any team in the entire model, behind only Detroit's -15.",
+        "The model doesn't soften why: the quarterback position “has been the defining issue for decades, still unresolved.” A full coaching staff overhaul is underway, but it's installing into a roster still built around that same open question.",
+        "Tyson Campbell steps into a bigger role as a proven veteran, a real, concrete bright spot. But the model's own downside case is unambiguous: “still rebuilding around an unresolved QB room” — the single hardest problem on this roster isn't new, and isn't solved yet.",
+      ],
+      fiveQuestions: [
+        "Does any answer at quarterback emerge in 2026, or does the decades-long question stay open?",
+        "Does the new coaching staff's system show real progress despite the QB uncertainty underneath it?",
+        "Does Tyson Campbell's bigger role produce the kind of proven-veteran stability the model expects?",
+        "Is -14 Trajectory a fair read on the scale of this rebuild, or does the model risk being too pessimistic about young talent elsewhere on the roster?",
+        "Does Regression's modest positive correction (+1.63) suggest Cleveland was slightly unlucky in 2025, or does it just mean a bad team was bad in a fairly predictable way?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "A real, sustainable answer at quarterback emerges, even a partial one.",
+          "Tyson Campbell's expanded role produces clear, stabilizing results.",
+          "The new coaching staff shows fast, visible installation progress.",
+        ],
+        lowerIf: [
+          "The quarterback question remains as unresolved at the end of 2026 as it's been for years.",
+          "The rebuild shows no visible progress across a full season.",
+          "Depth elsewhere on the roster proves as thin as the Trajectory number suggests.",
+        ],
+      },
+    },
+    Jaguars: {
+      headline: "Jaguars: A Strong Record, One Swing Factor Left",
+      oneLiner: "Jacksonville's 13-4 season and one of the highest Baseline scores on this list come with one persistent asterisk the model keeps flagging: Trevor Lawrence's health and consistency.",
+      execSummary: [
+        "The Jaguars went 13-4 in 2025, second in a tough AFC South behind Houston, with a Power Score of 3.67 — Baseline alone sits at +9.0, one of the highest on this list, a direct reflection of that record.",
+        "Trajectory (+1) is modestly positive and Regression (-3.64) trims some back, but neither is dramatic — this reads as a genuinely earned strong season, not one propped up by luck. Etienne's departure leaves a low-importance RB committee, and full continuity carries the rest of the roster forward.",
+        "The one recurring line in the model's own language is Trevor Lawrence: “health and consistency remains a swing factor.” Everything else about this roster is stable — this is the one real variable left.",
+      ],
+      fiveQuestions: [
+        "Does Trevor Lawrence stay healthy and consistent for a full season?",
+        "Is the RB committee replacing Etienne good enough, or does it become a real limiter?",
+        "Does Ruke Orhorhoro's fresh start at DT produce real snaps and production on a thin chart?",
+        "How much does one of the toughest schedules on this list (SOS rank 5) cost Jacksonville in the standings?",
+        "Can Jacksonville close the gap to Houston in the AFC South, or does the model's 4.62-to-3.67 gap hold?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Lawrence plays a full, consistent, healthy season.",
+          "The RB committee proves adequate without a clear lead back.",
+          "Jacksonville is competitive against its tough schedule, not overwhelmed by it.",
+        ],
+        lowerIf: [
+          "Lawrence's health or consistency becomes a real, visible problem.",
+          "The RB committee is exposed as a real weakness.",
+          "The tough schedule (SOS rank 5) produces a losing stretch that costs the division.",
+        ],
+      },
+    },
+    Colts: {
+      headline: "Colts: The Model's Luck Adjustment Likes Indianapolis More Than the Record Does",
+      oneLiner: "An 8-9 record undersells what the numbers say — Regression (+5.2), one of the largest positive corrections on this list, says Indianapolis was better than its record, even before factoring in a newly reported Alec Pierce injury.",
+      execSummary: [
+        "The Colts went 8-9 in 2025, but Power Score (-0.11) is nearly even — well ahead of where Baseline (-1.0) alone would suggest, because Regression (+5.2) is one of the largest positive corrections of any team on this list. The model reads Indianapolis's underlying performance as better than an 8-9 record shows.",
+        "A real WR2 hole opened after trading Pittman, but the Jones extension resolves the quarterback uncertainty that used to sit over this roster, and Josh Downs carries real target-share upside into a clearer offensive picture.",
+        "The most recent development complicates the receiver room further: Alec Pierce's ankle surgery (after a failed non-surgical treatment) carries a 4-6 month recovery that could cost him the preseason and part of the regular season — layering directly onto an already-thin WR2 situation. Downside has been raised, though only modestly, and Jones himself carries his own recent injury history on top of it.",
+      ],
+      fiveQuestions: [
+        "Does the +5.2 Regression correction actually show up as more wins in 2026?",
+        "How much time does Alec Pierce actually miss, and how does that affect an already-thin WR2 room?",
+        "Does Josh Downs' target-share upside grow enough to offset the WR2 hole?",
+        "Does the Jones extension's QB stability hold up against his own recent injury history?",
+        "Is 8-9 closer to Indianapolis's true level, or was the model's luck-adjustment read correct?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The Regression correction shows up as real, visible win-total improvement.",
+          "Pierce returns closer to the front of his recovery window, minimizing lost time.",
+          "Josh Downs' expanded role covers the WR2 gap adequately.",
+        ],
+        lowerIf: [
+          "The record stays flat or worsens even accounting for better underlying luck.",
+          "Pierce's recovery runs long, costing real regular-season time on top of the preseason.",
+          "Jones' own injury history becomes a real, in-season factor.",
+        ],
+      },
+    },
+    Titans: {
+      headline: "Titans: A 3-14 Record, With the Division's Best Upside Case",
+      oneLiner: "Tennessee's record was the AFC South's worst by a mile, but Cam Ward's rookie emergence gives the model its strongest upside case in the entire division — the roster underneath him is still the real question.",
+      execSummary: [
+        "The Titans went 3-14 in 2025, last in the AFC South, with a Power Score of -4.8. Baseline (-11.0) reflects that bad record directly, but Trajectory (-1) is nearly neutral — much less negative than the record alone would suggest — and Regression (+2.5) adds a bit more back, some of it real underlying improvement, some of it a luck correction.",
+        "The real story is Cam Ward: his rookie emergence, alongside Helm, earned both players spots on the league's All-Breakout Team — the model calls it the strongest upside case anywhere in the division. A new head coach and defensive coordinator are installing around that momentum.",
+        "The secondary remains unaddressed, and the model's downside case is direct: Ward is still unproven over a full season, and the roster underneath him remains division-worst. This is real promise sitting on top of a genuinely thin foundation.",
+      ],
+      fiveQuestions: [
+        "Does Cam Ward's rookie emergence carry into a full sophomore season, or was it a small-sample breakout?",
+        "Does Helm's own breakout production continue alongside Ward's?",
+        "Does the unaddressed secondary become a costly, exploited weakness?",
+        "Do the new HC and DC install a system that supports Ward's development?",
+        "Is the roster underneath Ward good enough to turn his individual progress into real team wins, or does a division-worst supporting cast cap the ceiling?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Ward's rookie emergence continues and translates to a meaningfully better record.",
+          "Helm's breakout production holds up over a full season.",
+          "The new coaching staff's system shows real, fast installation.",
+        ],
+        lowerIf: [
+          "Ward regresses once defenses have a full season of tape on him.",
+          "The secondary is exposed as a real, costly weakness.",
+          "The roster underneath Ward proves too thin to support his individual growth.",
+        ],
+      },
+    },
+    Vikings: {
+      headline: "Vikings: Zero Coaching Turnover, One Unresolved Question at QB",
+      oneLiner: "Minnesota returns its entire coaching staff from a 9-8 season, but an unresolved quarterback competition is the one variable the model can't fully price in yet.",
+      execSummary: [
+        "The Vikings went 9-8 in 2025, second in the NFC North, with a Power Score of -1.75. Baseline (+1.0) is modestly positive, matching a modest winning record, while Trajectory (-6) reflects real uncertainty layered on top.",
+        "Zero coaching turnover carries real continuity into 2026, and James Pierre adds a solid rotational piece at cornerback. Tight end production is flagged as weak, but the model treats it as low-importance rather than a real driver of the outlook.",
+        "The central open question is at quarterback: the competition is unresolved, and the model's own language is direct that this uncertainty is “already priced into Stability” — meaning the roster's risk score already assumes this is unsettled, rather than treating it as a surprise waiting to happen.",
+      ],
+      fiveQuestions: [
+        "Who wins the quarterback competition, and how early is it resolved?",
+        "Does the eventual starter perform at a level that improves on Stability's already-priced-in uncertainty?",
+        "Does tight end production stay a low-importance non-factor, or become a real limiter?",
+        "Does zero coaching turnover translate into a faster start than teams still installing new systems?",
+        "Does James Pierre's addition at corner meaningfully upgrade the secondary?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The QB competition resolves early and cleanly, with a clear, competent starter.",
+          "Coaching continuity shows up as a fast, cohesive start to the season.",
+          "Tight end production stays a genuine non-issue.",
+        ],
+        lowerIf: [
+          "The QB competition drags on or produces below-replacement-level play.",
+          "Tight end production becomes a real, costly weakness despite the low-importance framing.",
+          "The secondary doesn't show real improvement despite the Pierre addition.",
+        ],
+      },
+    },
+    Packers: {
+      headline: "Packers: Micah Parsons' Recovery Timeline Just Got Worse",
+      oneLiner: "Green Bay's outlook keeps sliding as more comes out about Micah Parsons' ACL and meniscus recovery — now expected to cost him most of the regular season, not just an uncertain stretch of it.",
+      execSummary: [
+        "The Packers went 9-7-1 in 2025, third in the NFC North, with a Power Score of -2.7. Baseline (+2.0) is modestly positive, but Trajectory (-10) is one of the more negative numbers on this list, driven almost entirely by one position: Edge, where Parsons' health leaves a real hole at a premium spot.",
+        "The situation has gotten more serious, not less, since it was first flagged: Parsons' ACL and meniscus recovery is now reported as likely to sideline him for much of the regular season — he isn't expected to be cleared for practice until September at the earliest, with a return targeted for the postseason. That's a materially worse update than an uncertain-timeline framing, and both Stability and Downside have been raised to reflect it.",
+        "Zero coaching turnover keeps the rest of the system intact, and Anthony Belton profiles as a real starting-caliber guard. But this is a team whose outlook is dominated by one player's recovery calendar more than almost any other roster on this list — the model's own Key-Person math for non-QB positions like Edge is flagged as unreliable for precise cliff numbers, but the qualitative read is unambiguous: Green Bay is worse off for most of 2026 without Parsons on the field.",
+      ],
+      fiveQuestions: [
+        "Does Parsons actually return for the postseason as targeted, or does the recovery run even longer?",
+        "Can the pass rush hold up at a competitive level for most of a season without him?",
+        "Does Anthony Belton's starting-caliber guard play stabilize the offensive line enough to offset the defensive loss?",
+        "How much does one of the toughest schedules on this list (SOS rank 4) compound a season already missing its best defender?",
+        "Does zero coaching turnover provide enough system stability to weather Parsons' absence?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Parsons returns earlier than the September-practice, postseason-return timeline suggests.",
+          "The pass rush performs credibly without him for most of the season.",
+          "Belton's play at guard is a clear, stabilizing positive.",
+        ],
+        lowerIf: [
+          "Parsons' recovery runs even longer than currently reported.",
+          "The pass rush is visibly, measurably worse without him.",
+          "The tough schedule compounds his absence into a lost season.",
+        ],
+      },
+    },
+    Lions: {
+      headline: "Lions: The Worst Trajectory Score in the League, on a 9-8 Team",
+      oneLiner: "Detroit's secondary situation is as bad as the numbers get — Trajectory (-15) is the single most negative score of any team in the model, worse even than teams with far worse actual records.",
+      execSummary: [
+        "The Lions went 9-8 in 2025 — a perfectly respectable record, and last in the NFC North only because the division itself is strong. But Trajectory (-15) is the worst of any team in the model's full 32-team dataset, worse than Cleveland's -14 or Arizona's -12, teams with far worse actual records than Detroit's.",
+        "The reason is concentrated almost entirely in one position group: the secondary is described as “riddled with red flags” — an arrest, an Achilles tear, and a knee issue, before the most recent update. Head coach Dan Campbell's own words on safety Kerby Joseph are now on record: the team “does not know when or if he will return” — a more severe status than a recovery-timeline question, and both Downside and Stability have been raised to reflect it.",
+        "Roger McCreary gets a real bounce-back opportunity in that same battered secondary, and only the offensive coordinator changed — the rest of the staff is intact. But this is a roster where one position group's crisis is doing almost all of the damage to an otherwise solid, 9-8-caliber team.",
+      ],
+      fiveQuestions: [
+        "Does Kerby Joseph return at all in 2026, given his own head coach's uncertainty about it?",
+        "Can Roger McCreary's bounce-back opportunity offset even part of the secondary's damage?",
+        "Does the secondary's run of red flags (arrest, Achilles, knee) stay isolated, or does it spread to further injuries?",
+        "Is -15 Trajectory an overcorrection for one position group's problems, or does it accurately capture how much a bad secondary can sink an otherwise solid team?",
+        "Does a 9-8-caliber roster elsewhere hold up well enough to offset the secondary being this depleted?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Kerby Joseph returns during the season, even later than expected.",
+          "McCreary's bounce-back is real and the secondary performs better than the red-flag list suggests.",
+          "The rest of the roster's 9-8-level strength shows up clearly despite the secondary's issues.",
+        ],
+        lowerIf: [
+          "Joseph doesn't return at all in 2026, matching his head coach's own uncertainty.",
+          "The secondary's problems compound with further injuries or issues.",
+          "The secondary's weakness is exploited badly enough to drag down the rest of the roster's performance.",
+        ],
+      },
+    },
+    Buccaneers: {
+      headline: "Buccaneers: A New Offensive Coordinator, and a Contract Situation to Watch",
+      oneLiner: "Tampa Bay's 2026 season hinges on a new-hire offensive coordinator finding answers at receiver and tight end, while Baker Mayfield's contract situation sits over the whole operation.",
+      execSummary: [
+        "The Buccaneers went 8-9 in 2025, third in the NFC South, with a Power Score of -0.62 — Baseline (-1.0) and Trajectory (0) both sit close to neutral, and Regression (-0.86) is only a mild drag. This is a roster the model reads as genuinely middle-of-the-pack, not clearly trending either direction.",
+        "The tight end room remains the least productive on the roster and unaddressed this offseason, and the team fired its offensive coordinator in favor of a new hire (Robinson) — a real scheme risk heading into a new system.",
+        "McMillan is the top candidate for outside-receiver snaps, a real opportunity, but the model flags his own injury history (hamstring, neck) as a real risk to that opportunity — and the Mayfield contract situation adds its own layer of uncertainty over the whole offense.",
+      ],
+      fiveQuestions: [
+        "Does the new offensive coordinator's system show real installation progress, or does the scheme change cost early-season cohesion?",
+        "Does McMillan stay healthy enough to actually claim the outside-receiver role the model projects for him?",
+        "Does the tight end room's unaddressed weakness ever become a real limiter?",
+        "How does the Mayfield contract situation resolve, and does it affect his on-field focus or availability?",
+        "Is a genuinely middle-of-the-pack roster (per Baseline/Trajectory both near zero) enough to compete in a real NFC South race?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The new OC's scheme installs smoothly and shows early results.",
+          "McMillan stays healthy and claims the outside-WR role cleanly.",
+          "The tight end room finds unexpected production.",
+        ],
+        lowerIf: [
+          "The scheme change costs real early-season cohesion.",
+          "McMillan's injury history recurs, costing him the opportunity.",
+          "The Mayfield contract situation becomes a real on-field distraction.",
+        ],
+      },
+    },
+    Falcons: {
+      headline: "Falcons: A Fourth Team on This List With the Same 3.21-Point QB Cliff",
+      oneLiner: "Atlanta's season depends on Michael Penix Jr.'s ACL recovery as directly as three other teams on this list depend on their own quarterback's health — and the model's downside case doesn't stop there.",
+      execSummary: [
+        "The Falcons went 8-9 in 2025, last in the NFC South, with a Power Score of -4.41. Both starting interior defensive linemen departed this offseason, replaced only by depth pieces, and Trajectory (-10) reflects that real downgrade along with a new head coach and offensive coordinator (the defensive coordinator was retained).",
+        "The model's Key-Person Dependency data puts a real number on the central question: Atlanta's Power Score is -4.41 with a healthy Michael Penix Jr. and -7.63 if he's not — a 3.21-point swing, the same standard cliff size the model assigns any starting-caliber quarterback, matching what it assigns Kansas City's Mahomes, Pittsburgh's Rodgers, and Cincinnati's Burrow elsewhere on this list. Penix's ACL recovery is unresolved.",
+        "The model's downside case doesn't stop at the QB question: Pearce Jr. faces felony charges with his 2026 availability in doubt, a real off-field risk layered directly on top of the on-field one. Dorlus' “lightbulb” breakout is flagged as real per scouts — a genuine bright spot, but a smaller one than the two risks sitting above it.",
+      ],
+      fiveQuestions: [
+        "Does Michael Penix Jr.'s ACL recovery clear him for a full, healthy season?",
+        "How does Pearce Jr.'s legal situation resolve, and what does that mean for his 2026 availability?",
+        "Do the interior DL depth pieces hold up after losing both starters, or is the position group exposed?",
+        "Does Dorlus' breakout translate into real, sustained production?",
+        "Does a new HC/OC pairing (with the DC retained) find a coherent system fast enough to matter?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Penix returns fully healthy and avoids the 3.21-point cliff.",
+          "Pearce Jr.'s legal situation resolves in his favor, or with minimal impact on availability.",
+          "The interior DL depth pieces perform capably.",
+        ],
+        lowerIf: [
+          "Penix's cliff materializes — the ACL recovery costs him real time or effectiveness.",
+          "Pearce Jr.'s availability is significantly limited by his legal situation.",
+          "The interior DL is exposed as a real, exploited weakness.",
+        ],
+      },
+    },
+    "49ers": {
+      headline: "49ers: A 12-5 Record, Buried in a Loaded Division",
+      oneLiner: "San Francisco won 12 games and still sits third in the NFC West — the model's real story here is a heavy Regression correction and an unresolved Aiyuk situation, not the division standing itself.",
+      execSummary: [
+        "The 49ers went 12-5 in 2025 but sit third in a stacked NFC West, behind the Rams (4.72) and Seahawks (3.68) — Power Score -1.12 doesn't match a 12-win team's usual station, a reminder that division rank and raw record don't always move together when the whole division is this strong.",
+        "Baseline (+7.0) reflects that strong record, but Trajectory (-9) and Regression (-5.61) both pull hard against it — Regression especially is one of the larger single corrections on this list, meaning the model reads a real chunk of 2025's success as not fully supported by the underlying point differential.",
+        "There's no reliable free safety left after the Hufanga-era departures, addressed partly by a new defensive coordinator (Raheem Morris). The Aiyuk saga remains unresolved, and the model flags a recent history of major injury attrition as a real, ongoing risk — not a one-time event.",
+      ],
+      fiveQuestions: [
+        "How much of the -5.61 Regression correction actually shows up as fewer wins in 2026?",
+        "Does the new DC find a real answer at free safety, or does the position stay a weak spot?",
+        "How does the Aiyuk situation resolve, and what does that mean for the passing game?",
+        "Does the recent pattern of major injury attrition continue, or does 2026 finally break it?",
+        "Can San Francisco actually close the gap to the Rams and Seahawks in a loaded NFC West?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "The 12-5-level performance holds up with minimal regression.",
+          "The new DC finds a workable answer at free safety.",
+          "The Aiyuk situation resolves in a way that strengthens the passing game.",
+        ],
+        lowerIf: [
+          "The record visibly regresses toward the mean, matching the -5.61 correction.",
+          "Free safety remains a real, exploited weakness.",
+          "The injury-attrition pattern continues, costing key contributors real time.",
+        ],
+      },
+    },
+    Cardinals: {
+      headline: "Cardinals: The Model's Second-Largest Luck Correction, Facing the League's Second-Hardest Schedule",
+      oneLiner: "Arizona's 3-14 record understates the roster by the model's own math — but a brutal 2026 schedule stands between that correction and an actual improved record.",
+      execSummary: [
+        "The Cardinals went 3-14 in 2025, last in the NFC West, with a Power Score of -7.69. Baseline (-11.0) reflects that rough record directly, and Trajectory (-12) is deeply negative too — the model's own language calls this “the worst need-fill situation in the league,” with no reliable starting quarterback through the whole season.",
+        "Regression (+7.32) works hard the other way, though — the third-largest positive luck correction of any team in the model, behind only the Chiefs and Giants. The model reads Arizona's underlying point differential as meaningfully better than 3-14 suggests.",
+        "The tension is real: Arizona faces the second-hardest schedule of any team in the league (SOS rank 2) in 2026, meaning even a genuinely-better-than-3-14 roster has to prove it against a brutal slate. Walter Nolen III flashed real Pro-Bowl-caliber play in limited snaps, but his own major injury history makes him, in the model's words, a genuine boom-or-bust factor.",
+      ],
+      fiveQuestions: [
+        "Does a real answer at quarterback finally emerge, addressing what the model calls the worst need-fill situation in the league?",
+        "Does the +7.32 Regression correction show up as real, meaningful win-total improvement?",
+        "Can Arizona's roster actually hold up against the league's second-hardest schedule?",
+        "Does Walter Nolen III stay healthy enough to build on his limited-snap flashes?",
+        "Do the new HC and OC find any real traction in Year 1, given the quarterback uncertainty underneath them?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "A workable answer at quarterback emerges, even a partial one.",
+          "The Regression correction shows up as real, visible improvement in the record.",
+          "Nolen stays healthy and builds meaningfully on his limited-snap flashes.",
+        ],
+        lowerIf: [
+          "The quarterback situation remains the league's worst need-fill problem all season.",
+          "The brutal schedule overwhelms any underlying roster improvement.",
+          "Nolen's injury history recurs, costing a genuine bright spot.",
+        ],
+      },
+    },
 };
 
 // ----------------------------------------------------------------------
