@@ -1392,6 +1392,40 @@ function App() {
   const upcomingSchedule = fullSchedule.filter((g) => g.bye || !g.date || g.date >= todayISO);
   const scheduleToShow = upcomingSchedule.length ? upcomingSchedule : fullSchedule;
 
+  // Schedule Journey (TEAM_PROFILE_DESIGN_SYSTEM.md section 7): "a timeline,
+  // not an opponent list" - each game already carries this team's own
+  // win_prob (computed by the matchup pipeline, same source as the
+  // Schedule & Matchups tab), so difficulty-coding is a read of data that
+  // already exists, not a new calculation. Division opponents are flagged
+  // as rivalry games (same real division data used for div_rank elsewhere);
+  // "swing games" are the ones nearest a true coin flip, since those are
+  // the games most likely to actually decide the season either way.
+  const teamDivision = Object.fromEntries(power.map((r) => [r.team, r.division]));
+  const journeyRows = scheduleToShow.map((g) => {
+    if (g.bye || g.win_prob === undefined || g.win_prob === null) return { ...g, difficulty: 'bye' };
+    const wp = Number(g.win_prob);
+    const difficulty = wp >= 0.6 ? 'favorable' : wp <= 0.4 ? 'difficult' : 'competitive';
+    const isSwing = Math.abs(wp - 0.5) <= 0.05;
+    const isDivision = teamDivision[g.opponent] && teamDivision[g.opponent] === teamDivision[activeTeam];
+    return { ...g, difficulty, isSwing, isDivision };
+  });
+  const difficultyMeta = {
+    favorable: { label: 'Favorable', color: 'var(--value-positive)' },
+    competitive: { label: 'Competitive', color: 'var(--brass)' },
+    difficult: { label: 'Difficult', color: 'var(--value-risk)' },
+    bye: { label: '', color: 'var(--ink-faint)' },
+  };
+  const playedGames = journeyRows.filter((g) => g.difficulty !== 'bye');
+  const toughestGame = playedGames.length
+    ? playedGames.reduce((worst, g) => (g.win_prob < worst.win_prob ? g : worst), playedGames[0])
+    : null;
+  const swingGames = playedGames.filter((g) => g.isSwing);
+  const journeySummary = playedGames.length ? (
+    swingGames.length > 0
+      ? `${swingGames.length} swing game${swingGames.length === 1 ? '' : 's'} left (within 5 points of a coin flip) — the toughest single test is Week ${toughestGame.week}, ${toughestGame.home ? 'vs' : '@'} ${toughestGame.opponent} (${pct(toughestGame.win_prob, 0)} win probability).`
+      : `No true coin-flip games left on the board — the toughest single test is Week ${toughestGame.week}, ${toughestGame.home ? 'vs' : '@'} ${toughestGame.opponent} (${pct(toughestGame.win_prob, 0)} win probability).`
+  ) : '';
+
   // Strength of schedule: win_projections' sos_avg_opp_power ranked against
   // the other 31 teams (rank 1 = hardest schedule) so the raw Power Score
   // scale doesn't have to be interpreted on its own.
@@ -1958,17 +1992,26 @@ function App() {
           <div style={st('flex:1 1 280px;display:flex;flex-direction:column;gap:22px')}>
             {activeRow && (
               <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>
-                  {upcomingSchedule.length ? 'Upcoming schedule' : 'Full schedule'}
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
+                  {upcomingSchedule.length ? 'Schedule journey' : 'Full schedule'}
                 </div>
-                {scheduleToShow.map((g) => (
+                {journeySummary && (
+                  <div style={st('font:400 12px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{journeySummary}</div>
+                )}
+                {journeyRows.map((g) => (
                   <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
                     <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
                     {g.bye ? (
                       <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
                     ) : (
                       <>
-                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>{g.home ? 'vs' : '@'} {g.opponent}</span>
+                        <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: difficultyMeta[g.difficulty].color }} title={difficultyMeta[g.difficulty].label} />
+                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>
+                          {g.home ? 'vs' : '@'} {g.opponent}
+                          {g.isDivision && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>DIV</span>}
+                          {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
+                        </span>
+                        <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted);text-align:right;width:38px;flex-shrink:0')}>{pct(g.win_prob, 0)}</span>
                         <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>
                           {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
                         </span>
@@ -1977,7 +2020,7 @@ function App() {
                   </div>
                 ))}
                 <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
-                  {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."}
+                  {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse. DIV = division opponent, SWING = within 5 points of a coin flip.
                 </div>
               </div>
             )}
