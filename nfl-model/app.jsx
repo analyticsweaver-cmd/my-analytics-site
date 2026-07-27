@@ -374,6 +374,174 @@ const TEAM_PROFILES = {
         ],
       },
     },
+    Texans: {
+      headline: "Texans: The Safest Bet in the AFC",
+      oneLiner: "Houston's 2026 case is almost boringly simple — the model's own language calls this the roster with the fewest issues in the entire conference, and the risk here is mostly the risk of nothing going wrong.",
+      execSummary: [
+        "Houston went 12-5 in 2025 and enters 2026 with the model's third-highest Power Score of any team profiled here (4.62, trailing only Denver and Los Angeles) — full continuity, and the “fewest roster issues in the AFC” by the model's own language.",
+        "Baseline (+7.0) and Trajectory (+5) both point up, and Regression (-1.42) is only a mild pullback — nothing close to the double-digit swings some other teams on this list are carrying. Calen Bullock is already rated excellent, with the model noting there's limited room for him to climb further — a nice problem to have.",
+        "The one real question mark, a minor RB2 concern, is explicitly framed as the exception rather than the rule: the model's downside case for Houston isn't an injury flag or a scheme risk, it's simply “stable, healthy core — lowest risk in the division.”",
+      ],
+      fiveQuestions: [
+        "Does the RB2 spot ever actually become a problem, or does it stay a non-factor all season the way the model expects?",
+        "Is there any real ceiling left above Calen Bullock's already-excellent rating, or has the model already priced in his full value?",
+        "Does full continuity translate to a fast start, or does familiarity breed a slow-developing complacency?",
+        "How much does the -1.42 Regression pullback actually cost Houston in the standings?",
+        "Is “fewest roster issues in the AFC” still true by midseason, or does a division rival close the gap?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Houston's record holds up close to 12-5 with minimal regression.",
+          "Bullock's excellent play continues without a real ceiling showing up.",
+          "The RB2 concern never actually costs the offense anything.",
+        ],
+        lowerIf: [
+          "An unexpected injury or scheme issue emerges where the model currently sees none.",
+          "The RB2 hole is exposed by a tougher opponent.",
+          "Regression toward the mean shows up as a real, visible step back.",
+        ],
+      },
+    },
+    Bears: {
+      headline: "Bears: A Real Record, With the Model's Biggest Single Pullback",
+      oneLiner: "Chicago's 11-6 season and Caleb Williams' breakout momentum are real — but Regression (-5.67), the model's largest overperformance correction on this list, says some of that record won't repeat.",
+      execSummary: [
+        "The Bears went 11-6 in 2025, the NFC North's best record, riding real breakout momentum from Caleb Williams and a rookie class highlighted by Burden III tying A.J. Brown's rookie efficiency record.",
+        "Baseline (+5.0) reflects the strong record, but Regression (-5.67) is the largest single pullback of any team profiled here — the model reads Chicago's 2025 point differential as not fully supporting an 11-6 finish, meaning real regression toward the mean is baked into the Power Score (0.77) already.",
+        "The interior defensive line got what the model calls “zero improvement” this offseason, on an otherwise zero-coaching-turnover roster the model itself frames as low-risk: “young, ascending, healthy core.”",
+      ],
+      fiveQuestions: [
+        "Does Caleb Williams' breakout momentum carry into a full season, or was 2025 a partial-sample high point?",
+        "How much does the -5.67 Regression correction actually show up as fewer wins in 2026?",
+        "Does the interior D-line's “zero improvement” offseason become a real, exploitable weakness?",
+        "Does Burden III's rookie efficiency hold up over a full season of opposing game plans?",
+        "Is a young, ascending, healthy core enough to hold off regression, or does inexperience show up in close games?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Williams' 2025 breakout carries forward without a step back.",
+          "Chicago's record holds up close to 11-6 despite the Regression flag.",
+          "The interior D-line's lack of improvement never actually gets exposed.",
+        ],
+        lowerIf: [
+          "The record visibly regresses toward the mean, matching the -5.67 correction.",
+          "The interior D-line is exploited by a good rushing offense.",
+          "Burden III's rookie efficiency proves to be a small-sample outlier.",
+        ],
+      },
+    },
+    Ravens: {
+      headline: "Ravens: The Other Half of the AFC North Coin Flip",
+      oneLiner: "Baltimore's 2026 season is the Steelers' mirror image — an even-money AFC North race, but here the swing factor is a full coaching staff overhaul and Lamar Jackson's own injury-availability history, not one specific cliff number.",
+      execSummary: [
+        "The Ravens finished 8-9 in 2025 and sit second in the AFC North, Power Score -1.87 to Pittsburgh's -1.85 — the same razor-thin margin from the other side. This is genuinely a coin-flip division, not just from the Steelers' vantage point.",
+        "Trajectory (-6) reflects real disruption: a full HC/OC/DC overhaul and the loss of All-Pro center Linderbaum, whose replacements are described plainly as “career backups.” Regression (+3.41) cuts the other way, though — the model reads Baltimore as having underperformed its point differential in 2025, meaning some positive correction toward the mean is already baked in, unlike Pittsburgh's negative one.",
+        "There's no single flagged Key-Person cliff here the way there is for Pittsburgh's Rodgers or Kansas City's Mahomes, but the risk is named plainly all the same: “Lamar Jackson has a real recent injury-availability history,” and a full new coaching staff adds real installation risk on top of it.",
+      ],
+      fiveQuestions: [
+        "Does the +3.41 Regression correction actually show up as more wins, offsetting the full coaching overhaul's disruption?",
+        "How much does replacing an All-Pro center with “career backups” cost the offense in real games?",
+        "Does Lamar Jackson stay healthy for a full season, given the model's own flag on his recent history?",
+        "Does a brand-new HC/OC/DC staff install its system fast enough to compete from Week 1?",
+        "Does Baltimore or Pittsburgh actually pull away in the AFC North, or does the coin flip stay a coin flip all season?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Jackson stays healthy and available for close to a full season.",
+          "The new coaching staff's system is competitive early, not a slow install.",
+          "The center position is a manageable, not costly, weak spot.",
+        ],
+        lowerIf: [
+          "Jackson misses real time, matching the model's injury-history flag.",
+          "Replacing Linderbaum is visibly costly to the offense.",
+          "The coaching transition is rocky enough to show up in the record.",
+        ],
+      },
+    },
+    Chargers: {
+      headline: "Chargers: An 11-6 Record the Model Doesn't Fully Believe",
+      oneLiner: "Los Angeles won 11 games in 2025, but the model's own math says some of that was borrowed — Regression (-5.12) is one of the largest pullbacks on this list, on a roster still waiting to fix its offensive guard spot.",
+      execSummary: [
+        "The Chargers went 11-6 in 2025, second in the AFC West behind Denver, but their Power Score (-0.17) is actually negative — one of the biggest gaps between raw record and model output of any team profiled here.",
+        "Baseline (+5.0) reflects the record, but Trajectory (-4) and Regression (-5.12) both pull hard the other way. Regression in particular is one of the largest single corrections on this list, meaning the model reads a meaningful chunk of that 11-6 finish as not repeatable — Los Angeles's actual point differential didn't fully back up the win total.",
+        "Offensive guard remains an unresolved weak link, and the swing factor at the very top of the roster is explicit in the model's own language: “Herbert carries some recent injury history.” Jamaree Caldwell projecting for more pass-rush reps is a real bright spot, but a smaller one than the two headwinds above it.",
+      ],
+      fiveQuestions: [
+        "How much of the -5.12 Regression correction actually shows up as fewer wins in 2026?",
+        "Does the offensive guard spot get fixed, or does it stay a live weakness protecting Justin Herbert?",
+        "Does Herbert's own injury-availability history become a real, season-altering factor?",
+        "Does Jamaree Caldwell's expanded pass-rush role meaningfully move the defense's numbers?",
+        "Can Los Angeles actually close the gap to Denver in the AFC West, or does the model's -0.17 versus Denver's 4.89 hold up as a real, wide gap?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Los Angeles's record holds up close to 11-6 with minimal regression.",
+          "Herbert stays healthy and available for a full season.",
+          "Offensive guard is a manageable, not costly, weak spot.",
+        ],
+        lowerIf: [
+          "The record visibly regresses, matching the -5.12 correction.",
+          "Herbert's injury history becomes a real, in-season factor.",
+          "Offensive guard is exploited and costs real protection.",
+        ],
+      },
+    },
+    Seahawks: {
+      headline: "Seahawks: Coming Off 14-3, With a Fresh Injury Wrinkle",
+      oneLiner: "Seattle's title-level record is real, but a newly reported Zach Charbonnet ACL recovery is exactly the kind of late-breaking downside the model didn't have priced in until just now.",
+      execSummary: [
+        "The Seahawks went 14-3 in 2025 — the model's own language calls it “champions' momentum” — and enter 2026 with the third-best Power Score in this whole group (3.68), behind only Denver and the Rams among teams profiled here.",
+        "Baseline (+11.0) is tied for the highest of any team on this list, matching the strength of that record. Trajectory (-2) and Regression (-2.87) both trim the number some, and WR depth beyond Jaxon Smith-Njigba, plus an aging Kupp, is flagged as a real concern — the passing game's ceiling may be lower than the record alone suggests.",
+        "The most recent development is a real, live risk: Zach Charbonnet's ACL recovery could cost him the start of the season, a newly reported factor the model has only just priced in — Downside has been raised accordingly, offset only modestly by rookie Jadarian Price picking up early snaps.",
+      ],
+      fiveQuestions: [
+        "How much of the season does Charbonnet miss, and how well does Jadarian Price fill in?",
+        "Is WR depth beyond Smith-Njigba (and an aging Kupp) a real limiter, or does the passing game find answers?",
+        "Does AJ Barner's “discount Kittle” upside case materialize as a real receiving weapon at tight end?",
+        "Does the aging defensive core show real signs of decline, or does it hold up post-title the way the model's downside case assumes it might not?",
+        "Does Seattle stay ahead of the Rams in the NFC West, or does the 3.68-to-4.72 gap close or reverse?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Charbonnet returns quickly and Price's early snaps prove to be a seamless bridge, not a real drop-off.",
+          "WR depth beyond Smith-Njigba proves to be a non-issue.",
+          "The defense shows no real signs of post-title decline.",
+        ],
+        lowerIf: [
+          "Charbonnet misses real time and the backfield production visibly suffers.",
+          "WR depth is exposed, capping the passing game.",
+          "The aging defensive core shows real, visible decline.",
+        ],
+      },
+    },
+    Panthers: {
+      headline: "Panthers: A Real Defensive Investment, Still Waiting on Bryce Young",
+      oneLiner: "Carolina's 2026 case rests on defense doing the heavy lifting again — Trajectory (+6) reflects real investment there — while the offense's outlook still comes down to whether Bryce Young's “lingering performance/confidence risk” finally resolves.",
+      execSummary: [
+        "The Panthers finished 8-9 in 2025, second in the NFC South behind New Orleans, with a Power Score of 0.76 — not far off the Saints' 1.77 in a division the model doesn't see as settled.",
+        "Trajectory (+6) is a real positive here, driven by genuine defensive investment, including a premium new Edge signing that the model expects gives Scourton easier snaps. Regression (-4.44) works against that some, reading 2025 as somewhat better than Carolina's underlying point differential supports.",
+        "The offense's outstanding question is named plainly rather than softened: “Young carries some lingering performance/confidence risk.” A TE hole went unaddressed this offseason too, though the model weighs that as a low-importance gap next to the Bryce Young question.",
+      ],
+      fiveQuestions: [
+        "Does Bryce Young's “lingering performance/confidence risk” finally resolve in a full, healthy season?",
+        "Does the new Edge signing's easier-snaps effect on Scourton show up as real, visible pass-rush production?",
+        "Is the unaddressed TE hole ever actually costly, or does it stay a low-weight non-issue as the model expects?",
+        "How much does the -4.44 Regression correction show up as fewer wins in 2026?",
+        "Can Carolina actually close the gap to New Orleans (0.76 to 1.77) and take the NFC South, or does the division stay New Orleans's to lose?",
+      ],
+      changeOurMind: {
+        pessimisticIf: [
+          "Young has a clean, confident season without the flagged risk showing up.",
+          "The defensive investment (Edge signing, Scourton's expanded role) shows up clearly in results.",
+          "Carolina closes the gap to New Orleans in the division race.",
+        ],
+        lowerIf: [
+          "Young's performance/confidence risk visibly resurfaces.",
+          "The defensive investment doesn't translate to real production.",
+          "The TE hole turns out to matter more than the model's low-weight framing assumed.",
+        ],
+      },
+    },
 };
 
 // ----------------------------------------------------------------------
