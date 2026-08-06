@@ -211,10 +211,15 @@ def build_coaching(src):
 def build_talent_map(src):
     """
     One real starter per depth-chart slot per team, from the most recent
-    snapshot in nflverse_cache/depth_charts_2025_sample.csv (221 daily
-    ESPN-format snapshots, Aug 2025 - 2026-03-14; only the latest `dt` is
-    used). Offense is uniform "3WR 1TE" personnel across all 32 teams;
-    defense is either "Base 4-3 D" or "Base 3-4 D" depending on scheme.
+    snapshot in nflverse_cache/nfl_depth_charts.csv (daily ESPN-format
+    snapshots pulled via nfl_data_py's import_depth_charts(), Aug 2025
+    onward; only the latest `dt` is used). This file is the 2026-03-14
+    depth_charts_2025_sample.csv archive (kept, untouched, alongside this
+    one) merged with a fresh nfl_data_py pull that continues seamlessly
+    from 2026-03-22 onward, refreshed 2026-08-06 - re-run the same
+    nfl_data_py.import_depth_charts([2026]) pull + concat to update again.
+    Offense is uniform "3WR 1TE" personnel across all 32 teams; defense is
+    either "Base 4-3 D" or "Base 3-4 D" depending on scheme.
 
     Important: `pos_rank` is an overall depth rank within a position label
     (e.g. WR1/WR2/WR3), not a per-slot rank - filtering to pos_rank == 1
@@ -225,7 +230,7 @@ def build_talent_map(src):
     pos_grp (offense slot 1 and defense slot 1 are different spots) but are
     unique within one team's one pos_grp.
     """
-    path = os.path.join(src, "nflverse_cache", "depth_charts_2025_sample.csv")
+    path = os.path.join(src, "nflverse_cache", "nfl_depth_charts.csv")
     if not os.path.exists(path):
         return {}, None
     sys.path.insert(0, src)
