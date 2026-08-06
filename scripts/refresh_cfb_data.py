@@ -57,11 +57,18 @@ def main():
             matchup_by_week[str(wk)] = records(path)
     weeks = sorted(weeks)
 
+    team_schedule = {}
+    team_schedule_path = os.path.join(src, "cfb_team_schedule.json")
+    if os.path.exists(team_schedule_path):
+        with open(team_schedule_path) as f:
+            team_schedule = json.load(f)
+
     data = {
         "power": power,
         "history": history,
         "matchup_by_week": matchup_by_week,
         "available_weeks": weeks,
+        "team_schedule": team_schedule,
         "generated_at": datetime.date.today().isoformat(),
     }
 
@@ -70,7 +77,8 @@ def main():
         json.dump(data, f)
 
     print(f"Wrote {out_path}")
-    print(f"  power rows: {len(power)}, history rows: {len(history)}, weeks: {weeks}")
+    print(f"  power rows: {len(power)}, history rows: {len(history)}, weeks: {weeks}, "
+          f"team_schedule teams: {len(team_schedule)}")
     print("Next: git add -A && git commit -m 'refresh cfb data' && git push")
 
 

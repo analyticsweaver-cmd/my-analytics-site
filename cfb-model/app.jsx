@@ -217,6 +217,7 @@ function App() {
     availableWeeks: [],
     matchupWeek: null,
     matchupByWeek: {},
+    teamSchedule: {},
     generatedAt: null,
     loaded: false,
     pipelineError: null,
@@ -238,6 +239,7 @@ function App() {
         powerRows: data.power || [],
         historyRows: data.history || [],
         matchupByWeek: data.matchup_by_week || {},
+        teamSchedule: data.team_schedule || {},
         matchupRows: latestWeek != null ? (data.matchup_by_week || {})[String(latestWeek)] || [] : [],
         availableWeeks: weeks,
         matchupWeek: latestWeek,
@@ -267,7 +269,7 @@ function App() {
 
   const pinnedAccentColor = PINNED_ACCENT === 'steel' ? 'var(--accent-primary)' : 'var(--brass)';
   const topN = TOP_N;
-  const { powerRows, matchupRows, historyRows, tab, sortKey, sortDir, expandedMatchup, selectedTeam, glossaryOpen, pinnedTeam } = s;
+  const { powerRows, matchupRows, historyRows, tab, sortKey, sortDir, expandedMatchup, selectedTeam, glossaryOpen, pinnedTeam, teamSchedule } = s;
 
   // Keep the URL in sync with tab/team so the current view is always
   // bookmarkable/shareable (replaceState, not pushState - this shouldn't
@@ -562,6 +564,51 @@ function App() {
   const leanMarkerStyle = `position:absolute;top:-3px;bottom:-3px;left:${leanPct}%;width:14px;height:18px;transform:translateX(-50%);background:var(--accent-primary);border-radius:4px;border:2px solid var(--surface-card)`;
   const fragilityRaw = hasPowerData ? (activeRankRow.fragility_type || '') : '';
   const fragilityLabel = fragilityRaw ? fragilityRaw.charAt(0).toUpperCase() + fragilityRaw.slice(1) : '—';
+
+  // Schedule Journey (mirrors NFL sibling's, TEAM_PROFILE_DESIGN_SYSTEM.md
+  // section 7): "a timeline, not an opponent list." Anna's ask 2026-08-06.
+  // Built from cfb_team_schedule.json (cfb_matchup.py's build_team_schedules())
+  // - the full season schedule, independent of which weeks have actually
+  // had predict_week() run for them. Weeks with no prediction yet (or
+  // preseason, before the matchup model can even run - see
+  // has_matchup_stats in cfb_matchup.py) come through with win_prob null,
+  // rendered as an explicit "not yet predicted" state rather than hidden
+  // or guessed at.
+  const fullTeamSchedule = (teamSchedule || {})[activeTeam] || [];
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const upcomingTeamSchedule = fullTeamSchedule.filter((g) => !g.date || g.date.slice(0, 10) >= todayISO);
+  const scheduleToShow = upcomingTeamSchedule.length ? upcomingTeamSchedule : fullTeamSchedule;
+  const formatGameDate = (iso) => {
+    if (!iso) return '—';
+    // Anchor to noon UTC before formatting - CFBD's startDate is midnight
+    // UTC, and converting straight to local time can roll the displayed
+    // date back a day west of the UTC line otherwise (same fix the NFL
+    // sibling applies to its own schedule dates).
+    return new Date(`${iso.slice(0, 10)}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  };
+  const scheduleDifficultyMeta = {
+    favorable: { label: 'Favorable', color: 'var(--value-positive)' },
+    competitive: { label: 'Competitive', color: 'var(--brass)' },
+    difficult: { label: 'Difficult', color: 'var(--value-risk)' },
+    unknown: { label: 'Not yet predicted', color: 'var(--ink-faint)' },
+  };
+  const scheduleJourneyRows = scheduleToShow.map((g) => {
+    if (g.win_prob === null || g.win_prob === undefined) return { ...g, difficulty: 'unknown', isSwing: false };
+    const wp = Number(g.win_prob);
+    const difficulty = wp >= 0.6 ? 'favorable' : wp <= 0.4 ? 'difficult' : 'competitive';
+    return { ...g, difficulty, isSwing: Math.abs(wp - 0.5) <= 0.05 };
+  });
+  const knownScheduleGames = scheduleJourneyRows.filter((g) => g.difficulty !== 'unknown');
+  const toughestScheduleGame = knownScheduleGames.length
+    ? knownScheduleGames.reduce((worst, g) => (g.win_prob < worst.win_prob ? g : worst), knownScheduleGames[0])
+    : null;
+  const scheduleSwingGames = knownScheduleGames.filter((g) => g.isSwing);
+  const scheduleSummary = knownScheduleGames.length
+    ? (scheduleSwingGames.length > 0
+        ? `${scheduleSwingGames.length} swing game${scheduleSwingGames.length === 1 ? '' : 's'} on the board (within 5 points of a coin flip) \u2014 the toughest single test is Week ${toughestScheduleGame.week}, ${toughestScheduleGame.home ? 'vs' : '@'} ${toughestScheduleGame.opponent} (${Math.round(toughestScheduleGame.win_prob * 100)}% win probability).`
+        : `No true coin-flip games on the board yet \u2014 the toughest single test is Week ${toughestScheduleGame.week}, ${toughestScheduleGame.home ? 'vs' : '@'} ${toughestScheduleGame.opponent} (${Math.round(toughestScheduleGame.win_prob * 100)}% win probability).`)
+    : (fullTeamSchedule.length ? 'Win probabilities not generated yet for these games \u2014 run the matchup pipeline to populate them.' : '');
+
 
   // Team DNA (shared component, team-dna.js) - identity, not grades: "what
   // kind of team is this," not "how good are they." Every dimension below
@@ -1047,6 +1094,34 @@ function App() {
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>Home Field Edge</div>
                 <div style={st('font:900 30px var(--font-sans);color:var(--ink)')}>{homeEdgeLabel}</div>
                 <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:4px')}>Adjustment to this team's predicted margin when playing at home — can be negative for teams with a poor home track record.</div>
+              </div>
+            </div>
+          )}
+
+          {hasPowerData && fullTeamSchedule.length > 0 && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
+                {upcomingTeamSchedule.length ? 'Schedule journey' : 'Full schedule'}
+              </div>
+              {scheduleSummary && (
+                <div style={st('font:400 12px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{scheduleSummary}</div>
+              )}
+              {scheduleJourneyRows.map((g, i) => (
+                <div key={`${g.week}-${g.opponent}-${i}`} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
+                  <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week ?? '—'}</span>
+                  <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: scheduleDifficultyMeta[g.difficulty].color }} title={scheduleDifficultyMeta[g.difficulty].label} />
+                  <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>
+                    {g.home ? 'vs' : '@'} {g.opponent}
+                    {g.neutral_site && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>NEUTRAL</span>}
+                    {g.is_conference_game && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>CONF</span>}
+                    {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
+                  </span>
+                  <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted);text-align:right;width:38px;flex-shrink:0')}>{g.win_prob !== null && g.win_prob !== undefined ? `${Math.round(g.win_prob * 100)}%` : '—'}</span>
+                  <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>{formatGameDate(g.date)}</span>
+                </div>
+              ))}
+              <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
+                {upcomingTeamSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started yet — showing the full schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse, grey means not predicted yet. CONF = conference game, SWING = within 5 points of a coin flip.
               </div>
             </div>
           )}
