@@ -391,6 +391,43 @@ function App() {
     rows: tableDisplayRows,
   };
 
+  // Run/Pass bars below show a single *net* edge (home offense-vs-away-
+  // defense minus away offense-vs-home-defense). Anna's catch (2026-08-06):
+  // that net can't tell a genuine stalemate (both teams mediocre at
+  // running/passing) apart from a shootout (both teams strong on offense
+  // AND leaky on defense, so the two big edges just cancel out). These
+  // percentile lookups expose the two ingredients behind the net so that
+  // distinction is visible without adding a permanent second bar per stat.
+  const powerByTeam = Object.fromEntries((powerRows || []).map((r) => [r.team, r]));
+  const fieldValues = (field) => (powerRows || []).map((r) => Number(r[field]));
+  const rushOffPool = fieldValues('adj_off_rush_success');
+  const rushDefPool = fieldValues('adj_def_rush_success');
+  const passOffPool = fieldValues('adj_off_pass_success');
+  const passDefPool = fieldValues('adj_def_pass_success');
+  // Defense stats are "success rate allowed" - low is good - so invert the
+  // raw percentile the same way dnaPctInverted() does elsewhere in this
+  // file, keeping "higher percentile = better" consistent across the page.
+  const defGoodPctl = (pool, raw) => {
+    const p = percentileRank(pool, raw);
+    return p === null ? null : 100 - p;
+  };
+  const sideDetail = (offField, defField, offPool, defPool) => (offTeam, defTeam) => {
+    const offRow = powerByTeam[offTeam];
+    const defRow = powerByTeam[defTeam];
+    if (!offRow || !defRow) return null;
+    const offPctl = percentileRank(offPool, Number(offRow[offField]));
+    const defPctl = defGoodPctl(defPool, Number(defRow[defField]));
+    if (offPctl === null || defPctl === null) return null;
+    return { offPctl, defPctl };
+  };
+  const rushSide = sideDetail('adj_off_rush_success', 'adj_def_rush_success', rushOffPool, rushDefPool);
+  const passSide = sideDetail('adj_off_pass_success', 'adj_def_pass_success', passOffPool, passDefPool);
+  // "Live matchup" flag: both directions pair a strong offense (>=60th
+  // percentile) against a leaky defense (<=40th percentile allowed-success),
+  // regardless of which team the net favors - this is the shootout case
+  // that a net-only bar hides.
+  const bothSidesLoaded = (side) => !!side && side.offPctl >= 60 && side.defPctl <= 40;
+
   const matchupsWithFlags = (matchupRows || []).map((g, i) => ({ ...g, _isPinnedGame: g.home_team === pinnedTeam || g.away_team === pinnedTeam, _origIdx: i }));
   const matchupSorted = [...matchupsWithFlags].sort((a, b) => {
     if (a._isPinnedGame !== b._isPinnedGame) return a._isPinnedGame ? -1 : 1;
@@ -418,9 +455,21 @@ function App() {
       { label: 'Explosiveness', value: g.explosive_contribution || 0 },
       { label: 'Havoc', value: g.havoc_contribution || 0 },
     ].map(makeBar);
+    const rushHomeSide = rushSide(g.home_team, g.away_team);
+    const rushAwaySide = rushSide(g.away_team, g.home_team);
+    const passHomeSide = passSide(g.home_team, g.away_team);
+    const passAwaySide = passSide(g.away_team, g.home_team);
+    const rushLive = bothSidesLoaded(rushHomeSide) && bothSidesLoaded(rushAwaySide);
+    const passLive = bothSidesLoaded(passHomeSide) && bothSidesLoaded(passAwaySide);
+    const rushDetail = (rushHomeSide && rushAwaySide)
+      ? `${g.home_team} rush off (${rushHomeSide.offPctl}th pctl) vs ${g.away_team} run D (${rushHomeSide.defPctl}th pctl) \u00b7 ${g.away_team} rush off (${rushAwaySide.offPctl}th pctl) vs ${g.home_team} run D (${rushAwaySide.defPctl}th pctl)`
+      : null;
+    const passDetail = (passHomeSide && passAwaySide)
+      ? `${g.home_team} pass off (${passHomeSide.offPctl}th pctl) vs ${g.away_team} pass D (${passHomeSide.defPctl}th pctl) \u00b7 ${g.away_team} pass off (${passAwaySide.offPctl}th pctl) vs ${g.home_team} pass D (${passAwaySide.defPctl}th pctl)`
+      : null;
     const schemeBars = [
-      { label: 'Run game', value: g.rush_contribution || 0 },
-      { label: 'Pass game', value: g.pass_contribution || 0 },
+      { label: 'Run game', value: g.rush_contribution || 0, detail: rushDetail, liveMatchup: rushLive },
+      { label: 'Pass game', value: g.pass_contribution || 0, detail: passDetail, liveMatchup: passLive },
       { label: 'Coaching continuity', value: g.coaching_contribution || 0 },
     ].map(makeBar);
     return {
@@ -776,10 +825,18 @@ function App() {
                     ))}
                     <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:10px')}>Scheme &amp; Staff</div>
                     {g.schemeBars.map((b) => (
-                      <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
-                        <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
-                        <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
-                        <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
+                      <div key={b.label} style={st('display:flex;flex-direction:column;gap:3px')}>
+                        <div style={st('display:flex;align-items:center;gap:12px')}>
+                          <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap')}>
+                            {b.label}
+                            {b.liveMatchup && (
+                              <span title="Both teams grade well here against a leaky opposing unit - the net edge looks quiet, but this is a live, high-variance matchup, not a stalemate." style={st('font:700 9px var(--font-sans);letter-spacing:.03em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:2px 6px;border-radius:999px;cursor:help')}>Live matchup</span>
+                            )}
+                          </span>
+                          <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
+                          <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
+                        </div>
+                        {b.detail && <div style={st('padding-left:142px;font:400 11px var(--font-sans);color:var(--ink-faint)')}>{b.detail}</div>}
                       </div>
                     ))}
                     <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Coaching continuity is a small, occasional signal — most matchups will show close to zero here unless one team has a coaching change this season.</div>
