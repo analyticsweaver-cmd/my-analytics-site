@@ -81,6 +81,20 @@ const TEAM_PROFILES = {
       'Even with a healthy Mahomes, can the Chiefs close an 8-to-10-point Power Score gap on a dominant Broncos team in one offseason?',
       "How much of the 6-11 finish was Mahomes' injury specifically, versus a broader decline the model hasn't fully separated out yet?",
     ],
+    whyModelThinks: {
+      optimism: [
+        "Regression sits at +10.5, the largest positive correction on the roster — the 6-11 record ran meaningfully worse than the team's actual point differential.",
+        'Kansas City already added Kenneth Walker III this offseason, a concrete roster move addressing the QB-injury risk directly.',
+        'Key-Person Dependency data isolates the injury\'s exact effect (3.21 points) rather than leaving it a vague risk label — the current -4.71 Power Score already assumes a healthy Mahomes, not a discounted one.',
+        'The 6-11 finish traces to one flagged event (the Week 15 injury), not a decline spread across the roster.',
+      ],
+      risks: [
+        'Power Score (-4.71) trails the division-leading Broncos (+8.4) by roughly 13 points, the largest gap in the AFC West.',
+        'Trajectory — the model\'s roster/coaching judgment component — sits at -13.0, the most negative of the three Power Score inputs.',
+        'The 3.21-point Key-Person cliff is the largest single-player dependency swing on the roster, concentrating real risk in one position.',
+        'Baseline (-5.0) still reflects the 6-11 record directly — the weakest of the three components before any judgment adjustment is applied.',
+      ],
+    },
     changeOurMind: {
       pessimisticIf: [
         'Mahomes returns for Week 1 and looks like his pre-injury self, not just "active."',
@@ -109,6 +123,18 @@ const TEAM_PROFILES = {
         "Can Dallas actually hold off Philadelphia for the division, or does experience and talent close a 0.69-point Power Score gap?",
         "Does a 7-9-1 baseline undersell a genuinely retooled roster, or was last year's record closer to the team's real level than Trajectory assumes?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Trajectory sits at +7, the largest positive component on the roster — real defensive additions and a new coordinator, not last year's record, are driving this year's call.",
+          "Dallas leads the NFC East by Power Score despite a below-.500 Baseline (-2.0), meaning the model rates the current roster well ahead of last year's record.",
+          "Regression is close to neutral (+0.5), meaning last year's 7-9-1 finish tracked the team's actual point differential — no hidden bad-luck cushion propping up the number.",
+        ],
+        risks: [
+          "Baseline (-2.0) still reflects last year's below-.500 finish directly — the record hasn't caught up to the roster bet yet.",
+          "DeMarvion Overshown's Key-Person data (healthy: 1.66, down: -1.08, cliff: 2.74) is flagged low-confidence due to a thin sample, leaving real uncertainty around the single biggest swing factor on the roster.",
+          "Cornerback depth remains the one roster hole the defensive rebuild left unaddressed.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The defense performs like a top-half unit early, validating the Trajectory bet.",
@@ -137,6 +163,18 @@ const TEAM_PROFILES = {
         "Is this core aging out of its window now, or is 2026 still inside it?",
         "Can Philadelphia hold off Dallas in a division where the gap is only 0.69 points, or does last year's record flatter Philadelphia more than this year's roster earns?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+5.0) still reflects an 11-6 season, the strongest raw-record input of any NFC East team besides Dallas's Trajectory bet.",
+          "The coaching staff carries zero turnover into 2026 — the only real continuity anchor on a roster that lost personnel.",
+          "DeVonta Smith Jr. and Jalen Hunt are already real, rostered pieces the model reads as upside if health holds.",
+        ],
+        risks: [
+          "Trajectory (-2.0) and Regression (-2.91) both pull down from Baseline — the model reads last year's subtractions as outweighing coaching continuity.",
+          "A.J. Brown was traded away and the starting safety departed — two real, already-completed subtractions from last year's roster.",
+          "This is described as an aging core closer to the end of its title window than the start of one.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The passing game doesn't miss Brown as much as expected — Smith Jr. and Hunt genuinely break out.",
@@ -165,6 +203,18 @@ const TEAM_PROFILES = {
         "How much does the defensive-line and scheme rebuild risk, already priced in, actually cost them in-season?",
         "Is Darius Alexander's role opportunity enough of a real contribution to matter, or just a depth note?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression sits at +9.26, the second-largest positive correction of any team in the model — New York's actual point differential was meaningfully better than the 4-13 record shows.",
+          "Trajectory is positive (+5.0), reflecting real roster improvement layered on top of the luck correction.",
+          "The coaching staff overhaul is already complete and well-reviewed, not a pending question.",
+        ],
+        risks: [
+          "Baseline (-9.0) is one of the most negative in the league, directly reflecting the 4-13 finish.",
+          "Center remains an unaddressed weak link on the offensive line.",
+          "The defensive-line and scheme rebuild risk is already priced into the Stability score, meaning the model itself is uncertain how it plays out.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "New York's record improves significantly even without a marquee offseason addition — the luck-adjustment bet pays off.",
@@ -193,6 +243,17 @@ const TEAM_PROFILES = {
         "Does the league's hardest projected schedule turn a mediocre roster into a genuinely bad record?",
         "Is retaining the head coach while changing both coordinators enough continuity to show real improvement, or too much churn to matter?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is positive (+3.53), meaning the model reads 2025 as somewhat unlucky relative to Washington's underlying point differential.",
+          "Terry McLaurin remains a proven, established WR1 the model already trusts.",
+        ],
+        risks: [
+          "Baseline (-7.0) and Trajectory (-8.0) are both negative at the same time — the only team in the division carrying that combination.",
+          "Washington's 2026 schedule is rated the hardest in the league (SOS rank #1).",
+          "WR2 opposite McLaurin was never addressed this offseason.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Daniels stays healthy for close to a full season.",
@@ -221,6 +282,18 @@ const TEAM_PROFILES = {
         "Do Riley and Sanker's mid-round finds hold up as full-season starters, not just camp standouts?",
         "Is zero coaching turnover an underrated stabilizer here, or does it mean no real answer for whatever didn't work in a 6-11 season?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Trajectory sits at +11, the single largest positive Trajectory jump of any team in the model.",
+          "New Orleans carries zero coaching turnover into 2026.",
+          "The 2026 schedule is rated the easiest in the league (SOS rank 32nd of 32).",
+        ],
+        risks: [
+          "Baseline (-5.0) still reflects a 6-11 finish directly.",
+          "The Trajectory jump rests heavily on Tyler Shough, a one-year-sample rookie quarterback.",
+          "The easy schedule inflates the raw win-total projection independent of roster strength.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Shough performs like a legitimate starting QB against a full slate of NFL defenses, not just early flashes.",
@@ -249,6 +322,17 @@ const TEAM_PROFILES = {
         "How does the unproven QB succession plan actually play out once the season starts?",
         "Is a -9 Trajectory a fair read on a full rebuild, or does the model risk underrating young talent that hasn't shown up in the data yet?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Ashton Jeanty is already on the roster as a real, model-flagged buy-low regression-to-mean case.",
+          "Regression is mildly positive (+1.23), a small offsetting correction on an otherwise deeply negative profile.",
+        ],
+        risks: [
+          "Baseline (-11.0) and Trajectory (-9.0) are both deeply negative — Power Score (-7.85) is the lowest of any team profiled.",
+          "There is no legitimate WR1 or true X-receiver currently on the roster.",
+          "The coaching staff saw a full overhaul, adding installation risk to an already rebuilding roster.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Jeanty's regression-to-mean case is real and shows up immediately.",
@@ -277,6 +361,16 @@ const TEAM_PROFILES = {
         "Can a team already rated as low-risk find any real upside beyond what's already priced in?",
         "Does the AFC West gap to Kansas City and Las Vegas hold, or does one of them close it faster than expected?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+11.0) is the highest of any team in the model, and Trajectory (+5.0) adds on top of it — Denver carries the least roster turnover in the league into 2026.",
+          "Power Score (4.89) leads not just the AFC West but the entire league.",
+        ],
+        risks: [
+          "Regression (-9.04) is the largest single luck correction, in either direction, of any team in the model — 2025's point differential didn't fully back up the 14-3 record.",
+          "There's a real gap at tight end, the one roster hole the model flags.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Denver's results don't show meaningful regression — 2025's point-differential gap turns out to not matter.",
@@ -305,6 +399,17 @@ const TEAM_PROFILES = {
         "Does zero coaching turnover translate to a faster start than teams with new systems to install?",
         "Is this Rams roster genuinely the second-best team in the model's eyes, or does the gap to Denver close or widen?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+7.0) and Trajectory (+4.0) both point the same direction, and Scheme sits at the maximum score in the entire dataset.",
+          "The Myles Garrett trade is already completed, adding a real, on-roster defensive upgrade.",
+          "Zero coaching turnover carries into 2026.",
+        ],
+        risks: [
+          "WR3 depth is the one roster hole the model flags on an otherwise elite roster.",
+          "Matthew Stafford is a 37-plus-year-old quarterback — the Power Score reflects the team as currently built, not a guarantee that holds if his play or availability slips.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The Garrett trade's impact shows up immediately and clearly on defense.",
@@ -333,6 +438,17 @@ const TEAM_PROFILES = {
         "Does the AFC North race stay a coin flip with Baltimore all year, or does one team pull away?",
         "How much of 2025's 10-7 record was overperformance the model expects to correct in 2026?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Power Score (-1.85) leads the AFC North, ahead of Baltimore's -1.87, by the thinnest margin in the model.",
+          "Baseline is positive (+3.0), reflecting a 10-7 finish.",
+        ],
+        risks: [
+          "Trajectory (-7.0) reflects a full coaching staff overhaul on top of an unsettled right guard spot.",
+          "The Key-Person Dependency data is explicit: Power Score is -1.85 with a healthy Aaron Rodgers and -5.06 if he goes down — a 3.21-point cliff on a 42-year-old quarterback.",
+          "Regression (-3.73) adds a second headwind — the model reads 2025 as overperformance against the team's own point differential.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Rodgers plays a full, healthy season at a level close to his career norm.",
@@ -361,6 +477,17 @@ const TEAM_PROFILES = {
         "Is Jared Wilson's modest breakout case enough to matter, or just a depth note?",
         "Can New England hold off Buffalo by a wide-enough margin to make the AFC East a non-race?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline sits at +11.0, tied for the highest in the model, directly reflecting a 14-3 season.",
+          "Power Score (2.63) leads the AFC East by a wide margin over Buffalo's 1.96.",
+          "A.J. Brown was acquired via trade from Philadelphia, a real, already-completed roster addition.",
+        ],
+        risks: [
+          "Trajectory (-4.0) reflects a real, unaddressed hole at edge rusher.",
+          "Regression (-4.62) is a real pullback — the model reads 2025 as somewhat better than New England's underlying point differential supports.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The pass rush performs better than an unaddressed-hole framing suggests, even without a marquee addition.",
@@ -389,6 +516,16 @@ const TEAM_PROFILES = {
         "How much does the -1.42 Regression pullback actually cost Houston in the standings?",
         "Is “fewest roster issues in the AFC” still true by midseason, or does a division rival close the gap?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+7.0) and Trajectory (+5.0) both point up, and Regression (-1.42) is only a mild pullback — nothing like the double-digit swings other teams on this list carry.",
+          "Power Score (4.62) is the third-highest of any team in the model, trailing only Denver and the Rams.",
+          "The roster carries full continuity into 2026, with the model's own language calling it the fewest roster issues in the AFC.",
+        ],
+        risks: [
+          "A minor RB2 concern is the one real question mark the model flags, though it's explicitly framed as the exception rather than the rule.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Houston's record holds up close to 12-5 with minimal regression.",
@@ -417,6 +554,17 @@ const TEAM_PROFILES = {
         "Does Burden III's rookie efficiency hold up over a full season of opposing game plans?",
         "Is a young, ascending, healthy core enough to hold off regression, or does inexperience show up in close games?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+5.0) reflects an 11-6 finish, the NFC North's best record.",
+          "Caleb Williams' 2025 breakout and a rookie class headlined by Burden III (who tied A.J. Brown's rookie efficiency record) are both already on the books, not projections.",
+          "Trajectory is only mildly negative (-1.0) — most of the pressure on Power Score comes from Regression, not a roster-quality read.",
+        ],
+        risks: [
+          "Regression (-5.67) is the largest single overperformance correction of any team in the model — 2025's point differential didn't fully support an 11-6 finish.",
+          "The interior defensive line got zero improvement this offseason.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Williams' 2025 breakout carries forward without a step back.",
@@ -445,6 +593,16 @@ const TEAM_PROFILES = {
         "Does a brand-new HC/OC/DC staff install its system fast enough to compete from Week 1?",
         "Does Baltimore or Pittsburgh actually pull away in the AFC North, or does the coin flip stay a coin flip all season?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is positive (+3.41) — the model reads Baltimore as having underperformed its point differential in 2025, the opposite correction from division-rival Pittsburgh.",
+          "Power Score (-1.87) trails Pittsburgh by just two-hundredths of a point — the closest division race in the model.",
+        ],
+        risks: [
+          "Trajectory (-6.0) reflects a full HC/OC/DC overhaul and the loss of All-Pro center Linderbaum, whose replacements are described as career backups.",
+          "Lamar Jackson carries a real, recent injury-availability history, flagged directly in the model's own language.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Jackson stays healthy and available for close to a full season.",
@@ -473,6 +631,16 @@ const TEAM_PROFILES = {
         "Does Jamaree Caldwell's expanded pass-rush role meaningfully move the defense's numbers?",
         "Can Los Angeles actually close the gap to Denver in the AFC West, or does the model's -0.17 versus Denver's 4.89 hold up as a real, wide gap?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+5.0) reflects an 11-6 finish, second in the AFC West.",
+          "Jamaree Caldwell projects for an expanded pass-rush role, a real on-roster addition.",
+        ],
+        risks: [
+          "Trajectory (-4.0) and Regression (-5.12) both pull hard against Baseline — Power Score (-0.17) is actually negative, one of the widest record-to-model gaps in the league.",
+          "Offensive guard remains an unresolved weak link protecting Justin Herbert, who himself carries recent injury history.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Los Angeles's record holds up close to 11-6 with minimal regression.",
@@ -501,6 +669,16 @@ const TEAM_PROFILES = {
         "Does the aging defensive core show real signs of decline, or does it hold up post-title the way the model's downside case assumes it might not?",
         "Does Seattle stay ahead of the Rams in the NFC West, or does the 3.68-to-4.72 gap close or reverse?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+11.0) is tied for the highest in the model, directly reflecting a 14-3 season.",
+          "Power Score (3.68) is the third-best in the model among teams profiled here, behind only Denver and the Rams.",
+        ],
+        risks: [
+          "WR depth beyond Jaxon Smith-Njigba, plus an aging Kupp, is a flagged real concern.",
+          "Zach Charbonnet's ACL recovery is a newly reported, live risk that could cost him the start of the season.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Charbonnet returns quickly and Price's early snaps prove to be a seamless bridge, not a real drop-off.",
@@ -529,6 +707,16 @@ const TEAM_PROFILES = {
         "How much does the -4.44 Regression correction show up as fewer wins in 2026?",
         "Can Carolina actually close the gap to New Orleans (0.76 to 1.77) and take the NFC South, or does the division stay New Orleans's to lose?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Trajectory is positive (+6.0), driven by real defensive investment, including a premium Edge signing already on the roster.",
+        ],
+        risks: [
+          "Regression (-4.44) works against that gain — the model reads 2025 as somewhat better than Carolina's underlying point differential supports.",
+          "Bryce Young carries a named, unresolved performance/confidence risk.",
+          "A TE hole went unaddressed this offseason, though the model weighs it as low-importance next to the QB question.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Young has a clean, confident season without the flagged risk showing up.",
@@ -557,6 +745,16 @@ const TEAM_PROFILES = {
         "Does T.J. Sanders' rotational role at DT turn into more than expected?",
         "Can Buffalo close a real gap to New England (1.96 to 2.63) in the AFC East, or does the Patriots' margin hold up?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+7.0) reflects a 12-5 season, and Trajectory/Regression together trim only modestly — nothing like the double-digit corrections other AFC teams carry.",
+          "T.J. Sanders projects as a real rotational piece at defensive tackle.",
+        ],
+        risks: [
+          "The coaching staff saw full turnover this offseason, softened only by one internal promotion rather than a completely outside hire.",
+          "The linebacker corps carries an undisclosed injury into camp, on top of being a real, moderate weakness already.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The undisclosed LB injury turns out to be minor or resolved before Week 1.",
@@ -585,6 +783,17 @@ const TEAM_PROFILES = {
         "How much does thin depth actually cost Miami if a starter goes down?",
         "Is 2026 a true bottom-out year, or does the rebuild show early signs of working?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Patrick Paul is a real, already-rostered bright spot as an ascending young left tackle.",
+          "Baseline (-3.0) and Regression (-1.44) are comparatively minor drags — most of Miami's problem is structural, not bad luck.",
+        ],
+        risks: [
+          "Trajectory (-9.0) is deeply negative, reflecting a full head-coach-and-both-coordinators rebuild.",
+          "The receiver room is described in the model's own language as the weakest it has ever evaluated.",
+          "The model's downside case is explicit: thin depth if anyone goes down.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The receiver room finds real answers, even unexpectedly, during camp or early season.",
@@ -613,6 +822,17 @@ const TEAM_PROFILES = {
         "Does Year 2 continuity produce visible systemic improvement over a 3-14 baseline?",
         "How much does an easy 2026 schedule (one of the softest on this list) flatter New York's win total regardless of underlying improvement?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is positive (+2.58) and Trajectory is neutral (0) — both work in New York's favor relative to Baseline alone.",
+          "The offseason is described in the model's own language as extremely productive.",
+          "T'Vondre Sweat is flagged with real breakout upside at defensive tackle.",
+        ],
+        risks: [
+          "Baseline (-11.0) directly reflects a 3-14 finish, one of the worst in the league.",
+          "An interior offensive line flaw remains unaddressed.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The Regression correction shows up as real, meaningful win-total improvement.",
@@ -641,6 +861,17 @@ const TEAM_PROFILES = {
         "Does the historically bad performance against tight ends specifically get fixed, or does it remain exploitable?",
         "With a soft 2026 schedule (one of the easiest on this list), does a healthy Burrow alone get Cincinnati back to a winning record?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is positive (+2.35), a modest offsetting correction.",
+          "Full continuity carries over from last season — no coaching turnover to install around.",
+        ],
+        risks: [
+          "The defense has been bottom-8 for three straight years, and is historically bad against tight ends specifically.",
+          "The Key-Person Dependency data is explicit: Power Score is -3.88 with a healthy Joe Burrow and -7.09 if he goes down — a 3.21-point cliff, identical in size to the Chiefs' and Steelers' quarterback dependencies.",
+          "Erick All Jr.'s own ACL history sits on top of Burrow's recent injury history — two health questions stacked at the two positions the model watches closest.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Burrow plays a full, healthy season.",
@@ -669,6 +900,17 @@ const TEAM_PROFILES = {
         "Is -14 Trajectory a fair read on the scale of this rebuild, or does the model risk being too pessimistic about young talent elsewhere on the roster?",
         "Does Regression's modest positive correction (+1.63) suggest Cleveland was slightly unlucky in 2025, or does it just mean a bad team was bad in a fairly predictable way?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is mildly positive (+1.63), a small offsetting correction.",
+          "Tyson Campbell steps into a bigger role as a proven veteran, a concrete, already-rostered bright spot.",
+        ],
+        risks: [
+          "Trajectory (-14.0) is the second-most negative of any team in the entire model, behind only Detroit's -15.",
+          "The quarterback position is described as the defining issue for decades, still unresolved.",
+          "Baseline (-7.0) reflects a 5-12 finish directly.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "A real, sustainable answer at quarterback emerges, even a partial one.",
@@ -697,6 +939,17 @@ const TEAM_PROFILES = {
         "How much does one of the toughest schedules on this list (SOS rank 5) cost Jacksonville in the standings?",
         "Can Jacksonville close the gap to Houston in the AFC South, or does the model's 4.62-to-3.67 gap hold?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline sits at +9.0, one of the highest in the model, a direct reflection of a 13-4 season.",
+          "Trajectory is modestly positive (+1.0) — this reads as a genuinely earned strong season, not one propped up by luck.",
+        ],
+        risks: [
+          "Regression (-3.64) trims some back from an otherwise strong number.",
+          "Trevor Lawrence's health and consistency is the one recurring variable the model keeps flagging.",
+          "Etienne's departure leaves a running back committee behind him.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Lawrence plays a full, consistent, healthy season.",
@@ -725,6 +978,18 @@ const TEAM_PROFILES = {
         "Does the Jones extension's QB stability hold up against his own recent injury history?",
         "Is 8-9 closer to Indianapolis's true level, or was the model's luck-adjustment read correct?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression sits at +5.2, one of the largest positive corrections in the model — the model reads Indianapolis's underlying performance as better than an 8-9 record shows.",
+          "The Jones extension resolves the quarterback uncertainty that used to sit over this roster.",
+          "Josh Downs carries real, already-rostered target-share upside.",
+        ],
+        risks: [
+          "A real WR2 hole opened after trading Pittman.",
+          "Alec Pierce's ankle surgery carries a 4-6 month recovery window that could cost him real regular-season time, layering onto an already-thin WR2 room.",
+          "Jones himself carries his own recent injury history.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The Regression correction shows up as real, visible win-total improvement.",
@@ -743,16 +1008,27 @@ const TEAM_PROFILES = {
       oneLiner: "Tennessee's record was the AFC South's worst by a mile, but Cam Ward's rookie emergence gives the model its strongest upside case in the entire division — the roster underneath him is still the real question.",
       execSummary: [
         "The Titans went 3-14 in 2025, last in the AFC South, with a Power Score of -4.8. Baseline (-11.0) reflects that bad record directly, but Trajectory (-1) is nearly neutral — much less negative than the record alone would suggest — and Regression (+2.5) adds a bit more back, some of it real underlying improvement, some of it a luck correction.",
-        "The real story is Cam Ward: his rookie emergence, alongside Helm, earned both players spots on the league's All-Breakout Team — the model calls it the strongest upside case anywhere in the division. A new head coach and defensive coordinator are installing around that momentum.",
+        "The real story is Cam Ward: his rookie emergence, alongside Helm, earned both players spots on the league's All-Breakout Team — the model calls it the strongest upside case anywhere in the division. A new head coach and offensive coordinator are installing around that momentum.",
         "The secondary remains unaddressed, and the model's downside case is direct: Ward is still unproven over a full season, and the roster underneath him remains division-worst. This is real promise sitting on top of a genuinely thin foundation.",
       ],
       fiveQuestions: [
         "Does Cam Ward's rookie emergence carry into a full sophomore season, or was it a small-sample breakout?",
         "Does Helm's own breakout production continue alongside Ward's?",
         "Does the unaddressed secondary become a costly, exploited weakness?",
-        "Do the new HC and DC install a system that supports Ward's development?",
+        "Do the new HC and OC install a system that supports Ward's development?",
         "Is the roster underneath Ward good enough to turn his individual progress into real team wins, or does a division-worst supporting cast cap the ceiling?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Trajectory is nearly neutral (-1.0), much less negative than the record alone would suggest, and Regression (+2.5) adds a bit more back.",
+          "Cam Ward and Helm both earned spots on the league's All-Breakout Team as rookies — the model calls it the strongest upside case anywhere in the division.",
+        ],
+        risks: [
+          "Baseline (-11.0) directly reflects a 3-14 finish, the AFC South's worst.",
+          "The secondary remains unaddressed.",
+          "Ward is still unproven over a full season, on a roster that remains division-worst outside of him.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Ward's rookie emergence continues and translates to a meaningfully better record.",
@@ -781,6 +1057,17 @@ const TEAM_PROFILES = {
         "Does zero coaching turnover translate into a faster start than teams still installing new systems?",
         "Does James Pierre's addition at corner meaningfully upgrade the secondary?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Zero coaching turnover carries real continuity into 2026.",
+          "James Pierre adds a real, already-rostered piece at cornerback.",
+          "Baseline is modestly positive (+1.0), matching a 9-8 record.",
+        ],
+        risks: [
+          "Trajectory (-6.0) reflects real uncertainty layered on top of a modest record, centered on an unresolved quarterback competition.",
+          "Tight end production is flagged as weak, even though the model treats it as low-importance.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The QB competition resolves early and cleanly, with a clear, competent starter.",
@@ -809,6 +1096,18 @@ const TEAM_PROFILES = {
         "How much does one of the toughest schedules on this list (SOS rank 4) compound a season already missing its best defender?",
         "Does zero coaching turnover provide enough system stability to weather Parsons' absence?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Zero coaching turnover keeps the rest of the system intact.",
+          "Anthony Belton profiles as a real, already-rostered starting-caliber guard.",
+          "Baseline is positive (+2.0), matching a 9-7-1 record.",
+        ],
+        risks: [
+          "Trajectory (-10.0) is one of the more negative numbers in the model, driven almost entirely by Micah Parsons' ACL and meniscus recovery, now reported likely to cost him most of the regular season.",
+          "The Key-Person Dependency data for non-QB positions like Edge is flagged unreliable for precise cliff numbers here — Parsons' listed cliff is wrong-signed and shouldn't be read literally, only the qualitative read (Green Bay is worse off without him) is trustworthy.",
+          "One of the toughest schedules in the model (SOS rank 4) compounds a season already missing its best defender.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Parsons returns earlier than the September-practice, postseason-return timeline suggests.",
@@ -837,6 +1136,18 @@ const TEAM_PROFILES = {
         "Is -15 Trajectory an overcorrection for one position group's problems, or does it accurately capture how much a bad secondary can sink an otherwise solid team?",
         "Does a 9-8-caliber roster elsewhere hold up well enough to offset the secondary being this depleted?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression is positive (+3.06), a real offsetting correction.",
+          "Roger McCreary gets a real, already-rostered bounce-back opportunity in the secondary.",
+          "Only the offensive coordinator changed — the rest of the coaching staff is intact.",
+        ],
+        risks: [
+          "Trajectory (-15.0) is the single most negative score of any team in the model's full 32-team dataset.",
+          "The secondary is described as riddled with red flags — an arrest, an Achilles tear, and a knee issue.",
+          "Head coach Dan Campbell has said the team does not know when or if safety Kerby Joseph will return — the Key-Person data itself is flagged low-confidence and wrong-signed here, so only the qualitative severity is trustworthy, not the listed cliff number.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Kerby Joseph returns during the season, even later than expected.",
@@ -865,6 +1176,17 @@ const TEAM_PROFILES = {
         "How does the Mayfield contract situation resolve, and does it affect his on-field focus or availability?",
         "Is a genuinely middle-of-the-pack roster (per Baseline/Trajectory both near zero) enough to compete in a real NFC South race?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (-1.0) and Trajectory (0) both sit close to neutral — the model reads this roster as genuinely middle-of-the-pack, not clearly trending down.",
+          "McMillan is the top candidate for outside-receiver snaps, a real, already-rostered opportunity.",
+        ],
+        risks: [
+          "The tight end room remains the least productive on the roster and unaddressed this offseason.",
+          "The team fired its offensive coordinator in favor of a new hire, a real scheme-installation risk.",
+          "McMillan's own injury history (hamstring, neck) is a real risk to the opportunity in front of him.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The new OC's scheme installs smoothly and shows early results.",
@@ -893,6 +1215,17 @@ const TEAM_PROFILES = {
         "Does Dorlus' breakout translate into real, sustained production?",
         "Does a new HC/OC pairing (with the DC retained) find a coherent system fast enough to matter?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Dorlus' breakout is flagged as real per scouts, a genuine, already-visible bright spot.",
+          "The defensive coordinator was retained through the coaching change, preserving some continuity.",
+        ],
+        risks: [
+          "Trajectory (-10.0) reflects real downgrade — both starting interior defensive linemen departed this offseason, replaced only by depth pieces.",
+          "The Key-Person Dependency data is explicit: Power Score is -4.41 with a healthy Michael Penix Jr. and -7.63 if he's not — a 3.21-point cliff, the same size the model assigns three other quarterbacks on this list.",
+          "Pearce Jr. faces felony charges with his 2026 availability in doubt — a real off-field risk layered directly on top of the on-field one.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "Penix returns fully healthy and avoids the 3.21-point cliff.",
@@ -921,6 +1254,17 @@ const TEAM_PROFILES = {
         "Does the recent pattern of major injury attrition continue, or does 2026 finally break it?",
         "Can San Francisco actually close the gap to the Rams and Seahawks in a loaded NFC West?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Baseline (+7.0) reflects a 12-5 season, the strongest raw-record input in a stacked NFC West.",
+          "A new defensive coordinator (Raheem Morris) is already in place addressing the secondary.",
+        ],
+        risks: [
+          "Trajectory (-9.0) and Regression (-5.61) both pull hard against Baseline — Regression especially is one of the larger single corrections on this list.",
+          "There's no reliable free safety left after the Hufanga-era departures.",
+          "The Aiyuk situation remains unresolved, and the model flags a recent history of major injury attrition as an ongoing risk, not a one-time event.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "The 12-5-level performance holds up with minimal regression.",
@@ -949,6 +1293,17 @@ const TEAM_PROFILES = {
         "Does Walter Nolen III stay healthy enough to build on his limited-snap flashes?",
         "Do the new HC and OC find any real traction in Year 1, given the quarterback uncertainty underneath them?",
       ],
+      whyModelThinks: {
+        optimism: [
+          "Regression sits at +7.32, the third-largest positive luck correction of any team in the model, behind only the Chiefs and Giants.",
+          "Walter Nolen III flashed real Pro-Bowl-caliber play in limited snaps.",
+        ],
+        risks: [
+          "Baseline (-11.0) and Trajectory (-12.0) are both deeply negative — the model's own language calls this the worst need-fill situation in the league, with no reliable starting quarterback.",
+          "Arizona faces the second-hardest schedule of any team in the league (SOS rank 2).",
+          "Nolen's own major injury history makes him, in the model's words, a genuine boom-or-bust factor.",
+        ],
+      },
       changeOurMind: {
         pessimisticIf: [
           "A workable answer at quarterback emerges, even a partial one.",
@@ -1096,6 +1451,81 @@ function PctBar({ value, color, width = 70 }) {
   );
 }
 
+// One quadrant of the Model SWOT grid (Strengths/Weaknesses/Opportunities/Threats)
+function SWOTQuadrant({ label, sub, items, tone }) {
+  const color = tone === 'positive' ? 'var(--value-positive)' : 'var(--value-risk)';
+  return (
+    <div style={st(`background:var(--surface-card);border-left:3px solid ${color};border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:6px`)}>
+      <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${color}`)}>{label}</div>
+      <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-4px')}>{sub}</div>
+      <ul style={st('margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
+        {items.map((t, i) => (
+          <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Talent Map field layout (TEAM_PROFILE_DESIGN_SYSTEM.md §4 + Design Guide
+// Starting Point.pdf's "Field play map" + "Player Badges" components) —
+// percentage coordinates (0-100) within the field diagram, offense in the
+// lower half facing up, defense mirrored in the upper half. Positions not
+// in a given team's scheme (e.g. NT for a 4-3 team) simply never look
+// themselves up here since the data only contains what that team fields.
+const POSITION_COORDS = {
+  // Offense
+  QB: { x: 50, y: 78 }, RB: { x: 50, y: 90 }, FB: { x: 36, y: 85 },
+  LT: { x: 26, y: 64 }, LG: { x: 39, y: 64 }, C: { x: 50, y: 64 }, RG: { x: 61, y: 64 }, RT: { x: 74, y: 64 },
+  TE: { x: 85, y: 66 },
+  // Defense — 4-3 front
+  LDE: { x: 30, y: 38 }, LDT: { x: 42, y: 40 }, RDT: { x: 58, y: 40 }, RDE: { x: 70, y: 38 },
+  WLB: { x: 35, y: 27 }, MLB: { x: 50, y: 25 }, SLB: { x: 65, y: 27 },
+  // Defense — 3-4 front (replaces the four D-line / three LB slots above)
+  NT: { x: 50, y: 40 }, LILB: { x: 42, y: 24 }, RILB: { x: 58, y: 24 },
+  // Defense — shared across both fronts
+  LCB: { x: 7, y: 20 }, RCB: { x: 93, y: 20 }, NB: { x: 21, y: 15 }, FS: { x: 40, y: 9 }, SS: { x: 60, y: 9 },
+};
+// The three WR slots share the "WR" abbreviation with different pos_slot
+// numbers that aren't consistent team-to-team, so they're placed by sorted
+// order (outside-left, outside-right, slot) rather than a fixed lookup.
+const WR_COORDS = [{ x: 5, y: 70 }, { x: 95, y: 70 }, { x: 18, y: 74 }];
+
+function TalentMapField({ players, scheme }) {
+  const wrs = players.filter((p) => p.pos_abb === 'WR').sort((a, b) => Number(a.pos_slot) - Number(b.pos_slot));
+  const others = players.filter((p) => p.pos_abb !== 'WR' && POSITION_COORDS[p.pos_abb]);
+  const badges = [
+    ...wrs.map((p, i) => ({ ...p, coord: WR_COORDS[i] || WR_COORDS[WR_COORDS.length - 1] })),
+    ...others.map((p) => ({ ...p, coord: POSITION_COORDS[p.pos_abb] })),
+  ].filter((b) => b.coord);
+
+  const W = 600, H = 440;
+  const yardLines = [10, 25, 40, 55, 70, 85];
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', background: 'color-mix(in srgb, var(--green) 10%, var(--surface-page))', borderRadius: 8 }}>
+      {yardLines.map((pct) => (
+        <line key={pct} x1={0} y1={(pct / 100) * H} x2={W} y2={(pct / 100) * H} stroke="var(--hairline)" strokeWidth="1" />
+      ))}
+      <line x1={0} y1={H * 0.53} x2={W} y2={H * 0.53} stroke="var(--brass)" strokeWidth="1.5" strokeDasharray="5 4" />
+      {badges.map((b, i) => {
+        const cx = (b.coord.x / 100) * W;
+        const cy = (b.coord.y / 100) * H;
+        const nameParts = (b.player_name || '').split(' ').filter((p) => !/^(Jr\.?|Sr\.?|I{2,3}|IV|V)$/i.test(p));
+        const lastName = nameParts.slice(-1)[0] || '';
+        return (
+          <g key={i}>
+            <circle cx={cx} cy={cy} r="17" fill="var(--surface-card)" stroke="var(--brass)" strokeWidth="2" />
+            <text x={cx} y={cy + 4} textAnchor="middle" style={{ font: '700 10px var(--font-sans)', fill: 'var(--ink)' }}>{b.pos_abb}</text>
+            <text x={cx} y={cy + 29} textAnchor="middle" style={{ font: '600 10px var(--font-sans)', fill: 'var(--ink-muted)' }}>{lastName}</text>
+          </g>
+        );
+      })}
+      <text x={W - 8} y={16} textAnchor="end" style={{ font: '700 10px var(--font-sans)', letterSpacing: '.05em', fill: 'var(--ink-faint)' }}>{scheme ? `${scheme} DEFENSE` : ''}</text>
+      <text x={8} y={H - 8} style={{ font: '700 10px var(--font-sans)', letterSpacing: '.05em', fill: 'var(--ink-faint)' }}>OFFENSE</text>
+    </svg>
+  );
+}
+
 // ----------------------------------------------------------------------
 // App
 // ----------------------------------------------------------------------
@@ -1117,6 +1547,9 @@ function App() {
     playoff: [],
     keyPerson: [],
     preseasonPower: [],
+    coaching: {},
+    talentMap: {},
+    talentMapSnapshot: null,
     matchupByWeek: {},
     teamSchedule: {},
     availableWeeks: [],
@@ -1159,6 +1592,9 @@ function App() {
         playoff: data.playoff || [],
         keyPerson: data.key_person || [],
         preseasonPower: data.preseason_power || [],
+        coaching: data.coaching || {},
+        talentMap: data.talent_map || {},
+        talentMapSnapshot: data.talent_map_snapshot || null,
         matchupByWeek: data.matchup_by_week || {},
         teamSchedule: data.team_schedule || {},
         availableWeeks: weeks,
@@ -1174,7 +1610,7 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
+  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, coaching, talentMap, talentMapSnapshot, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
 
   const pinnedAccentColor = pinnedTeam ? teamColor(pinnedTeam) : 'var(--brass)';
   const togglePin = (team) => setState((prev) => {
@@ -1374,6 +1810,8 @@ function App() {
   const activeMC = monteCarlo.find((r) => r.team === activeTeam);
   const activePlayoff = playoff.find((r) => r.team === activeTeam);
   const activeKeyPerson = keyPerson.filter((r) => r.team === activeTeam);
+  const activeCoaching = coaching[activeTeam];
+  const activeTalent = talentMap[activeTeam];
   const profile = TEAM_PROFILES[activeTeam];
   // Fallback rationale source (Problem 1 fix) - only teams without a
   // TEAM_PROFILES entry fall back to this; teams with a profile show the
@@ -1869,6 +2307,23 @@ function App() {
                 )}
               </div>
 
+              <div style={st('display:flex;flex-direction:column;gap:14px')}>
+                <div>
+                  <div style={st('font:800 19px var(--font-sans);color:var(--ink)')}>Model SWOT</div>
+                  <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:2px')}>Strengths and Weaknesses are what the model's numbers say right now. Opportunities and Threats are what would change the call.</div>
+                </div>
+                {profile.whyModelThinks && (
+                  <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
+                    <SWOTQuadrant label="Strengths" sub="Current evidence behind the call" items={profile.whyModelThinks.optimism} tone="positive" />
+                    <SWOTQuadrant label="Weaknesses" sub="Current evidence working against it" items={profile.whyModelThinks.risks} tone="risk" />
+                  </div>
+                )}
+                <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
+                  <SWOTQuadrant label="Opportunities" sub="Model is probably too pessimistic if…" items={profile.changeOurMind.pessimisticIf} tone="positive" />
+                  <SWOTQuadrant label="Threats" sub="Expectations should be lowered if…" items={profile.changeOurMind.lowerIf} tone="risk" />
+                </div>
+              </div>
+
               <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
                 <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
@@ -1879,25 +2334,6 @@ function App() {
               </div>
 
               {keyPersonCardJSX}
-
-              <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
-                <div style={st('background:var(--surface-card);border-left:3px solid var(--value-positive);border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:8px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--value-positive)')}>Model is probably too pessimistic if…</div>
-                  <ul style={st('margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
-                    {profile.changeOurMind.pessimisticIf.map((t, i) => (
-                      <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div style={st('background:var(--surface-card);border-left:3px solid var(--value-risk);border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:8px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--value-risk)')}>Expectations should be lowered if…</div>
-                  <ul style={st('margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
-                    {profile.changeOurMind.lowerIf.map((t, i) => (
-                      <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
             </div>
           )}
 
@@ -1924,6 +2360,34 @@ function App() {
                   <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{signed(b.value, 1)}</span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {activeCoaching && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Coaching Overview</div>
+              {[
+                { label: 'Head Coach', name: activeCoaching.head_coach, change: activeCoaching.changes.hc },
+                { label: 'Offensive Coordinator', name: activeCoaching.offensive_coordinator, change: activeCoaching.changes.oc },
+                { label: 'Defensive Coordinator', name: activeCoaching.defensive_coordinator, change: activeCoaching.changes.dc },
+              ].map((row) => (
+                <div key={row.label} style={st('display:flex;flex-direction:column;gap:2px;padding-top:8px;border-top:1px solid var(--hairline)')}>
+                  <div style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>{row.label}</div>
+                  <div style={st('display:flex;align-items:center;gap:8px;flex-wrap:wrap')}>
+                    <span style={st('font:700 16px var(--font-sans);color:var(--ink)')}>{row.name}</span>
+                    {row.change.new && <span style={st('font:700 10px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:3px 8px;border-radius:999px')}>New in 2026</span>}
+                  </div>
+                  {row.change.new && row.change.origin && <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{row.change.origin}</div>}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTalent && (
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Talent Map</div>
+              <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts, so treat this as a starting point, not today's exact 53.</div>
+              <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
             </div>
           )}
 

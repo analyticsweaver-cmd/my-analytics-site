@@ -191,6 +191,82 @@ def build_matchup_by_week(schedule_win_prob_rows, schedule):
     return matchup_by_week
 
 
+def build_coaching(src):
+    """
+    NFL Model/nfl_model_pipeline/nfl_coaching_2026.json -> {team: {...}} dict,
+    already keyed by short team name (matches TEAM_COLORS/TEAM_PROFILES
+    convention) and already carrying real 2026 new/origin flags - see that
+    file's own "notes" field for full provenance (2026 pre-read doc +
+    external coaching directory, cross-checked against already-published
+    TEAM_PROFILES exec-summary text in nfl-model/app.jsx).
+    """
+    path = os.path.join(src, "nfl_coaching_2026.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path) as f:
+        doc = json.load(f)
+    return doc.get("teams", {})
+
+
+def build_talent_map(src):
+    """
+    One real starter per depth-chart slot per team, from the most recent
+    snapshot in nflverse_cache/depth_charts_2025_sample.csv (221 daily
+    ESPN-format snapshots, Aug 2025 - 2026-03-14; only the latest `dt` is
+    used). Offense is uniform "3WR 1TE" personnel across all 32 teams;
+    defense is either "Base 4-3 D" or "Base 3-4 D" depending on scheme.
+
+    Important: `pos_rank` is an overall depth rank within a position label
+    (e.g. WR1/WR2/WR3), not a per-slot rank - filtering to pos_rank == 1
+    alone silently drops WR2/WR3 (and any other multi-slot position) since
+    only the single best-ranked player at that label survives. The correct
+    "starter for this specific spot" is the min-pos_rank row within each
+    (team, pos_grp, pos_slot) group, since pos_slot numbers repeat across
+    pos_grp (offense slot 1 and defense slot 1 are different spots) but are
+    unique within one team's one pos_grp.
+    """
+    path = os.path.join(src, "nflverse_cache", "depth_charts_2025_sample.csv")
+    if not os.path.exists(path):
+        return {}, None
+    sys.path.insert(0, src)
+    from nfl_team_colors import TEAM_ABBR
+    abbr_to_name = {v: k for k, v in TEAM_ABBR.items()}
+    abbr_to_name["LA"] = "Rams"  # legacy nflverse code, same quirk build_game_date_lookup() handles
+
+    df = pd.read_csv(path)
+    latest_dt = df["dt"].max()
+    df = df[df["dt"] == latest_dt]
+    df = df[df["pos_grp"] != "Special Teams"]
+
+    idx = df.groupby(["team", "pos_grp", "pos_slot"])["pos_rank"].idxmin()
+    starters = df.loc[idx]
+    # A handful of depth-chart slots have no named player at this snapshot
+    # (e.g. an open competition) - skip rather than emit a NaN, which isn't
+    # valid JSON and would break the frontend's fetch().
+    starters = starters[starters["player_name"].notna()]
+
+    talent_map = {}
+    for _, row in starters.iterrows():
+        team = abbr_to_name.get(row["team"])
+        if not team:
+            continue
+        pos_grp = row["pos_grp"]
+        entry = talent_map.setdefault(team, {"scheme": None, "players": []})
+        if pos_grp == "Base 4-3 D":
+            entry["scheme"] = "4-3"
+        elif pos_grp == "Base 3-4 D":
+            entry["scheme"] = "3-4"
+        entry["players"].append({
+            "pos_abb": row["pos_abb"],
+            "pos_grp": pos_grp,
+            "pos_name": row["pos_name"],
+            "player_name": row["player_name"],
+        })
+
+    snapshot_date = str(latest_dt)[:10] if latest_dt else None
+    return talent_map, snapshot_date
+
+
 def main():
     default_src = os.path.join(REPO_ROOT, "..", "NFL Model", "nfl_model_pipeline")
     src = sys.argv[1] if len(sys.argv) > 1 else default_src
@@ -219,6 +295,9 @@ def main():
     history = records(os.path.join(src, "nfl_ratings_history.csv"))
     preseason_power = records(os.path.join(src, "nfl_power_ratings_preseason_2026.csv"))
 
+    coaching = build_coaching(src)
+    talent_map, talent_map_snapshot = build_talent_map(src)
+
     schedule_path = os.path.join(src, "parsed_schedule_final.json")
     matchup_by_week = {}
     team_schedule = {}
@@ -243,6 +322,9 @@ def main():
         "available_weeks": weeks,
         "history": history,
         "preseason_power": preseason_power,
+        "coaching": coaching,
+        "talent_map": talent_map,
+        "talent_map_snapshot": talent_map_snapshot,
         "generated_at": datetime.date.today().isoformat(),
     }
 
@@ -259,6 +341,9 @@ def main():
           f"playoff: {len(playoff)}, key_person: {len(key_person)}")
     print(f"  history rows: {len(history)}, preseason_power rows: {len(preseason_power)}")
     print(f"  weeks: {weeks}, total games across all weeks: {total_games}")
+    talent_map_players = sum(len(v["players"]) for v in talent_map.values())
+    print(f"  coaching teams: {len(coaching)}, talent_map teams: {len(talent_map)} "
+          f"({talent_map_players} starters, snapshot {talent_map_snapshot})")
     print("Next: git add -A && git commit -m 'refresh nfl data' && git push")
 
 
