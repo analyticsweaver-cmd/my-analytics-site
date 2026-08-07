@@ -84,3 +84,22 @@ a:hover{color:var(--brass);}
 .post-body .meta{color:var(--ink-faint);font-size:13px;margin-bottom:28px;}
 .post-body p{line-height:1.7;font-size:16px;color:var(--ink);}
 .post-body a.back{display:inline-block;margin-bottom:24px;font-size:13px;font-weight:700;}
+
+/* Model Validation hub page */
+.lede{font-size:18px;color:var(--ink-muted);max-width:680px;line-height:1.6;margin:6px 0 0;}
+.stat-row{display:flex;gap:32px;flex-wrap:wrap;margin:28px 0;}
+.stat-row .stat{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px 24px;min-width:180px;}
+.stat-row .stat .v{font-size:28px;font-weight:900;color:var(--ink);}
+.stat-row .stat .k{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:4px;}
+.section-title{font-size:22px;font-weight:900;margin:48px 0 6px;padding-top:20px;border-top:1px solid var(--hairline);}
+.section-eyebrow{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;}
+.tblwrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:var(--radius-md);background:var(--surface);}
+.tblwrap table{border-collapse:collapse;width:100%;font-size:14px;}
+.tblwrap th,.tblwrap td{padding:12px 18px;text-align:left;border-bottom:1px solid var(--hairline);}
+.tblwrap th{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.tblwrap td.num,.tblwrap th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.tblwrap tr:last-child td{border-bottom:none;}
+.miss-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:22px 26px;margin:16px 0;border-left:4px solid var(--brass);}
+.miss-card .tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:6px;}
+.miss-card p{margin:0;color:var(--ink-muted);font-size:15px;line-height:1.6;}
+.rank-table td.rank{color:var(--ink-faint);font-variant-numeric:tabular-nums;width:36px;}

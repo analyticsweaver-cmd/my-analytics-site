@@ -16,6 +16,7 @@
     <a href="index.html" class="active">Home</a>
     <a href="cfb-model/index.html">CFB Model</a>
     <a href="nfl-model/index.html">NFL Model</a>
+    <a href="validation.html">Validation</a>
     <a href="pre-read/index.html">Pre-Read</a>
     <a href="dashboards/index.html">Dashboards</a>
     <a href="blog/index.html">Blog</a>
@@ -24,9 +25,16 @@
 
 <main class="site-main">
   <section class="hero">
-    <h1>Analytics projects, for fun.</h1>
-    <p>A home for the models and dashboards I build in my spare time — plus notes on how they work and what I'm learning along the way.</p>
+    <h1>Two football models, backtested against three real seasons each — and every miss is on the record.</h1>
+    <p>Weaver Analytics is a home for the NFL and college football models I build in my spare time. It's not a power-rankings site or a hot-take blog — every number here is checked against what actually happened, the methodology is public, and when a model's been wrong, that's on the site too, not buried.</p>
   </section>
+
+  <div class="stat-row">
+    <div class="stat"><div class="v">r = 0.382</div><div class="k">NFL: Power Score vs. actual wins</div></div>
+    <div class="stat"><div class="v">13.71 pts</div><div class="k">CFB: average margin error (MAE)</div></div>
+    <div class="stat"><div class="v">3 seasons</div><div class="k">Both models, backtested 2023–2025</div></div>
+  </div>
+  <p style="margin-top:-8px;"><a class="cta" href="validation.html">See how these numbers are checked, hits and misses →</a></p>
 
   <div class="card-grid">
     <div class="card">
@@ -42,6 +50,12 @@
       <a class="cta" href="nfl-model/index.html">View dashboard →</a>
     </div>
     <div class="card">
+      <span class="tag">Trust, checked</span>
+      <h2>Model Validation</h2>
+      <p>Backtests, calibration, benchmarks against a naive baseline and against Vegas — plus the biggest misses from both models and what changed because of them.</p>
+      <a class="cta" href="validation.html">See the validation record →</a>
+    </div>
+    <div class="card">
       <span class="tag">Read</span>
       <h2>2026 NFL Preseason Pre-Read</h2>
       <p>Coaching carousel, QB rooms, rookie impact, and a from-scratch prediction model — the full pre-camp breakdown.</p>
@@ -52,6 +66,12 @@
       <h2>Arkansas 2026: A Roster Rebuilt</h2>
       <p>Almost the entire two-deep turned over this offseason — a position-by-position look at who left, who stayed, and who's walking in the door.</p>
       <a class="cta" href="spotlights/arkansas-2026.html">See the roster turnover →</a>
+    </div>
+    <div class="card">
+      <span class="tag">New</span>
+      <h2>CFB Offseason Roster Movement</h2>
+      <p>Every FBS team ranked by the model's own preseason personnel + coaching prior, transfer portal net impact, and returning production — the same numbers the model uses, not a separate hot-take layer.</p>
+      <a class="cta" href="roster-movers.html">See who moved →</a>
     </div>
     <div class="card disabled">
       <span class="tag">Coming Soon</span>

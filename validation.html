@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Validation — Weaver Analytics</title>
+<meta name="description" content="How the NFL and CFB models have actually performed — backtests, calibration, benchmarks, and the real misses, not just the hits.">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="cfb-model/index.html">CFB Model</a>
+    <a href="nfl-model/index.html">NFL Model</a>
+    <a href="validation.html" class="active">Validation</a>
+    <a href="pre-read/index.html">Pre-Read</a>
+    <a href="dashboards/index.html">Dashboards</a>
+    <a href="blog/index.html">Blog</a>
+  </nav>
+</header>
+
+<main class="site-main">
+  <section class="hero">
+    <h1>Two models, three seasons of backtesting each, and an honest record of where they've been wrong.</h1>
+    <p class="lede">Most sites show you a ranking and ask you to trust it. This page is the opposite bet: every number below is checked against real historical results, and the misses are on here right alongside the hits. If a claim isn't backtested, it doesn't appear on this page.</p>
+  </section>
+
+  <div class="stat-row">
+    <div class="stat"><div class="v">r = 0.382</div><div class="k">NFL: Power Score vs. actual wins (n=96)</div></div>
+    <div class="stat"><div class="v">13.71 pts</div><div class="k">CFB: pooled margin error, MAE (n=1,979)</div></div>
+    <div class="stat"><div class="v">3 seasons</div><div class="k">Both models, 2023–2025, backtested</div></div>
+    <div class="stat"><div class="v">0.208 / 0.2375</div><div class="k">Win-probability Brier score, CFB / NFL (naive: 0.25)</div></div>
+  </div>
+
+  <h2 class="section-title"><span class="section-eyebrow">Head to head</span>How the two models compare</h2>
+  <p style="color:var(--ink-muted);max-width:680px;">CFB is the younger model and it shows in a couple of places below — most notably, it doesn't have a Monte Carlo season simulation yet. Where it's ahead of NFL (a real, team-specific home-field number instead of a flat one) is called out too — this table isn't written to make NFL look better.</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>Check</th><th>NFL</th><th>CFB</th></tr>
+    <tr><td>Seasons backtested</td><td>3 (2023–2025)</td><td>3 (2023–2025)</td></tr>
+    <tr><td>Games in pooled backtest</td><td>816</td><td>1,979</td></tr>
+    <tr><td>Win correlation / margin error</td><td>r = 0.382 (p &lt; 0.001)</td><td>MAE 13.71 pts</td></tr>
+    <tr><td>Win-probability calibration (Brier)</td><td>0.2375 (naive: 0.2497)</td><td>0.208 (naive: 0.250)</td></tr>
+    <tr><td>Needed a Monte Carlo calibration fix?</td><td>Yes — tail overconfidence found and fixed</td><td>No — well-calibrated out of the box</td></tr>
+    <tr><td>Season simulation (win-total ranges, playoff odds)</td><td>Yes — 20,000-run Monte Carlo</td><td>Not built yet</td></tr>
+    <tr><td>Home-field advantage</td><td>Flat 2 pts, every team (team-specific architecture added, not yet calibrated)</td><td>Team-specific, historically derived</td></tr>
+    <tr><td>In-dashboard validation panel</td><td>Yes</td><td>Yes</td></tr>
+  </table></div>
+
+  <h2 class="section-title"><span class="section-eyebrow">Benchmarks</span>What we're actually being measured against</h2>
+  <p style="color:var(--ink-muted);max-width:680px;">A naive "always predict 50/50" baseline scores 0.25 on the Brier scale — both models clear that by a real margin, not a marginal one. The more honest comparison is against Vegas: closing lines, checked against the NFL model on 816 real games, are noticeably more accurate. Expected — the market prices in everything up to kickoff, including injury news, and this model only updates when the pipeline is re-run by hand. Neither model ingests betting lines, so there's no line-shopping trick making either one look artificially sharp.</p>
+
+  <h2 class="section-title"><span class="section-eyebrow">Biggest misses, and what we did about them</span>Caught, not hidden</h2>
+
+  <div class="miss-card">
+    <span class="tag">NFL — found and fixed</span>
+    <p><strong>Tail overconfidence.</strong> The model's win probabilities were checked against 816 real games and came back overconfident at the extremes: games called at 76.5% actually got won 68.1% of the time. Fix: a 20,000-run Monte Carlo simulation marginalizes over strength uncertainty instead of evaluating a single point estimate — this is the same fix behind the Cone of Certainty. Now calibrated (Brier 0.2375, down from 0.2497 naive).</p>
+  </div>
+
+  <div class="miss-card">
+    <span class="tag">NFL — found and fixed</span>
+    <p><strong>Coaching continuity was quietly hurting accuracy.</strong> A 2026-07-24 audit found that "Scheme Continuity" — whether a team kept its coordinators — was actually making Power Score worse, not better. Three independent checks agreed. Removing it from the formula improved the season-level win correlation from r = 0.352 to r = 0.382. Scheme is still scored and shown on team pages; it just no longer moves the number.</p>
+  </div>
+
+  <div class="miss-card">
+    <span class="tag">CFB — found and fixed</span>
+    <p><strong>A coaching-change signal was silently doing nothing.</strong> Pooling three seasons together (instead of validating one at a time) surfaced that the coaching-change feature had never actually been wired into the multi-season backtest — every run scored it as if no team ever changed coaches. Separately, pooling exposed real multicollinearity in the matchup model (three coefficients flipped sign between single-season and pooled fits); fixed by dropping the redundant term.</p>
+  </div>
+
+  <div class="miss-card">
+    <span class="tag">CFB — checked, honest negative result</span>
+    <p><strong>The run/pass "fragility" flag doesn't predict prediction error.</strong> We checked whether teams flagged as unbalanced (too rush-reliant or pass-reliant) actually get missed more often by the model. They don't — the error difference is 0.244 points, against a standard error of 0.422, well within noise. The flag stays on team pages as a qualitative watchlist item; it's not wired into the rating, because it hasn't earned a place in it.</p>
+  </div>
+
+  <p style="color:var(--ink-faint);font-size:13px;max-width:680px;margin-top:32px;">Full technical detail for every number on this page lives on each model's own methodology page: <a href="nfl-model/methodology.html">NFL</a> · <a href="cfb-model/methodology.html">CFB</a>.</p>
+</main>
+
+<footer class="site-footer">
+  Weaver Analytics — a personal project.
+</footer>
+
+</body>
+</html>
