@@ -34,6 +34,13 @@ const GLOSSARY_TERMS = [
   { term: 'SP+', def: 'An independent, well-established power rating (built by a college football analytics site, not this model) shown alongside our number as a sanity check.' },
 ];
 
+const CFB_VALIDATION_STATS = [
+  { headline: 'Backtested across three seasons: pooled MAE 13.71, RMSE 17.41 (2023\u20132025, n=1,979 games)', gloss: 'Walk-forward validation, pooled for real statistical power rather than trusted one season at a time. The matchup-decomposed model (rush/pass/havoc/coaching edges) beats the aggregate Power Score model on pooled accuracy: 13.65 MAE vs. 13.71.' },
+  { headline: 'Win-probability calibration: Brier score 0.208 (naive always-50% baseline: 0.250)', gloss: 'A real, substantial improvement over guessing. Unlike the NFL sibling model, this came back well-calibrated out of the box \u2014 the tail-overconfidence problem that needed a Monte Carlo-averaging fix on the NFL side doesn\u2019t show up here, so no equivalent fix was needed.' },
+  { headline: 'A 2026-08-06 pooling pass found and fixed two real bugs', gloss: 'Coaching-continuity signal was silently zero in every backtest run to date (never actually threaded into the multi-season code). Separately, pooling exposed real multicollinearity \u2014 three coefficients flipped sign between the single-season and pooled fits \u2014 fixed by dropping the redundant success_diff term. Both caught by pooling three seasons together instead of validating one at a time.', link: { href: 'methodology.html', label: 'Read the full methodology \u2192' } },
+  { headline: 'The run/pass fragility flag was checked and found not to predict backtest error', gloss: 'Fragile teams\u2019 error is only 0.244 points higher than balanced teams\u2019, against a standard error of 0.422 \u2014 within noise, not a real effect. Reported as an honest negative result: the flag stays a qualitative watchlist tool on team pages, never wired into the actual rating.' },
+];
+
 // ----------------------------------------------------------------------
 // Small helpers
 // ----------------------------------------------------------------------
@@ -213,6 +220,7 @@ function App() {
     selectedTeam: initialURLState.selectedTeam,
     pinnedTeam: DEFAULT_PINNED_TEAM,
     glossaryOpen: false,
+    validationOpen: false,
     weekInput: '',
     availableWeeks: [],
     matchupWeek: null,
@@ -231,7 +239,11 @@ function App() {
   // server on this site. Re-run the pipeline locally and redeploy to refresh.
   async function loadData() {
     try {
-      const res = await fetch('../assets/data/cfb-data.json');
+      // Cache-bust with a timestamp query param + no-store, so a fresh
+      // data push shows up on reload instead of getting served a stale
+      // copy from Netlify's CDN or the browser's own HTTP cache (bug
+      // Anna hit 2026-08-06 - had to hard-refresh to see a pipeline update).
+      const res = await fetch(`../assets/data/cfb-data.json?v=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       const weeks = data.available_weeks || [];
       const latestWeek = weeks.length ? weeks[weeks.length - 1] : null;
@@ -269,7 +281,7 @@ function App() {
 
   const pinnedAccentColor = PINNED_ACCENT === 'steel' ? 'var(--accent-primary)' : 'var(--brass)';
   const topN = TOP_N;
-  const { powerRows, matchupRows, historyRows, tab, sortKey, sortDir, expandedMatchup, selectedTeam, glossaryOpen, pinnedTeam, teamSchedule } = s;
+  const { powerRows, matchupRows, historyRows, tab, sortKey, sortDir, expandedMatchup, selectedTeam, glossaryOpen, validationOpen, pinnedTeam, teamSchedule } = s;
 
   // Keep the URL in sync with tab/team so the current view is always
   // bookmarkable/shareable (replaceState, not pushState - this shouldn't
@@ -289,8 +301,10 @@ function App() {
     const willPin = prev.pinnedTeam !== team;
     return { pinnedTeam: willPin ? team : null, selectedTeam: willPin ? team : prev.selectedTeam };
   });
-  const toggleGlossary = () => setState((prev) => ({ glossaryOpen: !prev.glossaryOpen }));
+  const toggleGlossary = () => setState((prev) => ({ glossaryOpen: !prev.glossaryOpen, validationOpen: false }));
+  const toggleValidation = () => setState((prev) => ({ validationOpen: !prev.validationOpen, glossaryOpen: false }));
   const glossaryButtonStyle = `display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--hairline);background:${glossaryOpen ? 'var(--ink)' : 'var(--surface-card)'};color:${glossaryOpen ? 'var(--paper)' : 'var(--ink-muted)'};font:700 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;cursor:pointer`;
+  const validationButtonStyle = `display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--hairline);background:${validationOpen ? 'var(--ink)' : 'var(--surface-card)'};color:${validationOpen ? 'var(--paper)' : 'var(--ink-muted)'};font:700 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;cursor:pointer`;
 
   const TAB_DEFS = [
     { id: 'rankings', label: 'Season Power Rankings', tone: 'var(--ink)', textOn: 'var(--paper)' },
@@ -701,6 +715,7 @@ function App() {
   };
 
   const glossaryArrow = glossaryOpen ? '▲' : '▼';
+  const validationArrow = validationOpen ? '▲' : '▼';
   const glossaryPanel = glossaryOpen && (
     <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
       {GLOSSARY_TERMS.map((gl) => (
@@ -709,6 +724,25 @@ function App() {
           <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{gl.def}</div>
         </div>
       ))}
+    </div>
+  );
+  const validationPanel = validationOpen && (
+    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px')}>
+      {CFB_VALIDATION_STATS.map((v) => (
+        <div key={v.headline}>
+          <div style={st('font:700 16px var(--font-sans);color:var(--ink);margin-bottom:4px')}>{v.headline}</div>
+          <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{v.gloss}</div>
+          {v.link && (
+            <a href={v.link.href} style={st('display:inline-block;margin-top:6px;font:700 14px var(--font-sans);color:var(--accent-primary)')}>{v.link.label}</a>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+  const explainerButtons = (
+    <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
+      <button style={st(glossaryButtonStyle)} onClick={toggleGlossary}>What do these mean? {glossaryArrow}</button>
+      <button style={st(validationButtonStyle)} onClick={toggleValidation}>How well does this model actually work? {validationArrow}</button>
     </div>
   );
 
@@ -723,6 +757,7 @@ function App() {
           <h1 style={st('font:900 22px var(--font-sans);color:var(--ink);margin:0;white-space:nowrap;flex-shrink:0')}>The Weaver Line</h1>
           <nav style={st('display:flex;gap:16px;flex-wrap:wrap;margin-left:8px')}>
             <a href="../index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Home</a>
+            <a href="methodology.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Methodology</a>
             <a href="../nfl-model/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>NFL Model</a>
             <a href="../pre-read/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Pre-Read</a>
             <a href="../dashboards/index.html" style={st('font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none')}>Dashboards</a>
@@ -797,15 +832,10 @@ function App() {
 
       {tab === 'rankings' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:26px')}>
-          <div style={st('display:flex;align-items:center')}>
-            <button style={st(glossaryButtonStyle)} onClick={toggleGlossary}>What do these mean? {glossaryArrow}</button>
-          </div>
+          {explainerButtons}
 
           {glossaryPanel}
-
-          <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:16px 20px;font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>
-            <strong style={st('color:var(--ink)')}>Model validation status:</strong> backtested across three completed seasons (2023–2025, 1,979 games), MAE ~13.7 points pooled. Win probability is calibrated and well-behaved out of the box (Brier score 0.208 vs. 0.250 for a naive always-50% baseline) — no Monte Carlo correction needed here, unlike the NFL sibling model. See its <a href="../nfl-model/methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a> for how the two compare. Still open: a dashboard validation panel surfacing these numbers in-app (in progress) and full Monte Carlo season simulation (not started).
-          </div>
+          {validationPanel}
 
           <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
             {sortPills.map((p) => (
@@ -823,11 +853,10 @@ function App() {
 
       {tab === 'matchup' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:20px')}>
-          <div style={st('display:flex;align-items:center')}>
-            <button style={st(glossaryButtonStyle)} onClick={toggleGlossary}>What do these mean? {glossaryArrow}</button>
-          </div>
+          {explainerButtons}
 
           {glossaryPanel}
+          {validationPanel}
 
           <div style={st('font:400 16px var(--font-sans);color:var(--ink-muted)')}>
             {s.matchupWeek != null
@@ -912,9 +941,11 @@ function App() {
             </select>
             {delta !== null && <span style={st(`font:700 15px var(--font-sans);color:${trendDeltaColor}`)}>{trendDeltaLabel}</span>}
             <button style={st(glossaryButtonStyle)} onClick={toggleGlossary}>What do these mean? {glossaryArrow}</button>
+            <button style={st(validationButtonStyle)} onClick={toggleValidation}>How well does this model actually work? {validationArrow}</button>
           </div>
 
           {glossaryPanel}
+          {validationPanel}
 
           {activeTeam !== pinnedTeam && (
             <div style={st(snapshotBoxStyle)}>
