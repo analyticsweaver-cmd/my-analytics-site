@@ -48,8 +48,8 @@ const GLOSSARY_TERMS = [
   { term: 'Upside / Downside', def: "The Power Score cone's judgment-based bounds — the model's own estimate of how much better (Upside) or worse (Downside) a team could plausibly play than its Power Score, driven by specific flagged players or situations." },
   { term: 'Cone of Certainty', def: "A team's projected win-total range, from a 20,000-season Monte Carlo simulation — shows both the simple analytical estimate and the (correctly wider) simulated range that accounts for how uncertain the underlying Power Score really is." },
   { term: 'Key-Person Dependency', def: "What a team's Power Score becomes if a specific flagged player (most reliably, the starting QB) goes down — a real, data-derived number, not just a risk label." },
-  { term: 'Spread / Win Probability', def: "The model's predicted point margin and win chance for a given matchup. Power Score converts to spread 1-for-1: subtract the two teams' Power Scores, add a fixed 2-point home-field edge, and that's the predicted margin — no hidden scaling factor. This model doesn't ingest betting lines, so there's no market comparison — just the model's own number." },
-  { term: 'HFA (Home Field Adjustment)', def: "Points added to the home team's spread for playing at home; zeroed out for international/neutral-site games." },
+  { term: 'Spread / Win Probability', def: "The model's predicted point margin and win chance for a given matchup. Power Score converts to spread 1-for-1: subtract the two teams' Power Scores, add a home-field edge, and that's the predicted margin — no hidden scaling factor. That edge is currently a flat 2 points for every team (team-specific calibration is planned, matching the CFB model's approach — see HFA below). This model doesn't ingest betting lines, so there's no market comparison — just the model's own number." },
+  { term: 'HFA (Home Field Adjustment)', def: "Points added to the home team's spread for playing at home; zeroed out for international/neutral-site games. Currently a flat 2 points for every team — the pipeline now supports team-specific values (like the CFB model already has), but real per-team home-field calibration hasn't been done yet, so every team still gets the same number." },
   { term: 'Playoff / Super Bowl probability', def: 'From the same season simulation as the Cone of Certainty, carried through a full playoff bracket (with correct re-seeding) 5,000 times per team.' },
 ];
 
@@ -1537,9 +1537,31 @@ const TABS = [
   { id: 'playoff', label: 'Playoff Picture', tone: 'var(--value-positive)', textOn: 'var(--paper)' },
 ];
 
+// Deep-linkable team profile: read ?tab=&team= once on load so a URL like
+// nfl-model/index.html?tab=team&team=Kansas+City opens straight to that
+// team's profile - same pattern as the CFB dashboard (which had this and
+// NFL didn't - closed 2026-08-06). Falls back to the normal defaults if
+// either param is absent or the team name doesn't match anything
+// (validated for real once `power`/teams loads, same as any other
+// selectedTeam value - see activeTeam's fallback below).
+function readURLState() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    const teamParam = params.get('team');
+    return {
+      tab: tabParam || 'rankings',
+      selectedTeam: teamParam ? decodeURIComponent(teamParam) : null,
+    };
+  } catch (e) {
+    return { tab: 'rankings', selectedTeam: null };
+  }
+}
+
 function App() {
+  const initialURLState = readURLState();
   const [s, setStateRaw] = useState({
-    tab: 'rankings',
+    tab: initialURLState.tab,
     power: [],
     winProjections: [],
     monteCarlo: [],
@@ -1567,7 +1589,7 @@ function App() {
     weekInput: '',
     expandedMatchup: null,
 
-    selectedTeam: null,
+    selectedTeam: initialURLState.selectedTeam,
     pinnedTeam: null,
 
     playoffSortKey: 'super_bowl_pct',
@@ -1610,7 +1632,21 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, coaching, talentMap, talentMapSnapshot, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam } = s;
+  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, coaching, talentMap, talentMapSnapshot, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam, selectedTeam } = s;
+
+  // Keep the URL in sync with tab/team so the current view is always
+  // bookmarkable/shareable (replaceState, not pushState - shouldn't spam
+  // the back button every time someone picks a different team).
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (tab && tab !== 'rankings') params.set('tab', tab); else params.delete('tab');
+      if (tab === 'team' && selectedTeam) params.set('team', selectedTeam); else params.delete('team');
+      const query = params.toString();
+      const newURL = window.location.pathname + (query ? `?${query}` : '');
+      window.history.replaceState(null, '', newURL);
+    } catch (e) { /* no-op if history API is unavailable */ }
+  }, [tab, selectedTeam]);
 
   const pinnedAccentColor = pinnedTeam ? teamColor(pinnedTeam) : 'var(--brass)';
   const togglePin = (team) => setState((prev) => {
