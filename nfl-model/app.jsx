@@ -2287,43 +2287,6 @@ function App() {
               </div>
 
               {kpiTilesJSX}
-
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px;max-width:760px')}>
-                {profile.execSummary.map((p, i) => (
-                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0')}>{p}</p>
-                ))}
-                {monteCarloCallout && (
-                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink)')}>
-                    Most likely finish: {monteCarloCallout.modeWins} wins ({pct(monteCarloCallout.modeProb, 0)} of simulations). {pct(monteCarloCallout.atLeastNinePct, 0)} chance of at least 9 wins.{monteCarloCallout.rangeLow !== null && ` Simulated 90% range: ${monteCarloCallout.rangeLow} to ${monteCarloCallout.rangeHigh} wins.`}
-                  </div>
-                )}
-              </div>
-
-              <div style={st('display:flex;flex-direction:column;gap:14px')}>
-                <div>
-                  <div style={st('font:800 19px var(--font-sans);color:var(--ink)')}>Model SWOT</div>
-                  <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:2px')}>Strengths and Weaknesses are what the model's numbers say right now. Opportunities and Threats are what would change the call.</div>
-                </div>
-                {profile.whyModelThinks && (
-                  <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:980px')}>
-                    <SWOTQuadrant label="Strengths" sub="Current evidence behind the call" items={profile.whyModelThinks.optimism} tone="positive" />
-                    <SWOTQuadrant label="Weaknesses" sub="Current evidence working against it" items={profile.whyModelThinks.risks} tone="risk" />
-                  </div>
-                )}
-                <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:980px')}>
-                  <SWOTQuadrant label="Opportunities" sub="Model is probably too pessimistic if…" items={profile.changeOurMind.pessimisticIf} tone="positive" />
-                  <SWOTQuadrant label="Threats" sub="Expectations should be lowered if…" items={profile.changeOurMind.lowerIf} tone="risk" />
-                </div>
-              </div>
-
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px;max-width:760px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
-                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
-                  {profile.fiveQuestions.map((q, i) => (
-                    <li key={i} style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink)')}>{q}</li>
-                  ))}
-                </ol>
-              </div>
             </div>
           )}
 
@@ -2336,17 +2299,9 @@ function App() {
             </div>
           )}
 
-          <div style={st('display:flex;flex-wrap:wrap;gap:18px;align-items:stretch')}>
-            {teamDNADimensions.length > 0 && (
-              <div style={st('flex:1 1 300px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team DNA</div>
-                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>What kind of team this is, not how good they are — each bar is this team's percentile among all {teams.length} teams on that dimension.</div>
-                <TeamDNA st={st} dimensions={teamDNADimensions} />
-              </div>
-            )}
-
+          <div style={st('display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px')}>
             {activeCoaching && (
-              <div style={st('flex:1 1 300px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Coaching Overview</div>
                 {[
                   { label: 'Head Coach', name: activeCoaching.head_coach, change: activeCoaching.changes.hc },
@@ -2365,8 +2320,16 @@ function App() {
               </div>
             )}
 
+            {teamDNADimensions.length > 0 && (
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team DNA</div>
+                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>What kind of team this is, not how good they are — each bar is this team's percentile among all {teams.length} teams on that dimension.</div>
+                <TeamDNA st={st} dimensions={teamDNADimensions} />
+              </div>
+            )}
+
             {activeRow && (
-              <div style={st('flex:1 1 300px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Score breakdown</div>
                 <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Shown at full scale — Power Score above applies 45%/35%/20% weights to these three, so they won't sum to it directly.</div>
                 {componentBars.map((b) => (
@@ -2380,88 +2343,123 @@ function App() {
             )}
           </div>
 
-          <div style={st('display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start')}>
-            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
-              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>People</div>
-
-              {activeTalent && (
-                <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Talent Map</div>
-                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts, so treat this as a starting point, not today's exact 53.</div>
-                  <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
-                </div>
-              )}
-
-              {keyPersonCardJSX}
-            </div>
-
-            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
-              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Schedule</div>
-
-              {activeRow && (
-                <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
-                    {upcomingSchedule.length ? 'Schedule journey' : 'Full schedule'}
+          {profile && (
+            <div style={st('display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px')}>
+                {profile.execSummary.map((p, i) => (
+                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0;max-width:640px')}>{p}</p>
+                ))}
+                {monteCarloCallout && (
+                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink);max-width:640px')}>
+                    Most likely finish: {monteCarloCallout.modeWins} wins ({pct(monteCarloCallout.modeProb, 0)} of simulations). {pct(monteCarloCallout.atLeastNinePct, 0)} chance of at least 9 wins.{monteCarloCallout.rangeLow !== null && ` Simulated 90% range: ${monteCarloCallout.rangeLow} to ${monteCarloCallout.rangeHigh} wins.`}
                   </div>
-                  {journeySummary && (
-                    <div style={st('font:400 12px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{journeySummary}</div>
-                  )}
-                  {journeyRows.map((g) => (
-                    <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
-                      <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
-                      {g.bye ? (
-                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
-                      ) : (
-                        <>
-                          <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: difficultyMeta[g.difficulty].color }} title={difficultyMeta[g.difficulty].label} />
-                          <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>
-                            {g.home ? 'vs' : '@'} {g.opponent}
-                            {g.isDivision && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>DIV</span>}
-                            {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
-                          </span>
-                          <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted);text-align:right;width:38px;flex-shrink:0')}>{pct(g.win_prob, 0)}</span>
-                          <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>
-                            {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
-                          </span>
-                        </>
-                      )}
-                    </div>
+                )}
+              </div>
+
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
+                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
+                  {profile.fiveQuestions.map((q, i) => (
+                    <li key={i} style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink)')}>{q}</li>
                   ))}
-                  <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
-                    {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse. DIV = division opponent, SWING = within 5 points of a coin flip.
-                  </div>
-                </div>
-              )}
+                </ol>
+              </div>
             </div>
+          )}
 
-            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
-              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Outlook</div>
-
-              {coneRows.length > 0 && (
-                <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Cone of Certainty — projected wins</div>
-                  <svg viewBox={`0 0 ${coneChartW} ${coneRows.length * coneRowH + 24}`} width="100%" height={coneRows.length * coneRowH + 24} style={{ display: 'block' }}>
-                    {coneRows.map((r, i) => {
-                      const y = i * coneRowH + coneRowH / 2;
-                      return (
-                        <React.Fragment key={r.label}>
-                          <text x={0} y={y + 4} style={{ font: '600 12px var(--font-sans)', fill: 'var(--ink-muted)' }}>{r.label}</text>
-                          <line x1={coneX(r.low)} y1={y} x2={coneX(r.high)} y2={y} stroke={r.color} strokeWidth="8" strokeLinecap="round" opacity="0.35" />
-                          <circle cx={coneX(r.mean)} cy={y} r="6" fill={r.color} />
-                          <text x={coneX(r.low)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.low, 1)}</text>
-                          <text x={coneX(r.high)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.high, 1)}</text>
-                          <text x={coneX(r.mean)} y={y - 14} style={{ font: '700 12px var(--font-sans)', fill: 'var(--ink)' }} textAnchor="middle">{num(r.mean, 1)}</text>
-                        </React.Fragment>
-                      );
-                    })}
-                  </svg>
-                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>90% confidence interval, expected wins out of 17 games. The simulated range is wider — that's the correction described in "How well does this model actually work?" on the Power Rankings tab.</div>
+          {profile && (
+            <div style={st('display:flex;flex-direction:column;gap:14px')}>
+              <div>
+                <div style={st('font:800 19px var(--font-sans);color:var(--ink)')}>Model SWOT</div>
+                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:2px')}>Strengths and Weaknesses are what the model's numbers say right now. Opportunities and Threats are what would change the call.</div>
+              </div>
+              {profile.whyModelThinks && (
+                <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
+                  <SWOTQuadrant label="Strengths" sub="Current evidence behind the call" items={profile.whyModelThinks.optimism} tone="positive" />
+                  <SWOTQuadrant label="Weaknesses" sub="Current evidence working against it" items={profile.whyModelThinks.risks} tone="risk" />
                 </div>
               )}
+              <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
+                <SWOTQuadrant label="Opportunities" sub="Model is probably too pessimistic if…" items={profile.changeOurMind.pessimisticIf} tone="positive" />
+                <SWOTQuadrant label="Threats" sub="Expectations should be lowered if…" items={profile.changeOurMind.lowerIf} tone="risk" />
+              </div>
+            </div>
+          )}
 
+          <div style={st('display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start')}>
+            {activeTalent && (
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Talent Map</div>
+                <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts, so treat this as a starting point, not today's exact 53.</div>
+                <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
+              </div>
+            )}
+
+            {keyPersonCardJSX}
+          </div>
+
+          <div style={st('display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start')}>
+            {activeRow && (
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
+                  {upcomingSchedule.length ? 'Schedule journey' : 'Full schedule'}
+                </div>
+                {journeySummary && (
+                  <div style={st('font:400 12px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{journeySummary}</div>
+                )}
+                {journeyRows.map((g) => (
+                  <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
+                    <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
+                    {g.bye ? (
+                      <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
+                    ) : (
+                      <>
+                        <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: difficultyMeta[g.difficulty].color }} title={difficultyMeta[g.difficulty].label} />
+                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>
+                          {g.home ? 'vs' : '@'} {g.opponent}
+                          {g.isDivision && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>DIV</span>}
+                          {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
+                        </span>
+                        <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted);text-align:right;width:38px;flex-shrink:0')}>{pct(g.win_prob, 0)}</span>
+                        <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>
+                          {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                ))}
+                <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
+                  {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse. DIV = division opponent, SWING = within 5 points of a coin flip.
+                </div>
+              </div>
+            )}
+
+            {coneRows.length > 0 && (
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Cone of Certainty — projected wins</div>
+                <svg viewBox={`0 0 ${coneChartW} ${coneRows.length * coneRowH + 24}`} width="100%" height={coneRows.length * coneRowH + 24} style={{ display: 'block' }}>
+                  {coneRows.map((r, i) => {
+                    const y = i * coneRowH + coneRowH / 2;
+                    return (
+                      <React.Fragment key={r.label}>
+                        <text x={0} y={y + 4} style={{ font: '600 12px var(--font-sans)', fill: 'var(--ink-muted)' }}>{r.label}</text>
+                        <line x1={coneX(r.low)} y1={y} x2={coneX(r.high)} y2={y} stroke={r.color} strokeWidth="8" strokeLinecap="round" opacity="0.35" />
+                        <circle cx={coneX(r.mean)} cy={y} r="6" fill={r.color} />
+                        <text x={coneX(r.low)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.low, 1)}</text>
+                        <text x={coneX(r.high)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.high, 1)}</text>
+                        <text x={coneX(r.mean)} y={y - 14} style={{ font: '700 12px var(--font-sans)', fill: 'var(--ink)' }} textAnchor="middle">{num(r.mean, 1)}</text>
+                      </React.Fragment>
+                    );
+                  })}
+                </svg>
+                <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>90% confidence interval, expected wins out of 17 games. The simulated range is wider — that's the correction described in "How well does this model actually work?" on the Power Rankings tab.</div>
+              </div>
+            )}
+
+            <div style={st('display:flex;flex-direction:column;gap:18px')}>
               {histBars.length > 0 && (
                 <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Win-total distribution — all 20,000 simulated seasons</div>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Win-total distribution</div>
                   <svg viewBox={`0 0 ${histChartW} ${histChartH + 24}`} width="100%" height={histChartH + 24} style={{ display: 'block' }}>
                     {histBars.map((b, i) => {
                       const x = i * (histBarW + histBarGap);
@@ -2475,21 +2473,21 @@ function App() {
                       );
                     })}
                   </svg>
-                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Each bar is a win total (0-17); height is how often that exact total came up across 20,000 simulated seasons. Gold bars mark the 90% confidence range shown in the Cone of Certainty above — the grey bars are real possibilities too, just less likely ones.</div>
+                  <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint)')}>All 20,000 simulated seasons — gold marks the 90% range shown in the Cone of Certainty.</div>
                 </div>
               )}
 
               {activePlayoff && (
-                <div style={st('display:flex;gap:14px;flex-wrap:wrap')}>
+                <div style={st('display:flex;flex-direction:column;gap:10px')}>
                   {[
                     { label: 'Division Win %', value: activePlayoff.division_win_pct },
                     { label: 'Playoff %', value: activePlayoff.playoff_pct },
                     { label: 'Conf. Champ %', value: activePlayoff.conf_champ_pct },
                     { label: 'Super Bowl %', value: activePlayoff.super_bowl_pct },
                   ].map((tile) => (
-                    <div key={tile.label} style={st('flex:1;min-width:120px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
-                      <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>{tile.label}</div>
-                      <div style={st('font:900 30px var(--font-sans);color:var(--ink)')}>{pct(tile.value)}</div>
+                    <div key={tile.label} style={st('display:flex;align-items:center;justify-content:space-between;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:12px var(--card-padding)')}>
+                      <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>{tile.label}</div>
+                      <div style={st('font:900 22px var(--font-sans);color:var(--ink)')}>{pct(tile.value)}</div>
                     </div>
                   ))}
                 </div>
