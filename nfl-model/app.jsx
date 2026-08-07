@@ -2288,12 +2288,12 @@ function App() {
 
               {kpiTilesJSX}
 
-              <div style={st('display:flex;flex-direction:column;gap:14px')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px;max-width:760px')}>
                 {profile.execSummary.map((p, i) => (
-                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0;max-width:720px')}>{p}</p>
+                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0')}>{p}</p>
                 ))}
                 {monteCarloCallout && (
-                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink);max-width:720px')}>
+                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink)')}>
                     Most likely finish: {monteCarloCallout.modeWins} wins ({pct(monteCarloCallout.modeProb, 0)} of simulations). {pct(monteCarloCallout.atLeastNinePct, 0)} chance of at least 9 wins.{monteCarloCallout.rangeLow !== null && ` Simulated 90% range: ${monteCarloCallout.rangeLow} to ${monteCarloCallout.rangeHigh} wins.`}
                   </div>
                 )}
@@ -2316,9 +2316,9 @@ function App() {
                 </div>
               </div>
 
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px;max-width:760px')}>
                 <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
-                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:720px')}>
+                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
                   {profile.fiveQuestions.map((q, i) => (
                     <li key={i} style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink)')}>{q}</li>
                   ))}
@@ -2380,25 +2380,23 @@ function App() {
             )}
           </div>
 
-          <div style={st('display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start')}>
-            <div style={st('flex:1 1 380px;display:flex;flex-direction:column;gap:22px')}>
+          <div style={st('display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start')}>
+            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
               <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>People</div>
 
               {activeTalent && (
                 <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
                   <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Talent Map</div>
                   <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts, so treat this as a starting point, not today's exact 53.</div>
-                  <div style={{ maxWidth: 520, margin: '0 auto', width: '100%' }}>
-                    <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
-                  </div>
+                  <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
                 </div>
               )}
 
               {keyPersonCardJSX}
             </div>
 
-            <div style={st('flex:1 1 380px;display:flex;flex-direction:column;gap:22px')}>
-              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Schedule & outlook</div>
+            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
+              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Schedule</div>
 
               {activeRow && (
                 <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
@@ -2434,6 +2432,10 @@ function App() {
                   </div>
                 </div>
               )}
+            </div>
+
+            <div style={st('flex:1 1 300px;display:flex;flex-direction:column;gap:18px')}>
+              <div style={st('font:700 14px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Outlook</div>
 
               {coneRows.length > 0 && (
                 <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
@@ -2478,14 +2480,14 @@ function App() {
               )}
 
               {activePlayoff && (
-                <div style={st('display:flex;gap:20px;flex-wrap:wrap')}>
+                <div style={st('display:flex;gap:14px;flex-wrap:wrap')}>
                   {[
                     { label: 'Division Win %', value: activePlayoff.division_win_pct },
                     { label: 'Playoff %', value: activePlayoff.playoff_pct },
                     { label: 'Conf. Champ %', value: activePlayoff.conf_champ_pct },
                     { label: 'Super Bowl %', value: activePlayoff.super_bowl_pct },
                   ].map((tile) => (
-                    <div key={tile.label} style={st('flex:1;min-width:150px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
+                    <div key={tile.label} style={st('flex:1;min-width:120px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
                       <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>{tile.label}</div>
                       <div style={st('font:900 30px var(--font-sans);color:var(--ink)')}>{pct(tile.value)}</div>
                     </div>
