@@ -23,7 +23,7 @@ const TEAM_COLORS = {
 function teamColor(team) { return TEAM_COLORS[team] || '#8C8F93'; }
 
 const GLOSSARY_TERMS = [
-  { term: 'Power Rating', def: 'Overall team strength, combining offensive and defensive efficiency, adjusted for opponent quality and blended with a preseason talent/coaching prior that fades out as the season goes on.' },
+  { term: 'Power Score', def: 'Overall team strength, combining offensive and defensive efficiency, adjusted for opponent quality and blended with a preseason talent/coaching prior that fades out as the season goes on.' },
   { term: 'Success Rate', def: 'The percentage of plays that gain enough yardage to keep a drive "on schedule" (roughly: 50% of yards needed on 1st down, 70% on 2nd, 100% on 3rd/4th). Measures consistency, not big plays.' },
   { term: 'Explosiveness', def: 'Average yards gained per successful play. Measures big-play ability — a team can be efficient (high success rate) without being explosive, or vice versa.' },
   { term: 'Havoc Rate', def: 'How often a defense creates a disruptive play — a tackle for loss, forced fumble, interception, or pass breakup.' },
@@ -545,7 +545,7 @@ function App() {
   const activeRankRow = rankRows.find((r) => r.team === activeTeam);
   const latestHist = selectedSeries.length ? selectedSeries[selectedSeries.length - 1] : null;
   const snapshotTiles = [
-    { label: 'Power Rating', value: activeRankRow ? num(activeRankRow.POWER_RATING_SHRUNK, 3) : (latestHist ? num(latestHist.rating, 3) : '—'), sublabel: '' },
+    { label: 'Power Score', value: activeRankRow ? num(activeRankRow.POWER_RATING_SHRUNK, 3) : (latestHist ? num(latestHist.rating, 3) : '—'), sublabel: '' },
     { label: 'Rank', value: activeRankRow ? `#${activeRankRow.rank}` : '—', sublabel: activeRankRow ? `of ${rankRows.length}` : '' },
     { label: 'SP+', value: activeRankRow ? num(activeRankRow.SP_PLUS, 1) : (latestHist ? num(latestHist.sp_plus, 1) : '—'), sublabel: '' },
     { label: 'Games', value: activeRankRow ? (activeRankRow.games_played ?? '—') : (latestHist ? (latestHist.games ?? '—') : '—'), sublabel: 'played' },
@@ -804,7 +804,7 @@ function App() {
           {glossaryPanel}
 
           <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:16px 20px;font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>
-            <strong style={st('color:var(--ink)')}>Model validation status:</strong> this model is backtested against one completed season (2025) — a walk-forward test with a recency/shrinkage grid search, reported as MAE/RMSE. That's less rigorous than the NFL sibling model's 3-season, statistically-tested validation (see its <a href="../nfl-model/methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a>). Multi-season backtesting and a win-probability calibration layer for this model are planned, not done yet.
+            <strong style={st('color:var(--ink)')}>Model validation status:</strong> backtested across three completed seasons (2023–2025, 1,979 games), MAE ~13.7 points pooled. Win probability is calibrated and well-behaved out of the box (Brier score 0.208 vs. 0.250 for a naive always-50% baseline) — no Monte Carlo correction needed here, unlike the NFL sibling model. See its <a href="../nfl-model/methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a> for how the two compare. Still open: a dashboard validation panel surfacing these numbers in-app (in progress) and full Monte Carlo season simulation (not started).
           </div>
 
           <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
@@ -944,10 +944,10 @@ function App() {
               <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
                 <div style={st('display:grid;grid-template-columns:45% 55%;gap:28px;align-items:stretch')}>
                   <div style={{ minWidth: 0, marginLeft: 14 }}>
-                    <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px')}>Power Rating (higher = better)</div>
+                    <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px')}>Power Score (higher = better)</div>
                     <div style={{ position: 'relative', width: '100%', overflow: 'visible' }}>
                       <div style={st('position:absolute;left:-14px;top:0;bottom:34px;display:flex;align-items:center;justify-content:center;width:14px')}>
-                        <span style={st('display:inline-block;transform:rotate(-90deg);white-space:nowrap;font:700 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>Power Rating</span>
+                        <span style={st('display:inline-block;transform:rotate(-90deg);white-space:nowrap;font:700 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>Power Score</span>
                       </div>
                       <svg viewBox={`0 0 ${chartW} ${chartH}`} width="100%" height={chartH} preserveAspectRatio="none" style={{ display: 'block' }}>
                         {yTicks.map((tick, i) => <line key={i} x1={padL - 8} y1={tick.y} x2={chartW} y2={tick.y} stroke="var(--hairline)" />)}
