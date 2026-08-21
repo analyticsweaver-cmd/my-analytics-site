@@ -62,21 +62,21 @@ const CFB_VALIDATION_STATS = [
 const CFB_TEAM_PROFILES = {
   'Ohio State': {
     headline: "Ohio State: The Model's #1 Team, With One Real Question Mark",
-    oneLiner: "Ohio State opens 2026 atop the model's rankings on talent and continuity alone — the one thing working against that consensus is the transfer portal, where the Buckeyes posted the most negative net value of any team on this list.",
+    oneLiner: "Ohio State opens 2026 atop the model's rankings on talent and continuity alone — the one thing working against that consensus is the transfer portal, where the Buckeyes posted a net value tied with Oregon for the most negative on this list.",
     execSummary: [
       "Power Score has Ohio State #1 overall (0.161), and SP+ agrees closely, ranking them #2 nationally (30.1) — two independently built systems landing in the same neighborhood is a real signal, not a coincidence.",
       "The foundation is real: a 98th-percentile recruiting talent base and Ryan Day returning for another season give Ohio State the most stable coaching situation of any team on this list.",
-      "The one number working against the consensus: Ohio State's transfer portal net value (-2.5 z-score) is the most negative of any team in this preseason class — real outgoing production the incoming class and returning core will need to cover.",
+      "The one number working against the consensus: Ohio State's transfer portal net value (-2.5 z-score) is tied with Oregon for the most negative of any team in this shortlist — real outgoing production the incoming class and returning core will need to cover.",
     ],
     whyModelThinks: {
       optimism: [
-        "98th-percentile recruiting talent — the deepest and most talented roster base in this group.",
+        "98th-percentile recruiting talent — one of the deepest rosters in this group, trailing only Georgia\u2019s.",
         "Zero coaching turnover — Ryan Day enters 2026 with full continuity, unlike four of the other five teams profiled here.",
         "An 80th-percentile returning-production number means the on-field continuity is real, not just recruiting rankings on paper.",
-        "The model's own +9.44 home-field edge is the largest of any team in this batch — a genuinely difficult environment for visitors.",
+        "A +9.44 home-field edge is a real, sizable number in its own right — though several other teams on this shortlist (Notre Dame, Indiana, Texas Tech among them) rate even higher.",
       ],
       risks: [
-        "Transfer portal net value (-2.5 z-score) is the most negative in this group — real production left, and it's an open question whether the incoming class fully replaces it.",
+        "Transfer portal net value (-2.5 z-score) is tied with Oregon for the most negative in this group — real production left, and it's an open question whether the incoming class fully replaces it.",
         "This is still a preseason read: no opponent-adjusted efficiency stats exist yet for any team in the country, Ohio State included, until real games are played.",
       ],
     },
@@ -102,16 +102,16 @@ const CFB_TEAM_PROFILES = {
     },
   },
   'Texas A&M': {
-    headline: "Texas A&M: The Best Returning-Production Number Outside Ohio State",
+    headline: "Texas A&M: One of the Best Returning-Production Numbers on the Shortlist",
     oneLiner: "Mike Elko's third season brings back more of last year's production (87th percentile) than all but one team on this list, and Arkansas travels to College Station in Week 5 as a real underdog.",
     execSummary: [
       "Power Score ranks Texas A&M #6 nationally (0.136); SP+ is slightly more cautious at #9 (20.7) — a real but modest gap between the two systems.",
-      "An 87th-percentile returning-production score, positive portal net value (+0.77), and zero coaching turnover under Mike Elko combine into one of the more stable preseason profiles in this group.",
+      "An 87th-percentile returning-production score \u2014 the second-highest of any team on this shortlist, behind only Oregon \u2014 combined with positive portal net value (+0.77) and zero coaching turnover under Mike Elko, makes this one of the more stable preseason profiles in this group.",
       "Arkansas visits in Week 5, and the model gives the Razorbacks just an 11% win probability on the road.",
     ],
     whyModelThinks: {
       optimism: [
-        "87th-percentile returning production — the best in this group behind only Ohio State.",
+        "87th-percentile returning production — the second-highest of any team on this shortlist, behind only Oregon.",
         "Positive transfer portal net value (+0.77 z-score) — a real, if modest, net gain rather than a loss to backfill.",
         "Zero coaching turnover under Mike Elko, now in his third season.",
       ],
@@ -127,7 +127,7 @@ const CFB_TEAM_PROFILES = {
     execSummary: [
       "Power Score has LSU at #33 nationally (0.059), while their recruiting talent alone (96th percentile) would suggest a top-10 roster — the gap is the story here, not either number in isolation.",
       "Lane Kiffin arrives from Ole Miss to replace Brian Kelly, a real, verified coaching change, and it shows up in the model as a real continuity penalty (coaching prior in the 16th percentile) — new systems take time, and the model isn't pretending otherwise.",
-      "Returning production sits at just the 29th percentile — real turnover on top of the coaching change. Arkansas hosts LSU in Week 13, the regular-season finale, and the model has this one closest to a true coin flip of anyone on Arkansas's schedule (46.5%).",
+      "Returning production sits at just the 29th percentile — real turnover on top of the coaching change, among the lower returning-production reads on this shortlist. Arkansas hosts LSU in Week 13, the regular-season finale, and the model has this one closest to a true coin flip of anyone on Arkansas's schedule (46.5%).",
     ],
     whyModelThinks: {
       optimism: [
@@ -137,7 +137,7 @@ const CFB_TEAM_PROFILES = {
       ],
       risks: [
         "The coaching change is real and recent — Kiffin inherits the program from Brian Kelly, and the model's coaching-continuity component (16th percentile) reflects genuine first-year uncertainty, not a guess.",
-        "Returning production in the 29th percentile is the lowest of any team in this group — a lot of what made LSU's talent base productive last season is gone.",
+        "Returning production in the 29th percentile is among the lowest on this shortlist (behind only Auburn and Indiana) — a lot of what made LSU's talent base productive last season is gone.",
       ],
     },
   },
@@ -178,6 +178,269 @@ const CFB_TEAM_PROFILES = {
       risks: [
         "Returning production at the 19th percentile is the lowest of any team profiled here — this is the most rebuilt roster in the group, not just a new coaching staff.",
         "Coaching continuity (16th percentile) reflects a real, first-year transition under Alex Golesh — the same open question as every other coaching change in this group.",
+      ],
+    },
+  },
+  Indiana: {
+    headline: "Indiana: The Model's Least-Recruited Top-2 Team, and It Doesn't Care",
+    oneLiner: "Curt Cignetti's Hoosiers rank #2 nationally by Power Score and #1 in the entire country by SP+ — built almost entirely on coaching stability and portal work, not recruiting talent.",
+    execSummary: [
+      "Power Score has Indiana #2 nationally (0.159); SP+ actually ranks them #1 in the entire country (32.4) — the two systems don't just agree Indiana is elite, SP+ thinks they're the best team in college football.",
+      "This isn't built on recruiting: Indiana's talent (45th percentile) is below average for this shortlist, the second-lowest of any team profiled here ahead of only Tulsa — the model is crediting Cignetti's program building and coaching stability, not a blue-chip roster.",
+      "Home field is real signal too: an 11.35-point home edge, the second-largest of any team on this shortlist behind only Notre Dame, means Bloomington is now a genuinely tough environment.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "SP+ ranks Indiana #1 in the country — outside validation for a program that wasn't in this conversation two years ago.",
+        "Positive transfer portal net value (+1.42 z-score) — real, successful reload work under Cignetti.",
+        "Zero coaching turnover, Cignetti entering his third season with the same system.",
+        "An 11.35-point home-field edge, the second-largest of any team on this shortlist.",
+      ],
+      risks: [
+        "Recruiting talent sits at just the 45th percentile — below average for a team ranked this high, meaning less margin if the roster-building approach falters.",
+        "Returning production is the 24th percentile — real turnover from last year's group; the model's confidence rests more on coaching and scheme continuity than depth.",
+      ],
+    },
+  },
+  Iowa: {
+    headline: "Iowa: Kirk Ferentz's Portal Class Is the Best Reload Story Nobody's Talking About",
+    oneLiner: "Iowa's transfer portal net value is the second-best of any team on this shortlist, behind only Ole Miss — a real reload under a coaching staff that's been unchanged for over two decades.",
+    execSummary: [
+      "Power Score ranks Iowa #9 nationally (0.113); SP+ is close behind at #12 (19.7) — a consistent read across both systems.",
+      "Iowa's transfer portal net value (+1.79 z-score) is the second-best of any team on this shortlist, trailing only Ole Miss — a real, effective reload under Kirk Ferentz.",
+      "Returning production sits at just the 39th percentile — moderate roster turnover, offset by one of the strongest portal classes in this group.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "The second-best transfer portal net value of any team on this shortlist (+1.79 z-score), behind only Ole Miss.",
+        "Zero coaching turnover — Kirk Ferentz provides the longest continuity streak in the sport.",
+        "A 9.43-point home-field edge, a real and meaningfully large number.",
+      ],
+      risks: [
+        "Recruiting talent (70th percentile) is middle-of-the-pack for this group — Iowa isn't out-recruiting the SEC/Big Ten heavyweights on this list.",
+        "Returning production at the 39th percentile means real turnover the portal class has to cover, not just supplement.",
+      ],
+    },
+  },
+  Miami: {
+    headline: "Miami: Elite Talent, Real Coaching Continuity, and a Negative Portal Grade",
+    oneLiner: "Mario Cristobal's roster carries 89th-percentile recruiting talent into 2026, but the model flags a real negative in the transfer portal worth watching.",
+    execSummary: [
+      "Power Score has Miami #10 nationally (0.112); SP+ agrees closely at #9 (20.7).",
+      "89.5th-percentile recruiting talent and zero coaching turnover under Mario Cristobal give Miami one of the more stable rosters-on-paper in this group.",
+      "The negative: transfer portal net value (-0.74 z-score) is a real outflow — worth watching relative to a talent base this strong.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "89.5th-percentile recruiting talent, among the highest in this group.",
+        "Zero coaching turnover under Mario Cristobal, now with real system continuity.",
+        "A 10.55-point home-field edge, one of the largest of any team profiled here.",
+      ],
+      risks: [
+        "Transfer portal net value (-0.74 z-score) is negative — real production left that the incoming class needs to replace.",
+        "Returning production (45th percentile) is middle-of-the-pack, not a strength to lean on.",
+      ],
+    },
+  },
+  Missouri: {
+    headline: "Missouri: Well Above Its Rank on Talent, Offset by a Real Portal Reload",
+    oneLiner: "Eli Drinkwitz's roster recruits like a top-15 team (84th percentile) even though the model has Missouri at #16 — and Arkansas hosts them in Week 9 as a real underdog.",
+    execSummary: [
+      "Power Score ranks Missouri #16 nationally (0.095); SP+ is more cautious at #21 (14.4) — a real but modest gap.",
+      "Recruiting talent (84th percentile) outpaces the raw rank — Eli Drinkwitz's program is recruiting like a top-15 team even though the model has it 16th.",
+      "Arkansas hosts Missouri in Week 9, and the model favors Missouri on the road, giving Arkansas just a 32.7% win probability at home.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "84th-percentile recruiting talent, well above what the raw #16 rank alone would suggest.",
+        "Positive transfer portal net value (+1.45 z-score), one of the stronger reload grades in this group.",
+        "Zero coaching turnover — Eli Drinkwitz enters a stable season.",
+      ],
+      risks: [
+        "Returning production is almost exactly average (55th percentile, near-zero z-score) — no real continuity edge to lean on.",
+        "The talent-to-rank gap could close either direction: it could mean Missouri is undervalued, or that the roster hasn't yet translated talent into results the model can see.",
+      ],
+    },
+  },
+  'Notre Dame': {
+    headline: "Notre Dame: The Largest Home-Field Edge in the Model, Paired With a Real Portal Negative",
+    oneLiner: "Marcus Freeman's Fighting Irish carry the single largest team-specific home-field number of any team on this shortlist (14.27 points) into a season where the transfer portal worked against them.",
+    execSummary: [
+      "Power Score ranks Notre Dame #7 nationally (0.134); SP+ is more bullish at #5 (24.4).",
+      "Notre Dame Stadium carries the largest team-specific home-field edge of any team on this shortlist (+14.27 points) — a real, model-derived number, not a generic estimate.",
+      "The real negative: transfer portal net value (-1.11 z-score) is among the more negative reads in this group — production left that the roster needs to replace.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "93.8th-percentile recruiting talent — one of the deepest rosters in this group.",
+        "61st-percentile returning production — solid continuity on top of the talent base.",
+        "The largest home-field edge of any team on this shortlist (+14.27 points) — Notre Dame Stadium is a real, quantified advantage.",
+        "Zero coaching turnover under Marcus Freeman.",
+      ],
+      risks: [
+        "Transfer portal net value (-1.11 z-score) is among the more negative reads in this group — real production lost that the roster needs to replace.",
+        "This is still a preseason number — no opponent-adjusted efficiency stats exist yet to confirm the talent shows up on the field.",
+      ],
+    },
+  },
+  Oregon: {
+    headline: "Oregon: The Best Returning-Production Number on the Shortlist, Tied for the Worst Portal Grade",
+    oneLiner: "Dan Lanning's Ducks bring back more of last year's production (88th percentile) than any other team on this shortlist — while posting a transfer portal number tied with Ohio State for the most negative.",
+    execSummary: [
+      "Power Score ranks Oregon #5 nationally (0.142); SP+ agrees closely at #4 (25.9).",
+      "Returning production sits at the 88th percentile — the highest of any team on this shortlist, meaning this roster isn't rebuilding, it's picking up where last year left off.",
+      "The same story as Ohio State: transfer portal net value (-2.5 z-score) is tied for the most negative of any team on this list — real outgoing talent the deep returning core has to absorb.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "88th-percentile returning production — the highest of any team on this shortlist.",
+        "96.7th-percentile recruiting talent, near the top of this group.",
+        "Zero coaching turnover under Dan Lanning.",
+      ],
+      risks: [
+        "Transfer portal net value (-2.5 z-score) ties Ohio State for the most negative in this group — a real, significant net outflow.",
+        "This is still a preseason read — no 2026 opponent-adjusted stats exist yet for any team, Oregon included.",
+      ],
+    },
+  },
+  'South Carolina': {
+    headline: "South Carolina: The Widest Power Score/SP+ Gap on the Shortlist",
+    oneLiner: "The model's two systems disagree on South Carolina by 20 ranking spots — the widest gap of any team on this shortlist — while the underlying personnel numbers (87th-percentile talent, 83rd-percentile returning production) back the higher read.",
+    execSummary: [
+      "Power Score ranks South Carolina #29 nationally (0.067); SP+ is far more skeptical at #49 (5.9) — a real, 20-spot gap between the two systems, the widest of any team on this shortlist.",
+      "The personnel numbers back the higher read: 87th-percentile recruiting talent and 83rd-percentile returning production, both well above what a #29-#49 team typically carries.",
+      "Arkansas hosts South Carolina in Week 11, and the model has it closer to a coin flip than all but one other game on Arkansas's schedule (43.1% for Arkansas).",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "87th-percentile recruiting talent and 83rd-percentile returning production — both real positives well above what the current rank alone would suggest.",
+        "Positive transfer portal net value (+1.45 z-score).",
+        "Zero coaching turnover under Shane Beamer.",
+      ],
+      risks: [
+        "The 20-spot gap between Power Score (#29) and SP+ (#49) is the widest of any team on this shortlist — one of the two systems is going to be wrong here, and it's worth watching which.",
+        "This is a preseason number only — no opponent-adjusted stats exist yet to settle which system has it right.",
+      ],
+    },
+  },
+  Tennessee: {
+    headline: "Tennessee: Real Talent, Real Turnover, and a Tough Week 6 Test for Arkansas",
+    oneLiner: "Josh Heupel's Volunteers carry a strong talent base (89th percentile) into 2026, but real roster turnover (41st-percentile returning production) is the open question.",
+    execSummary: [
+      "Power Score ranks Tennessee #20 nationally (0.085); SP+ is nearly identical at #19 (15.0) — tight agreement between the two systems.",
+      "Recruiting talent sits at the 89th percentile, well above the raw rank — the roster is talented even if the model hasn't fully credited it yet.",
+      "Arkansas hosts Tennessee in Week 6, and the model gives Arkansas just a 36.3% win probability at home — a real early-season measuring stick.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "88.8th-percentile recruiting talent, one of the stronger talent bases in this group relative to rank.",
+        "Zero coaching turnover under Josh Heupel.",
+      ],
+      risks: [
+        "Returning production sits at just the 41st percentile — real turnover from last year's roster.",
+        "Transfer portal net value (-0.85 z-score) is negative, on top of the returning-production gap — two real headwinds working against the talent base.",
+      ],
+    },
+  },
+  Texas: {
+    headline: "Texas: Elite Talent and Elite Returning Production, One of the Toughest Roads on Arkansas's Schedule",
+    oneLiner: "Steve Sarkisian's roster combines 98th-percentile recruiting talent with 86th-percentile returning production — a rare combination on this shortlist — and Arkansas travels to Austin in Week 12 as a heavy underdog.",
+    execSummary: [
+      "Power Score ranks Texas #12 nationally (0.11); SP+ is more cautious at #17 (16.2) — a real gap, with Power Score the more bullish of the two.",
+      "Texas combines 97.5th-percentile recruiting talent with 86.2nd-percentile returning production — few teams on this shortlist have both numbers this high at once.",
+      "Arkansas travels to Texas in Week 12, and the model gives the Razorbacks just a 15.7% win probability on the road — one of the toughest single games on Arkansas's schedule.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "97.5th-percentile recruiting talent, near the top of the entire shortlist.",
+        "86.2nd-percentile returning production — real continuity layered on top of elite talent, a rare combination in this group.",
+        "Zero coaching turnover under Steve Sarkisian.",
+        "A 10.8-point home-field edge, one of the largest of any team profiled here.",
+      ],
+      risks: [
+        "Transfer portal net value (-0.73 z-score) is negative — a real, if modest, net outflow even with the strong returning core.",
+        "Preseason number only — no opponent-adjusted stats exist yet for any 2026 team, Texas included.",
+      ],
+    },
+  },
+  'Texas Tech': {
+    headline: "Texas Tech: A Portal-Built #3, and Both Systems Agree",
+    oneLiner: "Joey McGuire's Red Raiders sit at #3 nationally in both Power Score and SP+ — a rare exact agreement — built on one of the best transfer portal classes on the shortlist, not blue-chip recruiting.",
+    execSummary: [
+      "Power Score and SP+ both rank Texas Tech #3 nationally (0.157 and 27.6 respectively) — an unusually tight agreement between two independently built systems.",
+      "This isn't a recruiting story: talent sits at the 79th percentile, solid but behind several teams ranked lower — the model is crediting a transfer portal class (+1.55 z-score, the third-best on this shortlist) and real returning production (62nd percentile).",
+      "Zero coaching turnover under Joey McGuire, and an 11.04-point home-field edge — one of the largest of any team on this list.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "Power Score and SP+ both rank Texas Tech #3 nationally — rare, strong agreement between two independent systems.",
+        "The third-best transfer portal net value on this shortlist (+1.55 z-score), behind only Ole Miss and Iowa — a real and effective reload.",
+        "62nd-percentile returning production on top of the portal class — genuine continuity, not just new additions.",
+        "An 11.04-point home-field edge, one of the largest of any team profiled here.",
+      ],
+      risks: [
+        "Recruiting talent (79th percentile) is solid but trails several teams ranked lower in this group — the roster is built more on transfer-portal execution than a talent-gap advantage, which is a different kind of bet.",
+        "Preseason number only — no opponent-adjusted stats exist yet to confirm the portal class translates on the field.",
+      ],
+    },
+  },
+  Tulsa: {
+    headline: "Tulsa: A Week 4 Home Game the Model Says Arkansas Should Win Comfortably",
+    oneLiner: "Tulsa is the clear outlier on this shortlist — ranked outside the top 100 nationally by both systems — and the model gives Arkansas a 78.8% win probability when the Razorbacks host the Golden Hurricane in Week 4.",
+    execSummary: [
+      "Power Score has Tulsa at #101 nationally (-0.032); SP+ is even more pessimistic at #104 (-10.0) — both systems agree this is a clear roster gap, not a close call.",
+      "Recruiting talent (36th percentile) and a near-zero home-field edge (+0.48 points) reflect a program without the resource base of the Power 4 teams on this shortlist — included here only because Arkansas plays them, not because of national ranking.",
+      "Arkansas hosts Tulsa in Week 4, and the model gives the Razorbacks a 78.8% win probability — the most lopsided matchup on Arkansas's 2026 schedule among the teams profiled here.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "Positive transfer portal net value (+0.71 z-score) — a real, modest reload success despite the program's overall resource gap.",
+        "Returning production is almost exactly average for FBS (53rd percentile) — no unusual turnover working against them.",
+      ],
+      risks: [
+        "Recruiting talent sits at just the 36th percentile, the second-lowest of any team on this shortlist, ahead of only Indiana.",
+        "A near-zero home-field edge (+0.48 points) is the smallest of any team profiled here — even Tulsa's home environment isn't grading as a real advantage in the model.",
+      ],
+    },
+  },
+  Utah: {
+    headline: "Utah: A New Coach Replacing a Legend, Backed by Real Roster Continuity",
+    oneLiner: "Morgan Scalley takes over for Kyle Whittingham, and while the model dings Utah for that transition, 80th-percentile returning production says the roster itself barely changed — Arkansas travels to Salt Lake City in Week 2 as a real underdog.",
+    execSummary: [
+      "SP+ actually likes Utah more than Power Score does — #8 nationally (22.2) versus #11 (0.111) — a real gap worth noting.",
+      "Morgan Scalley, promoted from within after Kyle Whittingham's departure, is a real, verified coaching change, and the model's coaching-continuity component reflects genuine first-year uncertainty.",
+      "The offset: 80.1st-percentile returning production, one of the higher reads in this group, meaning most of the on-field roster carries over even though the sideline changed. Arkansas travels to Utah in just Week 2, and the model gives the Razorbacks a 15.5% win probability on the road.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "80.1st-percentile returning production — one of the higher reads in this group, real continuity on the field even with a new head coach.",
+        "A 9.91-point home-field edge, a real and meaningfully large number for a Week 2 road test.",
+        "Essentially neutral transfer portal value (-0.02 z-score) — no real net loss during the transition.",
+      ],
+      risks: [
+        "The coaching change is real: Morgan Scalley's first year as head coach, replacing a two-decade tenure under Kyle Whittingham, carries the same kind of first-year uncertainty as any coaching transition.",
+        "Recruiting talent (69th percentile) is middling for this group — not a strength to lean on if the coaching transition is rocky.",
+      ],
+    },
+  },
+  Vanderbilt: {
+    headline: "Vanderbilt: Clark Lea's Program Keeps Climbing, and Arkansas Is a Real Underdog in Week 7",
+    oneLiner: "Vanderbilt's continued rise under Clark Lea (#13 Power Score, #11 SP+) means Arkansas travels to Nashville in Week 7 as an underdog by the model's own number.",
+    execSummary: [
+      "Power Score ranks Vanderbilt #13 nationally (0.107); SP+ is slightly more bullish at #11 (20.3) — both systems now have Vanderbilt solidly inside the top 15, a real shift for a program that wasn't in this range a few years ago.",
+      "Clark Lea returns for a continuity season with a 60th-percentile talent base — modest by this group's standards, but the program's trajectory is real, not a one-year blip.",
+      "Arkansas travels to Vanderbilt in Week 7, and the model gives the Razorbacks just a 16.4% win probability on the road.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "Both Power Score (#13) and SP+ (#11) now rank Vanderbilt inside the top 15 nationally — real, model-independent agreement on a program on the rise.",
+        "Positive transfer portal net value (+0.39 z-score).",
+        "Zero coaching turnover under Clark Lea, now building on a proven system.",
+        "A 7.09-point home-field edge, a real and solid number.",
+      ],
+      risks: [
+        "Returning production sits at just the 42nd percentile — real turnover from last year's roster.",
+        "Recruiting talent (60th percentile) is modest relative to the SEC teams on this shortlist — the program's ceiling may depend more on development and portal work than a talent-gap advantage.",
       ],
     },
   },
@@ -645,16 +908,23 @@ function App() {
       { label: 'Pass game', value: g.pass_contribution || 0, detail: passDetail, liveMatchup: passLive },
       { label: 'Coaching continuity', value: g.coaching_contribution || 0 },
     ].map(makeBar);
+    const hasFullModel = g.predicted_margin != null;
+    const homeWinPct = g.home_win_prob != null ? Math.round(g.home_win_prob * 100) : null;
+    const preseasonFavored = homeWinPct != null ? (homeWinPct >= 50 ? g.home_team : g.away_team) : null;
+    const preseasonPct = homeWinPct != null ? (homeWinPct >= 50 ? homeWinPct : 100 - homeWinPct) : null;
     return {
-      key, homeTeam: g.home_team, awayTeam: g.away_team,
+      key, homeTeam: g.home_team, awayTeam: g.away_team, hasFullModel,
       cardStyle: `border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card);border:${g._isPinnedGame ? `2px solid ${pinnedAccentColor}` : '1px solid var(--hairline)'}`,
-      predictedLabel: `Model ${g.predicted_margin > 0 ? '+' : ''}${num(g.predicted_margin, 1)}`,
+      predictedLabel: hasFullModel
+        ? `Model ${g.predicted_margin > 0 ? '+' : ''}${num(g.predicted_margin, 1)}`
+        : (preseasonFavored ? `Preseason: ${preseasonFavored} ${preseasonPct}%` : 'Model —'),
       marketLabel: g.market_spread != null ? `Market ${num(-g.market_spread, 1)}` : 'Market —',
       edgeLabel: g.model_edge != null ? `${g.model_edge > 0 ? '+' : ''}${num(g.model_edge, 1)} edge` : 'No line',
       edgeColor, expanded, onToggle: () => setState({ expandedMatchup: expanded ? null : key }), efficiencyBars, schemeBars,
       colorLegend: 'Bar color and position both indicate which team a stat favors — bars extending toward a team, in that team’s color, favor that team.',
       marginNote: `Predicted margin: positive = ${g.home_team} favored by that many points, negative = ${g.away_team} favored.`,
       homeFieldNote: `Home field edge applied: ${num(g.home_field_edge_used, 2)} pts${g.neutral_site ? ' (neutral site — 0 used)' : ''}`,
+      preseasonNote: preseasonFavored ? `Preseason baseline: ${preseasonFavored} favored, ${preseasonPct}% win probability — from each team's aggregate Power Score, before any 2026 games are played. The efficiency/scheme breakdown below needs real opponent-adjusted stats, which don't exist until this team has played a game.` : `No prediction available yet for this game.`,
     };
   });
 
@@ -1067,34 +1337,40 @@ function App() {
                       </div>
                       <span style={{ width: 56, flexShrink: 0 }} />
                     </div>
-                    <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px')}>Efficiency</div>
-                    {g.efficiencyBars.map((b) => (
-                      <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
-                        <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
-                        <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
-                        <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
-                      </div>
-                    ))}
-                    <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:10px')}>Scheme &amp; Staff</div>
-                    {g.schemeBars.map((b) => (
-                      <div key={b.label} style={st('display:flex;flex-direction:column;gap:3px')}>
-                        <div style={st('display:flex;align-items:center;gap:12px')}>
-                          <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap')}>
-                            {b.label}
-                            {b.liveMatchup && (
-                              <span title="Both teams grade well here against a leaky opposing unit - the net edge looks quiet, but this is a live, high-variance matchup, not a stalemate." style={st('font:700 9px var(--font-sans);letter-spacing:.03em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:2px 6px;border-radius:999px;cursor:help')}>Live matchup</span>
-                            )}
-                          </span>
-                          <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
-                          <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
-                        </div>
-                        {b.detail && <div style={st('padding-left:142px;font:400 11px var(--font-sans);color:var(--ink-faint)')}>{b.detail}</div>}
-                      </div>
-                    ))}
-                    <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Coaching continuity is a small, occasional signal — most matchups will show close to zero here unless one team has a coaching change this season.</div>
+                    {g.hasFullModel ? (
+                      <>
+                        <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px')}>Efficiency</div>
+                        {g.efficiencyBars.map((b) => (
+                          <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
+                            <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
+                            <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
+                            <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
+                          </div>
+                        ))}
+                        <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:10px')}>Scheme &amp; Staff</div>
+                        {g.schemeBars.map((b) => (
+                          <div key={b.label} style={st('display:flex;flex-direction:column;gap:3px')}>
+                            <div style={st('display:flex;align-items:center;gap:12px')}>
+                              <span style={st('width:130px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap')}>
+                                {b.label}
+                                {b.liveMatchup && (
+                                  <span title="Both teams grade well here against a leaky opposing unit - the net edge looks quiet, but this is a live, high-variance matchup, not a stalemate." style={st('font:700 9px var(--font-sans);letter-spacing:.03em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:2px 6px;border-radius:999px;cursor:help')}>Live matchup</span>
+                                )}
+                              </span>
+                              <div style={st(b.barWrapStyle)}><div style={st(b.barFillStyle)} /></div>
+                              <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{b.valueLabel}</span>
+                            </div>
+                            {b.detail && <div style={st('padding-left:142px;font:400 11px var(--font-sans);color:var(--ink-faint)')}>{b.detail}</div>}
+                          </div>
+                        ))}
+                        <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>Coaching continuity is a small, occasional signal — most matchups will show close to zero here unless one team has a coaching change this season.</div>
+                      </>
+                    ) : (
+                      <div style={st('padding:14px 16px;background:var(--surface-card);border-radius:var(--radius-sm);font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>{g.preseasonNote}</div>
+                    )}
                     <div style={st('font:600 13px var(--font-sans);color:var(--ink-faint);margin-top:4px')}>{g.homeFieldNote}</div>
-                    <div style={st('font:600 12px var(--font-sans);color:var(--ink-faint)')}>{g.colorLegend}</div>
-                    <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.marginNote}</div>
+                    {g.hasFullModel && <div style={st('font:600 12px var(--font-sans);color:var(--ink-faint)')}>{g.colorLegend}</div>}
+                    {g.hasFullModel && <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.marginNote}</div>}
                   </div>
                 )}
               </div>
