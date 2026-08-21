@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CFB Position-Group Roster Turnover — Weaver Analytics</title>
+<meta name="description" content="Which college football teams rebuilt the most by position group this offseason — real counted departures (portal, draft, presumed graduation) vs. returning players, split by offense/defense and by QB, RB, WR/TE, OL, DL, LB, and Secondary.">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/img/logo-lockup-transparent.png" alt="Weaver Analytics">
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="cfb-model/index.html">CFB Model</a>
+    <a href="nfl-model/index.html">NFL Model</a>
+    <a href="validation.html">Validation</a>
+    <a href="pre-read/index.html">Pre-Read</a>
+    <a href="dashboards/index.html">Dashboards</a>
+    <a href="blog/index.html">Blog</a>
+  </nav>
+</header>
+
+<main class="site-main">
+  <section class="hero">
+    <h1>Which rosters actually turned over this offseason — position by position, not just top-line.</h1>
+    <p class="lede">Every FBS team's last-known roster, reconstructed player by player: who left (transfer portal, NFL draft, or presumed graduated), who's incoming (transfer portal or HS signing class), broken out across seven position groups. Turnover share, not a quality score — this counts who changed, it doesn't grade whether the swap was a good one.</p>
+    <p style="font-size:13px;color:var(--ink-faint);margin-top:10px;">Data as of 2026-08-21 (source roster/portal/draft/recruiting/usage/PPA pulls: 2026-08-21T21:41:48.503380+00:00). "Presumed graduated" departures are a labeled guess for 4th+ year players not found in the portal or draft data — not a confirmed fact. See the <a href="cfb-model/methodology.html">CFB methodology page</a>.</p>
+  </section>
+
+  <h2 class="section-title"><span class="section-eyebrow">Side of the ball</span>Biggest offensive rebuilds</h2>
+  <p style="color:var(--ink-muted);max-width:680px;">Share of QB + RB + WR/TE + OL that departed (portal, draft, or presumed graduated) rather than returning.</p>
+  <div class="tblwrap" style="max-width:520px;"><table class="rank-table">
+    <tr><th>#</th><th>Team</th><th class="num">Offense turnover</th></tr>
+      <tr><td class="rank">1</td><td>Oklahoma State</td><td class="num">80%</td></tr>
+      <tr><td class="rank">2</td><td>West Virginia</td><td class="num">72%</td></tr>
+      <tr><td class="rank">3</td><td>Michigan</td><td class="num">71%</td></tr>
+      <tr><td class="rank">4</td><td>App State</td><td class="num">71%</td></tr>
+      <tr><td class="rank">5</td><td>LSU</td><td class="num">71%</td></tr>
+      <tr><td class="rank">6</td><td>Troy</td><td class="num">71%</td></tr>
+      <tr><td class="rank">7</td><td>Vanderbilt</td><td class="num">70%</td></tr>
+      <tr><td class="rank">8</td><td>Colorado</td><td class="num">68%</td></tr>
+      <tr><td class="rank">9</td><td>Temple</td><td class="num">68%</td></tr>
+      <tr><td class="rank">10</td><td>South Florida</td><td class="num">68%</td></tr>
+      <tr><td class="rank">11</td><td>Louisville</td><td class="num">67%</td></tr>
+      <tr><td class="rank">12</td><td>San Diego State</td><td class="num">67%</td></tr>
+      <tr><td class="rank">13</td><td>UL Monroe</td><td class="num">67%</td></tr>
+      <tr><td class="rank">14</td><td>North Texas</td><td class="num">65%</td></tr>
+      <tr><td class="rank">15</td><td>Penn State</td><td class="num">65%</td></tr>
+  </table></div>
+
+  <h2 class="section-title"><span class="section-eyebrow">Side of the ball</span>Biggest defensive rebuilds</h2>
+  <p style="color:var(--ink-muted);max-width:680px;">Share of DL + LB + Secondary that departed rather than returning.</p>
+  <div class="tblwrap" style="max-width:520px;"><table class="rank-table">
+    <tr><th>#</th><th>Team</th><th class="num">Defense turnover</th></tr>
+      <tr><td class="rank">1</td><td>Colorado</td><td class="num">91%</td></tr>
+      <tr><td class="rank">2</td><td>West Virginia</td><td class="num">75%</td></tr>
+      <tr><td class="rank">3</td><td>Coastal Carolina</td><td class="num">75%</td></tr>
+      <tr><td class="rank">4</td><td>Oklahoma State</td><td class="num">75%</td></tr>
+      <tr><td class="rank">5</td><td>Arkansas</td><td class="num">74%</td></tr>
+      <tr><td class="rank">6</td><td>San Diego State</td><td class="num">73%</td></tr>
+      <tr><td class="rank">7</td><td>UCF</td><td class="num">73%</td></tr>
+      <tr><td class="rank">8</td><td>Memphis</td><td class="num">73%</td></tr>
+      <tr><td class="rank">9</td><td>App State</td><td class="num">73%</td></tr>
+      <tr><td class="rank">10</td><td>North Texas</td><td class="num">72%</td></tr>
+      <tr><td class="rank">11</td><td>Baylor</td><td class="num">71%</td></tr>
+      <tr><td class="rank">12</td><td>Troy</td><td class="num">69%</td></tr>
+      <tr><td class="rank">13</td><td>UL Monroe</td><td class="num">69%</td></tr>
+      <tr><td class="rank">14</td><td>Florida Atlantic</td><td class="num">69%</td></tr>
+      <tr><td class="rank">15</td><td>UAB</td><td class="num">68%</td></tr>
+  </table></div>
+
+  <h2 class="section-title"><span class="section-eyebrow">Position group</span>Most turnover by group</h2>
+  <p style="color:var(--ink-muted);max-width:680px;">Top 10 per group, by share departed. A small group (e.g. a team that only rostered a handful of true QBs) can swing to 100% turnover on a single departure — read the "departed / returning" counts alongside the percentage, not the percentage alone.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-top:20px;">
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">QB</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Oregon State</td><td class="num">100%</td><td class="num">4 out / 0 back</td></tr>
+      <tr><td class="rank">2</td><td>Arkansas State</td><td class="num">83%</td><td class="num">5 out / 1 back</td></tr>
+      <tr><td class="rank">3</td><td>Coastal Carolina</td><td class="num">83%</td><td class="num">5 out / 1 back</td></tr>
+      <tr><td class="rank">4</td><td>East Carolina</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">5</td><td>Houston</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">6</td><td>Kentucky</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">7</td><td>LSU</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">8</td><td>Louisville</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">9</td><td>Oklahoma State</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">10</td><td>Penn State</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">RB</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Sacramento State</td><td class="num">90%</td><td class="num">9 out / 1 back</td></tr>
+      <tr><td class="rank">2</td><td>Penn State</td><td class="num">89%</td><td class="num">8 out / 1 back</td></tr>
+      <tr><td class="rank">3</td><td>West Virginia</td><td class="num">89%</td><td class="num">8 out / 1 back</td></tr>
+      <tr><td class="rank">4</td><td>Oklahoma State</td><td class="num">86%</td><td class="num">6 out / 1 back</td></tr>
+      <tr><td class="rank">5</td><td>Cincinnati</td><td class="num">83%</td><td class="num">5 out / 1 back</td></tr>
+      <tr><td class="rank">6</td><td>UL Monroe</td><td class="num">83%</td><td class="num">5 out / 1 back</td></tr>
+      <tr><td class="rank">7</td><td>Virginia</td><td class="num">83%</td><td class="num">5 out / 1 back</td></tr>
+      <tr><td class="rank">8</td><td>San Diego State</td><td class="num">80%</td><td class="num">4 out / 1 back</td></tr>
+      <tr><td class="rank">9</td><td>James Madison</td><td class="num">75%</td><td class="num">6 out / 2 back</td></tr>
+      <tr><td class="rank">10</td><td>Miami (OH)</td><td class="num">75%</td><td class="num">3 out / 1 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">WR/TE</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Oklahoma State</td><td class="num">91%</td><td class="num">21 out / 2 back</td></tr>
+      <tr><td class="rank">2</td><td>Florida Atlantic</td><td class="num">79%</td><td class="num">15 out / 4 back</td></tr>
+      <tr><td class="rank">3</td><td>Troy</td><td class="num">79%</td><td class="num">15 out / 4 back</td></tr>
+      <tr><td class="rank">4</td><td>Michigan</td><td class="num">75%</td><td class="num">18 out / 6 back</td></tr>
+      <tr><td class="rank">5</td><td>West Virginia</td><td class="num">74%</td><td class="num">17 out / 6 back</td></tr>
+      <tr><td class="rank">6</td><td>South Florida</td><td class="num">73%</td><td class="num">16 out / 6 back</td></tr>
+      <tr><td class="rank">7</td><td>North Texas</td><td class="num">71%</td><td class="num">15 out / 6 back</td></tr>
+      <tr><td class="rank">8</td><td>Florida</td><td class="num">71%</td><td class="num">17 out / 7 back</td></tr>
+      <tr><td class="rank">9</td><td>Toledo</td><td class="num">71%</td><td class="num">17 out / 7 back</td></tr>
+      <tr><td class="rank">10</td><td>LSU</td><td class="num">70%</td><td class="num">14 out / 6 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">OL</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Vanderbilt</td><td class="num">89%</td><td class="num">16 out / 2 back</td></tr>
+      <tr><td class="rank">2</td><td>Colorado</td><td class="num">82%</td><td class="num">14 out / 3 back</td></tr>
+      <tr><td class="rank">3</td><td>Memphis</td><td class="num">80%</td><td class="num">16 out / 4 back</td></tr>
+      <tr><td class="rank">4</td><td>App State</td><td class="num">78%</td><td class="num">14 out / 4 back</td></tr>
+      <tr><td class="rank">5</td><td>Temple</td><td class="num">78%</td><td class="num">14 out / 4 back</td></tr>
+      <tr><td class="rank">6</td><td>Michigan State</td><td class="num">76%</td><td class="num">16 out / 5 back</td></tr>
+      <tr><td class="rank">7</td><td>Louisville</td><td class="num">75%</td><td class="num">15 out / 5 back</td></tr>
+      <tr><td class="rank">8</td><td>Michigan</td><td class="num">75%</td><td class="num">15 out / 5 back</td></tr>
+      <tr><td class="rank">9</td><td>UL Monroe</td><td class="num">73%</td><td class="num">11 out / 4 back</td></tr>
+      <tr><td class="rank">10</td><td>LSU</td><td class="num">72%</td><td class="num">13 out / 5 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">DL</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Colorado</td><td class="num">100%</td><td class="num">18 out / 0 back</td></tr>
+      <tr><td class="rank">2</td><td>Memphis</td><td class="num">85%</td><td class="num">17 out / 3 back</td></tr>
+      <tr><td class="rank">3</td><td>Louisville</td><td class="num">83%</td><td class="num">15 out / 3 back</td></tr>
+      <tr><td class="rank">4</td><td>Oklahoma State</td><td class="num">83%</td><td class="num">15 out / 3 back</td></tr>
+      <tr><td class="rank">5</td><td>Florida State</td><td class="num">82%</td><td class="num">14 out / 3 back</td></tr>
+      <tr><td class="rank">6</td><td>Troy</td><td class="num">82%</td><td class="num">14 out / 3 back</td></tr>
+      <tr><td class="rank">7</td><td>UConn</td><td class="num">82%</td><td class="num">14 out / 3 back</td></tr>
+      <tr><td class="rank">8</td><td>Coastal Carolina</td><td class="num">81%</td><td class="num">13 out / 3 back</td></tr>
+      <tr><td class="rank">9</td><td>Sacramento State</td><td class="num">80%</td><td class="num">12 out / 3 back</td></tr>
+      <tr><td class="rank">10</td><td>South Alabama</td><td class="num">79%</td><td class="num">11 out / 3 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">LB</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Arkansas State</td><td class="num">86%</td><td class="num">12 out / 2 back</td></tr>
+      <tr><td class="rank">2</td><td>Colorado</td><td class="num">86%</td><td class="num">6 out / 1 back</td></tr>
+      <tr><td class="rank">3</td><td>Coastal Carolina</td><td class="num">83%</td><td class="num">10 out / 2 back</td></tr>
+      <tr><td class="rank">4</td><td>Eastern Michigan</td><td class="num">83%</td><td class="num">10 out / 2 back</td></tr>
+      <tr><td class="rank">5</td><td>App State</td><td class="num">82%</td><td class="num">9 out / 2 back</td></tr>
+      <tr><td class="rank">6</td><td>Troy</td><td class="num">82%</td><td class="num">9 out / 2 back</td></tr>
+      <tr><td class="rank">7</td><td>West Virginia</td><td class="num">81%</td><td class="num">13 out / 3 back</td></tr>
+      <tr><td class="rank">8</td><td>Oklahoma State</td><td class="num">80%</td><td class="num">8 out / 2 back</td></tr>
+      <tr><td class="rank">9</td><td>UCF</td><td class="num">78%</td><td class="num">7 out / 2 back</td></tr>
+      <tr><td class="rank">10</td><td>Georgia Tech</td><td class="num">75%</td><td class="num">6 out / 2 back</td></tr>
+    </table></div>
+    <div class="tblwrap"><table class="rank-table">
+      <tr><th colspan="4" style="text-align:left;font:700 13px var(--font-sans);color:var(--ink);padding-bottom:2px;">Secondary</th></tr>
+      <tr><th>#</th><th>Team</th><th class="num">Turnover</th><th class="num">Departed / Returning</th></tr>
+      <tr><td class="rank">1</td><td>Arkansas</td><td class="num">95%</td><td class="num">18 out / 1 back</td></tr>
+      <tr><td class="rank">2</td><td>Colorado</td><td class="num">84%</td><td class="num">16 out / 3 back</td></tr>
+      <tr><td class="rank">3</td><td>West Virginia</td><td class="num">79%</td><td class="num">19 out / 5 back</td></tr>
+      <tr><td class="rank">4</td><td>North Texas</td><td class="num">77%</td><td class="num">17 out / 5 back</td></tr>
+      <tr><td class="rank">5</td><td>Florida Atlantic</td><td class="num">75%</td><td class="num">21 out / 7 back</td></tr>
+      <tr><td class="rank">6</td><td>App State</td><td class="num">74%</td><td class="num">14 out / 5 back</td></tr>
+      <tr><td class="rank">7</td><td>San Diego State</td><td class="num">74%</td><td class="num">14 out / 5 back</td></tr>
+      <tr><td class="rank">8</td><td>Baylor</td><td class="num">71%</td><td class="num">20 out / 8 back</td></tr>
+      <tr><td class="rank">9</td><td>Clemson</td><td class="num">71%</td><td class="num">15 out / 6 back</td></tr>
+      <tr><td class="rank">10</td><td>Eastern Michigan</td><td class="num">71%</td><td class="num">15 out / 6 back</td></tr>
+    </table></div>
+  </div>
+
+  <p style="color:var(--ink-faint);font-size:13px;max-width:680px;margin-top:32px;">Full methodology: <a href="cfb-model/methodology.html">CFB Model Methodology</a>. See also: <a href="roster-movers.html">Offseason Roster Movement</a> (team-level talent/portal/returning-production view). This is a static snapshot generated locally by the pipeline and redeployed periodically — it doesn't refresh live in the browser.</p>
+</main>
+
+<footer class="site-footer">
+  Weaver Analytics — a personal project.
+</footer>
+
+</body>
+</html>
