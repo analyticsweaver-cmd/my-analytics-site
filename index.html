@@ -4,9 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Weaver Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
+<body class="home">
 
 <header class="site-header">
   <div class="brand">
@@ -23,85 +26,198 @@
   </nav>
 </header>
 
-<main class="site-main">
-  <section class="hero">
-    <h1>Two football models, backtested against three real seasons each — and every miss is on the record.</h1>
-    <p>Weaver Analytics is a home for the NFL and college football models I build in my spare time. It's not a power-rankings site or a hot-take blog — every number here is checked against what actually happened, the methodology is public, and when a model's been wrong, that's on the site too, not buried.</p>
-  </section>
+<section class="home-hero">
+  <div class="home-hero-inner">
+    <div class="home-hero-copy">
+      <div class="eyebrow">Weaver Analytics</div>
+      <h1>Football models, scored against seasons that already happened.</h1>
+      <p>Every NFL and FBS team gets a rating, every game gets a projection, and all of it is graded against 2023&ndash;2025. No betting lines feed the models.</p>
+      <a href="validation.html">See the record &rarr;</a>
+    </div>
 
-  <div class="stat-row">
-    <div class="stat"><div class="v">r = 0.382</div><div class="k">NFL: Power Score vs. actual wins</div></div>
-    <div class="stat"><div class="v">13.71 pts</div><div class="k">CFB: average margin error (MAE)</div></div>
-    <div class="stat"><div class="v">3 seasons</div><div class="k">Both models, backtested 2023–2025</div></div>
-  </div>
-  <p style="margin-top:-8px;"><a class="cta" href="validation.html">See how these numbers are checked, hits and misses →</a></p>
+    <div class="home-chart-card">
+      <div class="home-chart-head">
+        <div class="label">Probability accuracy</div>
+        <div class="sub">Brier &middot; lower is better</div>
+      </div>
+      <div class="home-chart-explainer">How well a stated probability matches what happened. A coin flip scores 0.250.</div>
 
-  <div class="card-grid">
-    <div class="card">
-      <span class="tag">Live Dashboard</span>
-      <h2>The Weaver Line — CFB Model</h2>
-      <p>Power ratings, matchup predictions, and week-over-week team trajectories for college football, built from a weekly-updated model.</p>
-      <a class="cta" href="cfb-model/index.html">View dashboard →</a>
-    </div>
-    <div class="card">
-      <span class="tag">Live Dashboard</span>
-      <h2>The Weaver Blitz — NFL Model</h2>
-      <p>Power ratings, schedule projections, win-total uncertainty (Cone of Certainty), and playoff/Super Bowl odds for the NFL, backtest-validated across 3 seasons.</p>
-      <a class="cta" href="nfl-model/index.html">View dashboard →</a>
-    </div>
-    <div class="card">
-      <span class="tag">Trust, checked</span>
-      <h2>Model Validation</h2>
-      <p>Backtests, calibration, benchmarks against a naive baseline and against Vegas — plus the biggest misses from both models and what changed because of them.</p>
-      <a class="cta" href="validation.html">See the validation record →</a>
-    </div>
-    <div class="card">
-      <span class="tag">Read</span>
-      <h2>2026 NFL Preseason Pre-Read</h2>
-      <p>Coaching carousel, QB rooms, rookie impact, and a from-scratch prediction model — the full pre-camp breakdown.</p>
-      <a class="cta" href="pre-read/index.html">Read the pre-read →</a>
-    </div>
-    <div class="card">
-      <span class="tag">Spotlight</span>
-      <h2>Arkansas 2026: A Roster Rebuilt</h2>
-      <p>Almost the entire two-deep turned over this offseason — a position-by-position look at who left, who stayed, and who's walking in the door.</p>
-      <a class="cta" href="spotlights/arkansas-2026.html">See the roster turnover →</a>
-    </div>
-    <div class="card">
-      <span class="tag">New</span>
-      <h2>CFB Offseason Roster Movement</h2>
-      <p>Every FBS team ranked by the model's own preseason personnel + coaching prior, transfer portal net impact, and returning production — the same numbers the model uses, not a separate hot-take layer.</p>
-      <a class="cta" href="roster-movers.html">See who moved →</a>
-    </div>
-    <div class="card">
-      <span class="tag">New</span>
-      <h2>Model vs. Public Perception</h2>
-      <p>Where the CFB model disagrees hardest with SP+, a well-known public rating — ranked by the actual gap, full sorted list, not a highlight reel.</p>
-      <a class="cta" href="disagreements.html">See the disagreements →</a>
-    </div>
-    <div class="card">
-      <span class="tag">New</span>
-      <h2>NFL Regression Watch</h2>
-      <p>Who won more games than their point differential predicted last season, and who won fewer — a formula-based luck check, not a hot take about who's "due."</p>
-      <a class="cta" href="regression-watch.html">See who's due →</a>
-    </div>
-    <div class="card disabled">
-      <span class="tag">Coming Soon</span>
-      <h2>More Dashboards</h2>
-      <p>Additional projects land here as they're built out.</p>
-      <a class="cta" href="dashboards/index.html">See what's planned →</a>
-    </div>
-    <div class="card">
-      <span class="tag">New</span>
-      <h2>Blog</h2>
-      <p>Write-ups on how these models are built, what changes week to week, and things I'm digging into.</p>
-      <a class="cta" href="blog/index.html">Read posts →</a>
+      <div class="home-bars">
+        <div class="home-bar-row">
+          <div class="top">
+            <span class="name">CFB model</span>
+            <span class="val">0.208</span>
+          </div>
+          <div class="home-bar-track"><div class="home-bar-fill" style="width:25.7%;background:var(--green-light);"></div></div>
+        </div>
+        <div class="home-bar-row">
+          <div class="top">
+            <span class="name">NFL model</span>
+            <span class="val">0.2375</span>
+          </div>
+          <div class="home-bar-track"><div class="home-bar-fill" style="width:67.9%;background:var(--steel);"></div></div>
+        </div>
+        <div class="home-bar-row">
+          <div class="top">
+            <span class="name">Coin flip</span>
+            <span class="val muted">0.250</span>
+          </div>
+          <div class="home-bar-track"><div class="home-bar-fill" style="width:85.7%;background:var(--neutral-tan);"></div></div>
+        </div>
+      </div>
+      <div class="home-chart-foot">1,979 CFB games and 816 NFL games, pooled 2023&ndash;2025. Axis starts at 0.190.</div>
     </div>
   </div>
-</main>
+</section>
 
-<footer class="site-footer">
-  Weaver Analytics — a personal project.
+<div class="home-statband">
+  <div class="home-statband-grid">
+    <div class="home-statband-cell">
+      <div class="k">CFB margin error</div>
+      <div class="v">13.71</div>
+      <div class="s">points off per game</div>
+    </div>
+    <div class="home-statband-cell">
+      <div class="k">NFL wins correlation</div>
+      <div class="v">0.382</div>
+      <div class="s">p &lt; 0.001</div>
+    </div>
+    <div class="home-statband-cell">
+      <div class="k">Games backtested</div>
+      <div class="v">2,795</div>
+      <div class="s">816 NFL &middot; 1,979 CFB</div>
+    </div>
+    <div class="home-statband-cell">
+      <div class="k">Simulated seasons</div>
+      <div class="v">20,000</div>
+      <div class="s">per NFL projection run</div>
+    </div>
+  </div>
+</div>
+
+<div class="home-section">
+  <div class="eyebrow">How it works</div>
+  <h2>Rate, project, then grade</h2>
+  <div class="home-hiw-row">
+    <div class="home-hiw-num">01</div>
+    <div class="home-hiw-title">Rate every team</div>
+    <div class="home-hiw-body">A Power Score built from personnel, coaching, transfer portal movement, and returning production.</div>
+  </div>
+  <div class="home-hiw-row">
+    <div class="home-hiw-num">02</div>
+    <div class="home-hiw-title">Project the season</div>
+    <div class="home-hiw-body">Ratings become matchup margins and win probabilities. The NFL model simulates the season 20,000 times for win totals and playoff odds.</div>
+  </div>
+  <div class="home-hiw-row">
+    <div class="home-hiw-num">03</div>
+    <div class="home-hiw-title">Grade the guesses</div>
+    <div class="home-hiw-body">Every projection is checked against 2023&ndash;2025. Features that don't improve accuracy come out &mdash; scheme continuity did, and the win correlation rose from 0.352 to 0.382.</div>
+  </div>
+</div>
+
+<div class="home-section record">
+  <div class="eyebrow">The record</div>
+  <h2>Caught, not hidden</h2>
+  <div class="home-record-intro">The largest miss so far was overconfidence, not a bad pick: games the NFL model called at 76.5% were actually won 68.1% of the time. The gap is what the simulation fix closed.</div>
+
+  <div class="home-record-grid">
+    <div class="home-calib-card">
+      <div class="label">Called vs. actual</div>
+      <div class="home-calib-bars">
+        <div class="home-calib-col" style="height:100%;">
+          <div class="v">76.5%</div>
+          <div class="home-calib-fill" style="height:100%;background:var(--steel);"></div>
+        </div>
+        <div class="home-calib-col" style="height:89%;">
+          <div class="v">68.1%</div>
+          <div class="home-calib-fill" style="height:100%;background:var(--red-light);"></div>
+        </div>
+      </div>
+      <div class="home-calib-captions">
+        <div>model said</div>
+        <div>actually happened</div>
+      </div>
+    </div>
+
+    <div class="home-cmp-table">
+      <div class="home-cmp-row head">
+        <div>Check</div><div>NFL</div><div>CFB</div>
+      </div>
+      <div class="home-cmp-row">
+        <div class="lbl">Games backtested</div><div class="val">816</div><div class="val">1,979</div>
+      </div>
+      <div class="home-cmp-row">
+        <div class="lbl">Calibration (Brier)</div><div class="val">0.2375</div><div class="val green">0.208</div>
+      </div>
+      <div class="home-cmp-row">
+        <div class="lbl">Season simulation</div><div class="val">20,000 runs</div><div class="val faint">Not built yet</div>
+      </div>
+      <div class="home-cmp-row">
+        <div class="lbl">Home-field advantage</div><div class="val">Flat 2 pts</div><div class="val green">Team-specific</div>
+      </div>
+    </div>
+  </div>
+  <div class="home-record-link"><a class="home-link" href="validation.html">Every miss, and what changed because of it &rarr;</a></div>
+</div>
+
+<div class="home-dest">
+  <div class="home-dest-col">
+    <div class="home-dest-col-head brass">Dashboards &amp; tools</div>
+    <div class="home-dest-list">
+      <a class="home-dest-row" href="cfb-model/index.html">
+        <span class="title">The Weaver Line &mdash; CFB</span>
+        <span class="action">Open &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="nfl-model/index.html">
+        <span class="title">The Weaver Blitz &mdash; NFL</span>
+        <span class="action">Open &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="roster-movers.html">
+        <span class="title">CFB Roster Movement</span>
+        <span class="action">Open &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="disagreements.html">
+        <span class="title">Model vs. SP+</span>
+        <span class="action">Open &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="regression-watch.html">
+        <span class="title">NFL Regression Watch</span>
+        <span class="action">Open &rarr;</span>
+      </a>
+    </div>
+  </div>
+  <div class="home-dest-col">
+    <div class="home-dest-col-head steel">Writing</div>
+    <div class="home-dest-list">
+      <a class="home-dest-row" href="pre-read/index.html">
+        <span class="title">2026 NFL Preseason Pre-Read</span>
+        <span class="action">Read &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="spotlights/arkansas-2026.html">
+        <span class="title">Arkansas 2026: A Roster Rebuilt</span>
+        <span class="action">Read &rarr;</span>
+      </a>
+      <a class="home-dest-row" href="blog/index.html">
+        <span class="title">Blog</span>
+        <span class="action">Read &rarr;</span>
+      </a>
+      <a class="home-dest-row dimmed" href="dashboards/index.html">
+        <span class="title">What's next</span>
+        <span class="action">See plans &rarr;</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer home-footer">
+  <div class="home-footer-inner">
+    <div class="credit">Weaver Analytics &mdash; a personal project.</div>
+    <div class="home-footer-links">
+      <a href="validation.html">Validation</a>
+      <a href="nfl-model/methodology.html">NFL methodology</a>
+      <a href="cfb-model/methodology.html">CFB methodology</a>
+    </div>
+  </div>
 </footer>
 
 </body>
