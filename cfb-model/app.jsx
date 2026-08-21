@@ -41,6 +41,163 @@ const CFB_VALIDATION_STATS = [
   { headline: 'The run/pass fragility flag was checked and found not to predict backtest error', gloss: 'Fragile teams\u2019 error is only 0.244 points higher than balanced teams\u2019, against a standard error of 0.422 \u2014 within noise, not a real effect. Reported as an honest negative result: the flag stays a qualitative watchlist tool on team pages, never wired into the actual rating.' },
 ];
 
+// CFB Team Profiles (added 2026-08-18, shortlist per Anna: all of Arkansas's
+// 2026 opponents + anyone else in the current top 10 by Power Score).
+// IMPORTANT SCOPE NOTE: this is deliberately a smaller template than the NFL
+// TEAM_PROFILES object. No CFB team has any opponent-adjusted on-field stats
+// yet (adj_off_success_rate, explosiveness, havoc, etc. are null for all 138
+// FBS teams - games_played is 0 across the board, since the 2026 season
+// hasn't started; CFBD has no game data until kickoff, ~Aug 23-30). Every
+// profile below is built ONLY from what's real and available preseason:
+// recruiting talent, returning production, transfer portal net value, the
+// personnel+coaching prior blend, real verified coaching-change facts, and -
+// where applicable - Arkansas's own model-computed win probability in that
+// matchup. No fiveQuestions/changeOurMind sections yet (kept to headline,
+// oneLiner, execSummary, and a two-quadrant Strengths/Weaknesses SWOT) -
+// once real 2026 game data exists, these should get a full refresh with the
+// same structure NFL's profiles use, including Team DNA's five currently-null
+// on-field dimensions. North Alabama (Arkansas's Week 1 opponent) has no
+// profile - it's an FCS program with zero rows in the CFB model's FBS-only
+// dataset, so there's no real data to ground one in.
+const CFB_TEAM_PROFILES = {
+  'Ohio State': {
+    headline: "Ohio State: The Model's #1 Team, With One Real Question Mark",
+    oneLiner: "Ohio State opens 2026 atop the model's rankings on talent and continuity alone — the one thing working against that consensus is the transfer portal, where the Buckeyes posted the most negative net value of any team on this list.",
+    execSummary: [
+      "Power Score has Ohio State #1 overall (0.161), and SP+ agrees closely, ranking them #2 nationally (30.1) — two independently built systems landing in the same neighborhood is a real signal, not a coincidence.",
+      "The foundation is real: a 98th-percentile recruiting talent base and Ryan Day returning for another season give Ohio State the most stable coaching situation of any team on this list.",
+      "The one number working against the consensus: Ohio State's transfer portal net value (-2.5 z-score) is the most negative of any team in this preseason class — real outgoing production the incoming class and returning core will need to cover.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "98th-percentile recruiting talent — the deepest and most talented roster base in this group.",
+        "Zero coaching turnover — Ryan Day enters 2026 with full continuity, unlike four of the other five teams profiled here.",
+        "An 80th-percentile returning-production number means the on-field continuity is real, not just recruiting rankings on paper.",
+        "The model's own +9.44 home-field edge is the largest of any team in this batch — a genuinely difficult environment for visitors.",
+      ],
+      risks: [
+        "Transfer portal net value (-2.5 z-score) is the most negative in this group — real production left, and it's an open question whether the incoming class fully replaces it.",
+        "This is still a preseason read: no opponent-adjusted efficiency stats exist yet for any team in the country, Ohio State included, until real games are played.",
+      ],
+    },
+  },
+  Georgia: {
+    headline: "Georgia: The Model's Best Recruiting Class, and Arkansas's Week 3 Gauntlet",
+    oneLiner: "Georgia carries the single highest recruiting-talent percentile of anyone on this list (99.6th) into a Week 3 home date with Arkansas, where the model gives the Razorbacks just an 18% chance of winning.",
+    execSummary: [
+      "Power Score has Georgia #4 nationally (0.145); SP+ is a touch more conservative at #6 (24.1) — close enough that the two systems are telling a consistent story, not contradicting each other.",
+      "Kirby Smart returns for a continuity year, and Georgia's 82nd-percentile returning-production number backs it up — this isn't a team leaning on a reload.",
+      "Arkansas hosts Georgia in Week 3, and the model gives the Razorbacks an 18% win probability — the toughest single test on Arkansas's slate, by that number.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "99.6th-percentile recruiting talent — the single highest of any team profiled here.",
+        "Zero coaching turnover under Kirby Smart, with an 82nd-percentile returning-production number to match.",
+        "A team-specific home-field edge of 5.08 — a real, model-derived number, not a league-average estimate.",
+      ],
+      risks: [
+        "Portal net value (-0.94 z-score) is negative — modest, but a real net outflow on an already-strong roster with less margin to absorb losses.",
+        "Like every team on this list, this is a preseason number — no in-season opponent-adjusted stats exist yet to confirm the talent shows up on the field.",
+      ],
+    },
+  },
+  'Texas A&M': {
+    headline: "Texas A&M: The Best Returning-Production Number Outside Ohio State",
+    oneLiner: "Mike Elko's third season brings back more of last year's production (87th percentile) than all but one team on this list, and Arkansas travels to College Station in Week 5 as a real underdog.",
+    execSummary: [
+      "Power Score ranks Texas A&M #6 nationally (0.136); SP+ is slightly more cautious at #9 (20.7) — a real but modest gap between the two systems.",
+      "An 87th-percentile returning-production score, positive portal net value (+0.77), and zero coaching turnover under Mike Elko combine into one of the more stable preseason profiles in this group.",
+      "Arkansas visits in Week 5, and the model gives the Razorbacks just an 11% win probability on the road.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "87th-percentile returning production — the best in this group behind only Ohio State.",
+        "Positive transfer portal net value (+0.77 z-score) — a real, if modest, net gain rather than a loss to backfill.",
+        "Zero coaching turnover under Mike Elko, now in his third season.",
+      ],
+      risks: [
+        "Recruiting talent (94.6th percentile) is real but trails Georgia, Ohio State, and LSU in this group — the roster is built more on development and continuity than a talent-gap advantage.",
+        "Preseason number only — no opponent-adjusted efficiency data exists yet for any 2026 team.",
+      ],
+    },
+  },
+  LSU: {
+    headline: "LSU: Elite Talent, a New Coach, and the Model's Biggest Gap Between Recruiting Rank and Actual Rank",
+    oneLiner: "LSU recruits like a top-5 program (96th percentile) but opens 2026 ranked #33 by Power Score — the widest talent-to-rank gap of any team on this list, driven by a first-year coaching change and real roster turnover.",
+    execSummary: [
+      "Power Score has LSU at #33 nationally (0.059), while their recruiting talent alone (96th percentile) would suggest a top-10 roster — the gap is the story here, not either number in isolation.",
+      "Lane Kiffin arrives from Ole Miss to replace Brian Kelly, a real, verified coaching change, and it shows up in the model as a real continuity penalty (coaching prior in the 16th percentile) — new systems take time, and the model isn't pretending otherwise.",
+      "Returning production sits at just the 29th percentile — real turnover on top of the coaching change. Arkansas hosts LSU in Week 13, the regular-season finale, and the model has this one closest to a true coin flip of anyone on Arkansas's schedule (46.5%).",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "96th-percentile recruiting talent — a real, elite talent base that doesn't disappear just because the coaching staff changed.",
+        "Positive transfer portal net value (+1.08 z-score) — Kiffin's staff has already added real value in the portal, even in a transition year.",
+        "A near-even Week 13 matchup with Arkansas (46.5%) says the model isn't writing LSU off despite the low overall rank.",
+      ],
+      risks: [
+        "The coaching change is real and recent — Kiffin inherits the program from Brian Kelly, and the model's coaching-continuity component (16th percentile) reflects genuine first-year uncertainty, not a guess.",
+        "Returning production in the 29th percentile is the lowest of any team in this group — a lot of what made LSU's talent base productive last season is gone.",
+      ],
+    },
+  },
+  'Ole Miss': {
+    headline: "Ole Miss: The Coaching Change Everyone Worried About, Covered by the Best Portal Class in This Group",
+    oneLiner: "Pete Golding steps up to replace Lane Kiffin, and while the model does dock Ole Miss for the transition, the best transfer portal net value in this group (+2.19 z-score) is doing real work to offset it.",
+    execSummary: [
+      "Power Score ranks Ole Miss #8 nationally (0.132); SP+ is actually slightly more bullish at #7 (24.0) — two systems landing almost exactly on top of each other.",
+      "Pete Golding, promoted from within after Lane Kiffin's move to LSU, means real coaching-continuity risk (16th percentile) — but Ole Miss backfilled aggressively, posting the best transfer portal net value of any team profiled here (+2.19 z-score).",
+      "Returning production (61st percentile) is solidly above average even through the transition — this isn't a program starting from scratch.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "The best transfer portal net value in this group by a wide margin (+2.19 z-score) — a real, aggressive, successful reload.",
+        "Returning production at the 61st percentile despite the coaching change — continuity on the roster even where the staff changed.",
+        "SP+ (#7) and Power Score (#8) agree closely — a real signal the model isn't an outlier here.",
+      ],
+      risks: [
+        "Coaching continuity sits at the 16th percentile — Pete Golding's first year carries the same real, unresolved transition risk as any first-time head coach.",
+        "Recruiting talent (85th percentile) is the lowest of the SEC teams in this group, meaning less margin if the portal class underperforms its projected value.",
+      ],
+    },
+  },
+  Auburn: {
+    headline: "Auburn: Elite Recruiting Talent, the Most Roster Turnover in This Group",
+    oneLiner: "Alex Golesh inherits a 91st-percentile talent base from Hugh Freeze, but Auburn's returning-production number is the lowest of any team profiled here — the roster changed as much as the staff did.",
+    execSummary: [
+      "Power Score has Auburn at #34 nationally (0.058), close to LSU's #33 — both programs show the same pattern: elite recruiting talent (91st percentile here) the model isn't yet crediting at full value because of a coaching change and heavy roster turnover.",
+      "Returning production sits at just the 19th percentile, the lowest of any team in this group — more of last year's on-field production left than stayed.",
+      "Arkansas travels to Auburn in Week 10, and the model gives the Razorbacks a 30% win probability on the road.",
+    ],
+    whyModelThinks: {
+      optimism: [
+        "91st-percentile recruiting talent — a real, elite talent floor regardless of this year's turnover.",
+        "Positive transfer portal net value (+0.6 z-score) — Golesh's staff added real value even in a transition year.",
+        "A 30% Arkansas win probability (meaning Auburn is favored) despite the low overall rank suggests the model isn't discounting Auburn as heavily as the raw rank implies.",
+      ],
+      risks: [
+        "Returning production at the 19th percentile is the lowest of any team profiled here — this is the most rebuilt roster in the group, not just a new coaching staff.",
+        "Coaching continuity (16th percentile) reflects a real, first-year transition under Alex Golesh — the same open question as every other coaching change in this group.",
+      ],
+    },
+  },
+};
+
+function CFBSWOTQuadrant({ label, sub, items, tone }) {
+  const color = tone === 'positive' ? 'var(--value-positive)' : 'var(--value-risk)';
+  return (
+    <div style={st(`background:var(--surface-card);border-left:3px solid ${color};border-radius:0 var(--radius-md) var(--radius-md) 0;box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:6px`)}>
+      <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${color}`)}>{label}</div>
+      <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-4px')}>{sub}</div>
+      <ul style={st('margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px')}>
+        {items.map((t, i) => (
+          <li key={i} style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink)')}>{t}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 // ----------------------------------------------------------------------
 // Small helpers
 // ----------------------------------------------------------------------
@@ -566,6 +723,7 @@ function App() {
   ];
   const oneLiner = oneLinerFor(powerRows, activeTeam);
   const hasPowerData = !!activeRankRow;
+  const profile = CFB_TEAM_PROFILES[activeTeam];
   const truthy = (v) => v === true || v === 'True' || v === 'true';
   const coachIsNew = hasPowerData && truthy(activeRankRow.hc_changed);
   const coachIsFirstTime = coachIsNew && truthy(activeRankRow.first_time_hc);
@@ -859,6 +1017,23 @@ function App() {
           {glossaryPanel}
           {validationPanel}
 
+          <div style={st('display:flex;align-items:center;gap:10px')}>
+            <label style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Week</label>
+            {s.availableWeeks.length > 0 ? (
+              <select
+                value={s.weekInput}
+                onChange={(e) => selectWeek(e.target.value)}
+                style={st('font:600 14px var(--font-sans);padding:8px 10px;border-radius:var(--radius-sm);border:1px solid var(--hairline);background:var(--surface-card);color:var(--ink)')}
+              >
+                {s.availableWeeks.map((w) => (
+                  <option key={w} value={w}>Week {w}</option>
+                ))}
+              </select>
+            ) : (
+              <span style={st('font:600 14px var(--font-sans);color:var(--ink-faint)')}>—</span>
+            )}
+          </div>
+
           <div style={st('font:400 16px var(--font-sans);color:var(--ink-muted)')}>
             {s.matchupWeek != null
               ? `Week ${s.matchupWeek} — sorted by |model edge| — ${pinnedTeam || 'pinned team'}'s games pinned to the top.`
@@ -960,6 +1135,32 @@ function App() {
                 ))}
               </div>
               <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{oneLiner}</div>
+            </div>
+          )}
+
+          {profile && (
+            <div style={st('background:var(--surface-dark);border-radius:var(--radius-md);padding:26px 28px;display:flex;flex-direction:column;gap:14px')}>
+              <div style={st('font:700 11px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--paper);opacity:.6')}>Team Profile — Preseason Read</div>
+              <div style={st('font:900 24px/1.3 var(--font-sans);color:var(--paper)')}>{profile.headline}</div>
+              <div style={st('font:400 16px/1.5 var(--font-sans);color:var(--paper);opacity:.85')}>{profile.oneLiner}</div>
+              <div style={st('display:flex;flex-direction:column;gap:8px;margin-top:6px')}>
+                {profile.execSummary.map((line, i) => (
+                  <div key={i} style={st('display:flex;gap:10px;align-items:flex-start')}>
+                    <span style={st('font:700 14px var(--font-sans);color:var(--paper);opacity:.5;flex-shrink:0')}>{i + 1}</span>
+                    <span style={st('font:400 15px/1.5 var(--font-sans);color:var(--paper);opacity:.9')}>{line}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={st('font:400 12px var(--font-sans);color:var(--paper);opacity:.55;margin-top:4px')}>
+                Preseason only — no 2026 opponent-adjusted on-field stats exist yet for any FBS team. Built from recruiting talent, returning production, transfer portal value, and coaching continuity.
+              </div>
+            </div>
+          )}
+
+          {profile && (
+            <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px')}>
+              <CFBSWOTQuadrant label="What's working" sub="Real, verified positives" items={profile.whyModelThinks.optimism} tone="positive" />
+              <CFBSWOTQuadrant label="Open questions" sub="Real, verified risks" items={profile.whyModelThinks.risks} tone="risk" />
             </div>
           )}
 
