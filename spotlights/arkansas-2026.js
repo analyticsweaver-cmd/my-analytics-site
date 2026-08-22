@@ -113,10 +113,11 @@
   // stacks both the outgoing (departed+returning) and incoming
   // (transfer+signee) totals in one place.
   const SK = {
-    vbW: 900, vbH: 560, padY: 30, nodeGap: 6,
+    vbW: 900, vbH: 640, padY: 30, nodeGap: 8,
     leftX: 120, leftW: 30,
     midX: 430, midW: 24,
     rightX: 750, rightW: 30,
+    minNodePx: 6, // floor so a 3-4-player group is still visible/hoverable, not a hairline
   };
   const RED = "var(--red)", GREEN = "var(--green)", BRASS = "var(--brass)";
 
@@ -154,7 +155,7 @@
       const totalH = items.reduce((s, it) => s + it.value * scale, 0) + SK.nodeGap * (items.length - 1);
       let y = SK.padY + (bandH - totalH) / 2;
       return items.map((it) => {
-        const h = Math.max(it.value * scale, it.value > 0 ? 1 : 0);
+        const h = Math.max(it.value * scale, it.value > 0 ? SK.minNodePx : 0);
         const node = { ...it, x, w, y, h, inCursor: y, outCursor: y };
         y += h + SK.nodeGap;
         return node;
@@ -185,7 +186,7 @@
       const w = value * scale;
       a.outCursor += w;
       b.inCursor += w;
-      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip, presumed: !!presumed });
+      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip, presumed: !!presumed, sourceKey: a.key, targetKey: b.key });
     }
 
     link(left, mid.stayed, stayed, GREEN, `${stayed} stayed on the roster`);
@@ -204,21 +205,211 @@
     return `M${l.x0},${l.y0} C${cx},${l.y0} ${cx},${l.y1} ${l.x1},${l.y1}`;
   }
 
-  function renderSankey(data) {
+  // Mode B: "Where people went" - same 2025 Roster -> mid -> 2026 Roster
+  // skeleton as buildSankey, but the departed/incoming mid-buckets are real
+  // destination/origin SCHOOL NAMES instead of status categories. Built
+  // entirely from data already in the JSON - destination school is embedded
+  // in departed players' `detail` text ("Transferred to X"), origin school
+  // is already its own field on incoming transfers (`origin_team`). No new
+  // API pull needed. Stayed/Presumed Departed/Drafted/HS Signees stay
+  // aggregate buckets (a destination school doesn't apply to any of them -
+  // draft goes to the NFL, not a school; a signee's "origin" is a high
+  // school, not a comparable college program).
+  const TOP_N_SCHOOLS = 5;
+
+  function topSchools(items, n) {
+    const counts = {};
+    items.forEach((s) => { if (s) counts[s] = (counts[s] || 0) + 1; });
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const top = sorted.slice(0, n);
+    const restCount = sorted.slice(n).reduce((s, [, c]) => s + c, 0);
+    return { top, restCount };
+  }
+
+  function buildSankeyByDestination(positionGroups) {
+    const bandH = SK.vbH - SK.padY * 2;
+    const allDeparted = positionGroups.flatMap((g) => g.departed);
+    const allIncoming = positionGroups.flatMap((g) => g.incoming);
+
+    const stayed = positionGroups.reduce((s, g) => s + g.returning.length, 0);
+    const graduated = allDeparted.filter((p) => p.status === "graduated").length;
+    const drafted = allDeparted.filter((p) => p.status === "draft").length;
+    // "Entered portal" (no committed destination yet) is a real, distinct
+    // status from "Transferred to X" - only extract a school name when one
+    // was actually confirmed, so an uncommitted entry never gets silently
+    // mislabeled as a fake school. Uncommitted players still count toward
+    // the roster total, just in their own bucket below (mirrors how
+    // "Presumed Departed" already gets its own honest, separately-labeled
+    // bucket instead of being hidden inside "Transferred").
+    const portalOutPlayers = allDeparted.filter((p) => p.status === "portal");
+    const transferOutDestinations = [];
+    let uncommittedOut = 0;
+    portalOutPlayers.forEach((p) => {
+      const m = /^Transferred to (.+)$/.exec(p.detail || "");
+      if (m) transferOutDestinations.push(m[1].trim());
+      else uncommittedOut += 1;
+    });
+    const portalInOrigins = allIncoming
+      .filter((p) => p.type === "transfer")
+      .map((p) => p.origin_team)
+      .filter((t) => t); // origin_team should always be set for a transfer, but guard anyway
+    const signees = allIncoming.filter((p) => p.type !== "transfer").length;
+
+    const { top: outTop, restCount: outRest } = topSchools(transferOutDestinations, TOP_N_SCHOOLS);
+    const { top: inTop, restCount: inRest } = topSchools(portalInOrigins, TOP_N_SCHOOLS);
+
+    const roster2025 = stayed + portalOutPlayers.length + drafted + graduated;
+    const roster2026 = stayed + portalInOrigins.length + signees;
+    const midTotal = roster2025 + portalInOrigins.length + signees;
+    const scale = bandH / Math.max(roster2025, roster2026, midTotal, 1);
+
+    function stack(items, x, w) {
+      const totalH = items.reduce((s, it) => s + it.value * scale, 0) + SK.nodeGap * (items.length - 1);
+      let y = SK.padY + (bandH - totalH) / 2;
+      return items.map((it) => {
+        const h = Math.max(it.value * scale, it.value > 0 ? SK.minNodePx : 0);
+        const node = { ...it, x, w, y, h, inCursor: y, outCursor: y };
+        y += h + SK.nodeGap;
+        return node;
+      });
+    }
+
+    const leftNodes = stack([{ key: "roster2025", label: "2025 Roster", value: roster2025, color: "var(--ink-faint)" }], SK.leftX, SK.leftW);
+    const rightNodes = stack([{ key: "roster2026", label: "2026 Roster", value: roster2026, color: "var(--ink-faint)" }], SK.rightX, SK.rightW);
+
+    const midItems = [
+      { key: "stayed", label: "Stayed", value: stayed, color: GREEN },
+      ...outTop.map(([school, n], i) => ({ key: `out_${i}`, label: school, value: n, color: RED, isSchool: true })),
+      ...(outRest > 0 ? [{ key: "out_other", label: `Other Schools (${outRest})`, value: outRest, color: RED }] : []),
+      ...(uncommittedOut > 0 ? [{ key: "out_uncommitted", label: "Portal, Uncommitted", value: uncommittedOut, color: RED }] : []),
+      { key: "graduated", label: "Presumed Departed", value: graduated, color: RED, presumed: true },
+      { key: "drafted", label: "NFL Draft", value: drafted, color: RED },
+      ...inTop.map(([school, n], i) => ({ key: `in_${i}`, label: school, value: n, color: BRASS, isSchool: true })),
+      ...(inRest > 0 ? [{ key: "in_other", label: `Other Schools (${inRest})`, value: inRest, color: BRASS }] : []),
+      { key: "signees", label: "HS Signees", value: signees, color: BRASS },
+    ];
+    const midNodes = stack(midItems, SK.midX, SK.midW);
+    const mid = Object.fromEntries(midNodes.map((n) => [n.key, n]));
+    const left = leftNodes[0], right = rightNodes[0];
+
+    const links = [];
+    function link(a, b, value, color, tip, presumed) {
+      if (value <= 0) return;
+      const y0 = a.outCursor, y1 = b.inCursor;
+      const w = value * scale;
+      a.outCursor += w;
+      b.inCursor += w;
+      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip, presumed: !!presumed, sourceKey: a.key, targetKey: b.key });
+    }
+
+    link(left, mid.stayed, stayed, GREEN, `${stayed} stayed on the roster`);
+    outTop.forEach(([school, n], i) => link(left, mid[`out_${i}`], n, RED, `${n} transferred to ${school}`));
+    if (outRest > 0) link(left, mid.out_other, outRest, RED, `${outRest} transferred to ${outRest === 1 ? "a school" : "other schools"} outside the top ${TOP_N_SCHOOLS} destinations`);
+    if (uncommittedOut > 0) link(left, mid.out_uncommitted, uncommittedOut, RED, `${uncommittedOut} entered the portal, destination not yet committed`);
+    link(left, mid.graduated, graduated, RED, `${graduated} presumed departed (graduated - senior eligibility, unconfirmed)`, true);
+    link(left, mid.drafted, drafted, RED, `${drafted} drafted to the NFL`);
+    link(mid.stayed, right, stayed, GREEN, `${stayed} returning in 2026`);
+    inTop.forEach(([school, n], i) => link(mid[`in_${i}`], right, n, BRASS, `${n} transferred in from ${school}`));
+    if (inRest > 0) link(mid.in_other, right, inRest, BRASS, `${inRest} transferred in from ${inRest === 1 ? "a school" : "schools"} outside the top ${TOP_N_SCHOOLS} sources`);
+    link(mid.signees, right, signees, BRASS, `${signees} HS signees`);
+
+    return { leftNodes, midNodes, rightNodes, links };
+  }
+
+  // Mode C: "By Position" - the one Anna actually wanted first. Left/right
+  // columns become the 7 position groups themselves (not a single "2025/2026
+  // Roster" aggregate) so you can see which groups turned over the most and
+  // which stayed intact, at a glance. Each group's RETURNING count draws a
+  // direct same-group link straight across (the "what stuck around" story);
+  // DEPARTED and INCOMING route through two small shared hub nodes in the
+  // middle rather than 7 more columns of nodes, which is the difference
+  // between a readable diagram and an unreadable one at this node count.
+  function buildSankeyByPosition(positionGroups) {
+    const bandH = SK.vbH - SK.padY * 2;
+    const groups = positionGroups.map((g) => ({
+      key: g.group,
+      departed: g.departed.length,
+      returning: g.returning.length,
+      incoming: g.incoming.length,
+    }));
+
+    const totalReturning = groups.reduce((s, g) => s + g.returning, 0);
+    const totalDeparted = groups.reduce((s, g) => s + g.departed, 0);
+    const totalIncoming = groups.reduce((s, g) => s + g.incoming, 0);
+    const leftTotal = groups.reduce((s, g) => s + g.returning + g.departed, 0);
+    const rightTotal = groups.reduce((s, g) => s + g.returning + g.incoming, 0);
+    // 3 lanes now (Stayed / Departed / Incoming), not 2 - Stayed used to be a
+    // direct left->right link bypassing the middle column entirely, which
+    // read as "2 lanes plus one line cutting through them." Anna's call:
+    // all three should be their own parallel lane, same visual treatment.
+    const midTotal = totalReturning + totalDeparted + totalIncoming;
+    const scale = bandH / Math.max(leftTotal, rightTotal, midTotal, 1);
+
+    function stack(items, x, w) {
+      const totalH = items.reduce((s, it) => s + it.value * scale, 0) + SK.nodeGap * (items.length - 1);
+      let y = SK.padY + (bandH - totalH) / 2;
+      return items.map((it) => {
+        const h = Math.max(it.value * scale, it.value > 0 ? SK.minNodePx : 0);
+        const node = { ...it, x, w, y, h, inCursor: y, outCursor: y };
+        y += h + SK.nodeGap;
+        return node;
+      });
+    }
+
+    const leftNodes = stack(groups.map((g) => ({
+      key: `L_${g.key}`, label: g.key, value: g.returning + g.departed, color: "var(--ink-faint)",
+    })), SK.leftX, SK.leftW);
+    const rightNodes = stack(groups.map((g) => ({
+      key: `R_${g.key}`, label: g.key, value: g.returning + g.incoming, color: "var(--ink-faint)",
+    })), SK.rightX, SK.rightW);
+    const midNodes = stack([
+      { key: "stayed_hub", label: "Stayed", value: totalReturning, color: GREEN },
+      { key: "departed_hub", label: "Departed", value: totalDeparted, color: RED },
+      { key: "incoming_hub", label: "Incoming", value: totalIncoming, color: BRASS },
+    ], SK.midX, SK.midW);
+
+    const leftByKey = Object.fromEntries(leftNodes.map((n) => [n.key, n]));
+    const rightByKey = Object.fromEntries(rightNodes.map((n) => [n.key, n]));
+    const mid = Object.fromEntries(midNodes.map((n) => [n.key, n]));
+
+    const links = [];
+    function link(a, b, value, color, tip) {
+      if (value <= 0) return;
+      const y0 = a.outCursor, y1 = b.inCursor;
+      const w = value * scale;
+      a.outCursor += w;
+      b.inCursor += w;
+      links.push({ x0: a.x + a.w, y0: y0 + w / 2, x1: b.x, y1: y1 + w / 2, w, color, tip, presumed: false, sourceKey: a.key, targetKey: b.key });
+    }
+
+    groups.forEach((g) => {
+      const L = leftByKey[`L_${g.key}`], R = rightByKey[`R_${g.key}`];
+      link(L, mid.stayed_hub, g.returning, GREEN, `${g.returning} ${g.key} stayed on the roster`);
+      link(mid.stayed_hub, R, g.returning, GREEN, `${g.returning} ${g.key} stayed on the roster`);
+      link(L, mid.departed_hub, g.departed, RED, `${g.departed} ${g.key} departed`);
+      link(mid.incoming_hub, R, g.incoming, BRASS, `${g.incoming} incoming ${g.key}`);
+    });
+
+    return { leftNodes, midNodes, rightNodes, links };
+  }
+
+  function renderSankey(data, mode) {
     const wrap = document.getElementById("sankey-wrap");
     if (!wrap || !data.position_groups.length) return;
-    const sk = buildSankey(data.position_groups);
+    const sk = mode === "destination" ? buildSankeyByDestination(data.position_groups)
+      : mode === "position" ? buildSankeyByPosition(data.position_groups)
+      : buildSankey(data.position_groups);
     const allNodes = [...sk.leftNodes, ...sk.midNodes, ...sk.rightNodes];
 
     const linkPaths = sk.links.map((l, i) => `
-      <path class="sankey-link-hit" d="${sankeyLinkPath(l)}" fill="none" stroke="transparent" stroke-width="${Math.max(l.w, 10)}" data-tip="${l.tip}"></path>
-      <path class="sankey-link" d="${sankeyLinkPath(l)}" fill="none" stroke="${l.presumed ? "url(#presumedHatch)" : l.color}" stroke-width="${l.w}" pointer-events="none"></path>`).join("");
+      <path class="sankey-link-hit" d="${sankeyLinkPath(l)}" fill="none" stroke="transparent" stroke-width="${Math.max(l.w, 10)}" data-tip="${l.tip}" data-source="${l.sourceKey}" data-target="${l.targetKey}"></path>
+      <path class="sankey-link" d="${sankeyLinkPath(l)}" fill="none" stroke="${l.presumed ? "url(#presumedHatch)" : l.color}" stroke-width="${l.w}" pointer-events="none" data-source="${l.sourceKey}" data-target="${l.targetKey}"></path>`).join("");
 
     const nodeRects = allNodes.map((n) => {
       const isSideNode = n.color === "var(--ink-faint)";
       const fill = n.presumed ? "url(#presumedHatch)" : (isSideNode ? "var(--ink)" : n.color);
       const tipSuffix = n.presumed ? " (presumed, unconfirmed)" : "";
-      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${fill}" ${n.presumed ? `stroke="${RED}" stroke-width="1"` : ""} data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}${tipSuffix}"></rect>`;
+      return `<rect class="sankey-node" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="2" fill="${fill}" ${n.presumed ? `stroke="${RED}" stroke-width="1"` : ""} data-tip="${n.label}: ${n.value} player${n.value === 1 ? "" : "s"}${tipSuffix}" data-key="${n.key}"></rect>`;
     }).join("");
 
     const leftLabels = sk.leftNodes.map((n) => `
@@ -231,8 +422,11 @@
       <text class="sankey-label mid-name" x="${SK.midX + SK.midW + 10}" y="${n.y + n.h / 2 - 6}" text-anchor="start">${n.label}</text>
       <text class="sankey-label mid-count" x="${SK.midX + SK.midW + 10}" y="${n.y + n.h / 2 + 12}" text-anchor="start">${n.value}</text>`).join("");
 
+    const headLabel = mode === "destination" ? "WHERE THEY WENT / CAME FROM"
+      : mode === "position" ? "STAYED / DEPARTED / INCOMING"
+      : "WHAT HAPPENED";
     const colHeads = `
-      <text class="sankey-col-head" x="${SK.midX + SK.midW / 2}" y="14" text-anchor="middle">WHAT HAPPENED</text>`;
+      <text class="sankey-col-head" x="${SK.midX + SK.midW / 2}" y="14" text-anchor="middle">${headLabel}</text>`;
 
     wrap.innerHTML = `
       <svg viewBox="0 0 ${SK.vbW} ${SK.vbH}" width="100%" height="${SK.vbH}" style="display:block">
@@ -250,16 +444,44 @@
       <div class="sankey-tip" id="sankey-tip"></div>`;
 
     const tip = document.getElementById("sankey-tip");
+    const allLinkEls = [...wrap.querySelectorAll(".sankey-link, .sankey-link-hit")];
+    const allNodeEls = [...wrap.querySelectorAll(".sankey-node")];
+
+    // Hover isolation: point at a node or a flow and everything NOT
+    // connected to it fades out, so a single position/school/status's
+    // path through the diagram is traceable even when a lot of curves
+    // overlap by default (unavoidable with this many groups sharing two
+    // hub nodes - isolating on demand is the fix, not fighting the tangle).
+    function clearIsolation() {
+      allLinkEls.forEach((el) => el.classList.remove("sankey-dim"));
+      allNodeEls.forEach((el) => el.classList.remove("sankey-dim"));
+    }
+    function isolate(keys) {
+      allLinkEls.forEach((el) => {
+        const match = keys.has(el.getAttribute("data-source")) || keys.has(el.getAttribute("data-target"));
+        el.classList.toggle("sankey-dim", !match);
+      });
+      allNodeEls.forEach((el) => {
+        el.classList.toggle("sankey-dim", !keys.has(el.getAttribute("data-key")));
+      });
+    }
+
     wrap.addEventListener("mousemove", (e) => {
       const target = e.target.closest(".sankey-node, .sankey-link-hit");
-      if (!target) { tip.style.display = "none"; return; }
+      if (!target) { tip.style.display = "none"; clearIsolation(); return; }
       const wrapRect = wrap.getBoundingClientRect();
       tip.textContent = target.getAttribute("data-tip");
       tip.style.display = "block";
       tip.style.left = `${e.clientX - wrapRect.left + 14}px`;
       tip.style.top = `${e.clientY - wrapRect.top + 14}px`;
+
+      if (target.classList.contains("sankey-node")) {
+        isolate(new Set([target.getAttribute("data-key")]));
+      } else {
+        isolate(new Set([target.getAttribute("data-source"), target.getAttribute("data-target")]));
+      }
     });
-    wrap.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+    wrap.addEventListener("mouseleave", () => { tip.style.display = "none"; clearIsolation(); });
   }
 
   // Three observations (WEAVER_ANALYTICS_LAB_VISION.md's own Arkansas example
@@ -319,8 +541,34 @@
     return qs;
   }
 
+  let currentData = null;
+  let sankeyMode = "position"; // default view - this is the one Anna actually wanted first
+
+  function setSankeyMode(mode) {
+    sankeyMode = mode;
+    if (currentData) renderSankey(currentData, sankeyMode);
+    const statusBtn = document.getElementById("sankey-mode-status");
+    const destBtn = document.getElementById("sankey-mode-destination");
+    const posBtn = document.getElementById("sankey-mode-position");
+    if (statusBtn && destBtn && posBtn) {
+      statusBtn.classList.toggle("active", mode === "status");
+      destBtn.classList.toggle("active", mode === "destination");
+      posBtn.classList.toggle("active", mode === "position");
+    }
+  }
+
   function render(data) {
-    renderSankey(data);
+    currentData = data;
+    renderSankey(data, sankeyMode);
+    const statusBtn = document.getElementById("sankey-mode-status");
+    const destBtn = document.getElementById("sankey-mode-destination");
+    const posBtn = document.getElementById("sankey-mode-position");
+    if (statusBtn && destBtn && posBtn && !statusBtn.dataset.wired) {
+      statusBtn.dataset.wired = "1";
+      statusBtn.addEventListener("click", () => setSankeyMode("status"));
+      destBtn.addEventListener("click", () => setSankeyMode("destination"));
+      posBtn.addEventListener("click", () => setSankeyMode("position"));
+    }
     const h = data.headline || {};
     document.getElementById("stat-returning-prod").textContent = fmtZ(h.returning_production_z);
     document.getElementById("stat-portal-net").textContent = fmtZ(h.portal_net_z);
