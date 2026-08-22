@@ -446,6 +446,91 @@ const CFB_TEAM_PROFILES = {
   },
 };
 
+// Real, source-cited preseason "notable player" list - from
+// CFB Model/cfb_model_pipeline's skill_watchlist.csv (2027 mock draft
+// boards) + trenches_watchlist.csv (Walter Camp/Athlon/Phil Steele
+// preseason All-America teams, since mock drafts skip O-line/D-line).
+// Only ~20 of 138 teams have entries - not comprehensive, same
+// graceful-no-op treatment as CFB_TEAM_PROFILES for unlisted teams.
+// Auto-derived "who's actually starting" (usage-based) isn't included
+// here yet - that needs cfb_qb_watch.py run for real on live 2026 usage
+// data, which doesn't exist until games are played.
+const CFB_KEY_PLAYERS = {
+  'Texas': [
+    { name: 'Arch Manning', position: 'QB', note: '2027 mock draft top prospect' },
+    { name: 'Trevor Goosby', position: 'OT', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+    { name: 'Colin Simmons', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+  ],
+  'Oregon': [
+    { name: 'Dante Moore', position: 'QB', note: '2027 mock draft top prospect' },
+    { name: 'Teitum Tuioti', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+    { name: "A'Mauri Washington", position: 'DL', note: 'Walter Camp 2026 preseason All-America, 2nd team' },
+  ],
+  'Ohio State': [
+    { name: 'Julian Sayin', position: 'QB', note: '2027 mock draft top prospect' },
+    { name: 'Jeremiah Smith', position: 'WR', note: '2027 mock draft top prospect' },
+    { name: 'Austin Siereveld', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+  ],
+  'USC': [{ name: 'Jayden Maiava', position: 'QB', note: '2027 mock draft top prospect' }],
+  'Miami': [{ name: 'Darian Mensah', position: 'QB', note: '2027 mock draft top prospect' }],
+  'Notre Dame': [
+    { name: 'CJ Carr', position: 'QB', note: '2027 mock draft top prospect' },
+    { name: 'Anthonie Knapp', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+  ],
+  'Oklahoma State': [{ name: 'Drew Mestemaker', position: 'QB', note: '2027 mock draft top prospect' }],
+  'Clemson': [{ name: 'T.J. Moore', position: 'WR', note: '2027 mock draft top prospect' }],
+  'Virginia Tech': [
+    { name: 'Kemari Copeland', position: 'DL', note: '2027 mock draft top prospect' },
+    { name: 'Ayden Greene', position: 'WR', note: '2027 mock draft top prospect' },
+  ],
+  'Virginia': [{ name: 'McKale Boley', position: 'OT', note: '2027 mock draft top prospect' }],
+  'Iowa': [
+    { name: 'Kade Pieper', position: 'C', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+  ],
+  'South Carolina': [{ name: 'Dylan Stewart', position: 'DE', note: '2027 mock draft top prospect' }],
+  'Indiana': [
+    { name: 'Carter Smith', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+    { name: 'Tyrique Tucker', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 1st team' },
+  ],
+  'Cincinnati': [{ name: 'Evan Tengesdahl', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'Tennessee': [{ name: 'Wendell Moe Jr.', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'LSU': [{ name: 'Jordan Seaton', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'Michigan': [
+    { name: 'Andrew Sprague', position: 'OL', note: 'Walter Camp 2026 preseason All-America, 2nd team' },
+    { name: 'John Henry Daley', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 2nd team' },
+  ],
+  'Missouri': [{ name: 'Cayden Green', position: 'OG', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'Minnesota': [{ name: 'Anthony Smith', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'Oklahoma': [{ name: 'David Stone', position: 'DL', note: 'Walter Camp 2026 preseason All-America, 2nd team' }],
+  'SMU': [{ name: 'PJ Williams', position: 'OT', note: 'Athlon 4th team / Phil Steele 2nd team OT' }],
+  'Louisville': [{ name: 'Clev Lubin', position: 'DL', note: 'Athlon 2026 preseason All-America, 3rd team' }],
+};
+
+// Bar narration: reads the SAME contribution numbers already driving the
+// Efficiency/Scheme bars and turns the single biggest driver (plus a
+// second factor, if it either reinforces or fights the first) into one
+// plain sentence. Template-based on real numbers, not hardcoded per team -
+// works for any matchup with hasFullModel data.
+function buildMatchupNarration(g, efficiencyBars, schemeBars) {
+  const allBars = [...efficiencyBars, ...schemeBars];
+  const sorted = [...allBars].sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+  const top = sorted[0];
+  if (!top || Math.abs(top.value) < 0.05) {
+    return `${g.away_team} and ${g.home_team} grade out close across the board here — no single factor is doing much of the work.`;
+  }
+  const favoredTeam = top.value >= 0 ? g.home_team : g.away_team;
+  const otherTeam = top.value >= 0 ? g.away_team : g.home_team;
+  const second = sorted[1];
+  const secondMatters = second && Math.abs(second.value) >= 0.05;
+  const sameSide = secondMatters && Math.sign(second.value) === Math.sign(top.value);
+  const oppositeSide = secondMatters && Math.sign(second.value) !== Math.sign(top.value);
+  let sentence = `${favoredTeam} leans on ${top.label.toLowerCase()} in this matchup`;
+  if (sameSide) sentence += `, backed up by an edge in ${second.label.toLowerCase()} too`;
+  else if (oppositeSide) sentence += `, though ${otherTeam} claws some of it back on ${second.label.toLowerCase()}`;
+  sentence += '.';
+  return sentence;
+}
+
 function CFBSWOTQuadrant({ label, sub, items, tone }) {
   const color = tone === 'positive' ? 'var(--value-positive)' : 'var(--value-risk)';
   return (
@@ -932,8 +1017,20 @@ function App() {
     const homeWinPct = g.home_win_prob != null ? Math.round(g.home_win_prob * 100) : null;
     const preseasonFavored = homeWinPct != null ? (homeWinPct >= 50 ? g.home_team : g.away_team) : null;
     const preseasonPct = homeWinPct != null ? (homeWinPct >= 50 ? homeWinPct : 100 - homeWinPct) : null;
+    const narration = hasFullModel ? buildMatchupNarration(g, efficiencyBars, schemeBars) : null;
+    const keyPlayersHome = CFB_KEY_PLAYERS[g.home_team] || [];
+    const keyPlayersAway = CFB_KEY_PLAYERS[g.away_team] || [];
+    // "Things to watch for" - reuses each team's already-written profile
+    // bullets (CFB_TEAM_PROFILES.whyModelThinks) instead of writing new
+    // matchup-specific copy. Graceful no-op for the ~117 unprofiled teams.
+    const homeProfile = CFB_TEAM_PROFILES[g.home_team];
+    const awayProfile = CFB_TEAM_PROFILES[g.away_team];
+    const watchFor = [
+      homeProfile && { team: g.home_team, text: (homeProfile.whyModelThinks.risks || [])[0] || (homeProfile.whyModelThinks.optimism || [])[0] },
+      awayProfile && { team: g.away_team, text: (awayProfile.whyModelThinks.risks || [])[0] || (awayProfile.whyModelThinks.optimism || [])[0] },
+    ].filter((w) => w && w.text);
     return {
-      key, homeTeam: g.home_team, awayTeam: g.away_team, hasFullModel,
+      key, homeTeam: g.home_team, awayTeam: g.away_team, hasFullModel, narration, keyPlayersHome, keyPlayersAway, watchFor,
       cardStyle: `border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card);border:${g._isPinnedGame ? `2px solid ${pinnedAccentColor}` : '1px solid var(--hairline)'}`,
       predictedLabel: hasFullModel
         ? `Model ${g.predicted_margin > 0 ? '+' : ''}${num(g.predicted_margin, 1)}`
@@ -1357,6 +1454,9 @@ function App() {
                       </div>
                       <span style={{ width: 56, flexShrink: 0 }} />
                     </div>
+                    {g.narration && (
+                      <div style={st('font:600 13px/1.5 var(--font-sans);color:var(--ink)')}>{g.narration}</div>
+                    )}
                     {g.hasFullModel ? (
                       <>
                         <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px')}>Efficiency</div>
@@ -1390,6 +1490,29 @@ function App() {
                     <div style={st('font:600 13px var(--font-sans);color:var(--ink-faint);margin-top:4px')}>{g.homeFieldNote}</div>
                     {g.hasFullModel && <div style={st('font:600 12px var(--font-sans);color:var(--ink-faint)')}>{g.colorLegend}</div>}
                     {g.hasFullModel && <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{g.marginNote}</div>}
+                    {(g.keyPlayersHome.length > 0 || g.keyPlayersAway.length > 0) && (
+                      <div style={st('margin-top:8px')}>
+                        <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px')}>Players to Watch</div>
+                        <div style={st('display:flex;gap:20px;flex-wrap:wrap')}>
+                          {[{ team: g.awayTeam, list: g.keyPlayersAway }, { team: g.homeTeam, list: g.keyPlayersHome }].filter((c) => c.list.length > 0).map((c) => (
+                            <div key={c.team} style={st('display:flex;flex-direction:column;gap:3px')}>
+                              <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted)')}>{c.team}</span>
+                              {c.list.map((p) => (
+                                <span key={p.name} style={st('font:400 12px var(--font-sans);color:var(--ink)')} title={p.note}>{p.name} <span style={st('color:var(--ink-faint)')}>({p.position})</span></span>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {g.watchFor.length > 0 && (
+                      <div style={st('margin-top:8px')}>
+                        <div style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px')}>Things to Watch For</div>
+                        {g.watchFor.map((w) => (
+                          <div key={w.team} style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-muted);margin-bottom:4px')}><strong style={st('color:var(--ink)')}>{w.team}:</strong> {w.text}</div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
