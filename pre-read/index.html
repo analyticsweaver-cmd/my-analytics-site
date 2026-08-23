@@ -75,7 +75,7 @@
 <section class="pr-section" id="how-to-read" style="padding-top:0;padding-bottom:32px;">
   <div class="card" style="max-width:820px;">
     <h4 style="margin-bottom:10px;">How to read this page</h4>
-    <p style="margin-bottom:8px;">Every prediction here comes from one number per team, the <strong>Power Score</strong> — built from three pieces: <strong>Baseline</strong> (last year's record), <strong>Trajectory</strong> (a hand-scored read on roster needs, coaching continuity, and off-field stability), and <strong>Regression</strong> (a check on whether a team's record matched how good their point differential said they actually were).</p>
+    <p style="margin-bottom:8px;">Every prediction here comes from one number per team, the <strong>Power Score</strong> — built from three pieces: <strong>Baseline</strong> (last year's record), <strong>Trajectory</strong> (a hand-scored read on roster needs and off-field stability), and <strong>Regression</strong> (a check on whether a team's record matched how good their point differential said they actually were). Coaching continuity is scored for every team too, but a July audit found it wasn't adding real predictive signal, so it's tracked and shown, not counted toward the number — see Methodology.</p>
     <p style="margin-bottom:8px;">Every team also gets a <strong>Cone of Certainty</strong> — a projected win-total range, not just a single guess — and every division gets a <strong>Confidence Rating</strong> for how close the race at the top actually is.</p>
     <p>Full formulas and sources are in the Methodology &amp; Sources section at the bottom. The <a href="../nfl-model/index.html">NFL dashboard</a> also has a glossary covering every term used there in more depth.</p>
   </div>
@@ -507,14 +507,15 @@
 
   <h3 style="font:700 15px var(--font-sans);margin-bottom:12px;">Methodology at a Glance</h3>
   <div class="methodology-grid" style="margin-bottom:32px;">
-    <div class="formula-card"><h4>Trajectory Score</h4><code>Need-Fill + Scheme Continuity + Stability</code></div>
+    <div class="formula-card"><h4>Trajectory Score</h4><code>Need-Fill + Stability</code></div>
     <div class="formula-card"><h4>Baseline Score</h4><code>(2025 Wins − 8.5) × 2</code></div>
     <div class="formula-card"><h4>Regression Score</h4><code>−(Actual Wins − Pythagorean Expected Wins) × 3</code></div>
     <div class="formula-card"><h4>Power Score</h4><code>(0.45 × Baseline) + (0.35 × Trajectory) + (0.20 × Regression)</code></div>
     <div class="formula-card"><h4>Cone of Certainty</h4><code>Power Score ± (Upside/Downside, scored 0–10 each)</code></div>
     <div class="formula-card"><h4>Confidence Rating</h4><code>Gap(#1 vs #2) − Avg. Volatility(#1,#2) ÷ 6</code></div>
   </div>
-  <p class="dek">Full model — all 32 teams, every formula live and adjustable — is in the companion Excel workbook.</p>
+  <p class="dek">Scheme Continuity (coaching-staff turnover) is still scored and shown in every team's rationale, but a July 24 audit found it added no real predictive signal once tested against three seasons of actual results — it's tracked, not counted toward Trajectory or Power Score.</p>
+  <p class="dek">Full model — all 32 teams, every formula live and adjustable — is in the companion Excel workbook. Note: the workbook keeps Scheme Continuity in its Power Score formula and always will — it's the frozen historical version, not the live one described above.</p>
 
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Sources &amp; Notes</h3>
   <ul class="source-list">
