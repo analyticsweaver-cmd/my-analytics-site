@@ -115,6 +115,13 @@
       <p><strong>The run-reliant/pass-reliant fragility flag does not have a validated accuracy relationship.</strong> Fragile teams' backtest error is only 0.244 points higher than balanced teams' — against a standard error of 0.422, well within noise — and a continuous reliance-vs-error check found essentially zero correlation (r = -0.018). This is a legitimate "checked, and the answer is no" result, not a gap. The flag stays a qualitative watchlist tool on team pages; it was never wired into any model coefficient, so nothing about the live ratings changes because of this finding.</p>
     </div>
 
+    <h2 class="section"><span class="eyebrow">Model update</span>What changed on 2026-08-22, and why</h2>
+    <div class="card good">
+      <span class="tag">Added</span>
+      <p><strong>New coaching-quality signal added: recruiting-adjusted SP+ residual.</strong> The existing coaching-continuity signal only measured disruption (did the team change head coaches, and how severe a change). It said nothing about whether a coaching staff was actually good at outperforming its talent level. The new signal regresses each team's SP+ rating on its recruiting-talent composite across the whole FBS field per season, keeps the residual (over/under-performance relative to talent), z-scores it, and lags it one season so it can inform next season's rating without leaking that season's own results.</p>
+      <p>Validated with the same leave-one-season-out cross-validation discipline used elsewhere in this model: personnel/coaching/residual weights moved from 0.75/0.25/0.0 to 0.40/0.20/0.40, a real, consistent gain — every fold in the grid search converged on the same weights, not just a narrow margin in one season. Pooled MAE improved from 13.630 to 13.085 across all 1,979 games in the backtest. Re-verified independently after wiring into production (<code>cfb_coaching_residual.py</code>, plus the 3 backtest/validation scripts that call <code>combine_priors()</code>): full multiseason backtest on the live code path landed at pooled MAE 13.10, matching the validation number within ~0.1% — expected noise between two independently-computed code paths, not a discrepancy.</p>
+    </div>
+
     <h2 class="section" id="known-limits"><span class="eyebrow">Known limits</span>What this model doesn't do yet</h2>
     <ul>
       <li><strong>No Monte Carlo season simulation yet.</strong> The NFL model runs a 20,000-season simulation for win-total ranges and playoff odds; CFB doesn't have this infrastructure yet. The calibrated win-probability engine this would run on is done, so the remaining work is the simulation layer itself, not the underlying math.</li>

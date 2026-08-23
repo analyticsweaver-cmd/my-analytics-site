@@ -115,6 +115,12 @@
 
     <p>Home-field advantage (a flat 2 points) was checked against the same real-game data and came back well-calibrated — no change there. Full numbers, regression tables, and code citations for both the audit and the correction are documented in the project's internal notes.</p>
 
+    <h2 class="section"><span class="eyebrow">Investigated</span>Strength of schedule, checked on 2026-08-22</h2>
+    <div class="card risk">
+      <span class="tag">Checked, honest negative result</span>
+      <p><strong>Prior-season strength of schedule was tested as a 4th Power Score term, and it earned zero weight.</strong> The candidate signal (average win total of a team's actual opponents the prior season, z-scored within season) was added alongside the existing Baseline/Trajectory/Regression split and run through the same leave-one-season-out cross-validation used for every other weight decision in this model. Every single fold, for both the current 3-term formula and the candidate 4-term version, selected a weight of 0.0 for the SOS term. The diagnostic explains why: SOS correlates at r=-0.369 with Baseline, meaning the information SOS would add is already substantially captured by the existing Baseline term — an explicit 4th term is redundant, not new signal. Power Score's formula is unchanged; SOS is not currently used as a distinct input.</p>
+    </div>
+
     <h2 class="section"><span class="eyebrow">In-season updates</span>The preseason call, permanently preserved — then updated weekly</h2>
     <p>As of 2026-07-24 this model is no longer preseason-only. The preseason call is frozen the moment it's made and never overwritten again — that's the permanent starting point you'll always see on the <a href="index.html">Season Trend tab</a>, however the year goes. From there, re-running the pipeline during the season blends real results in:</p>
     <ul>
