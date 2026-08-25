@@ -136,3 +136,135 @@ table.pr-table tr:last-child td{border-bottom:none;}
   .pr-section{padding:40px 20px;}
   .pr-topbar,.pr-jumpnav{padding-left:20px;padding-right:20px;}
 }
+
+/* ===== Additions: 2026 pre-read section redesigns (Aug 2026) ===== */
+:root{
+  --ink-faintest:#B9B3A3; --hairline-light:#F0EBDD; --brass-dark:#8a6a1f;
+  --brass-pale-bg:#FBF0DA; --green-pale-bg:#DDEFE6; --red-pale-bg:#F7E1DA;
+  --ink-on-light:#0B0D10; --steel-link:#7E9BC0;
+}
+
+/* jump nav brass group */
+.pr-jumpnav-group{display:flex;gap:8px;margin-left:8px;padding-left:16px;border-left:1px solid var(--hairline);}
+.pr-jumpnav a.pr-jumpnav-brass{color:var(--brass-dark);border-color:var(--brass);}
+.pr-jumpnav a.pr-jumpnav-brass:hover{color:var(--ink);border-color:var(--ink);}
+
+/* full-bleed section wrapper (risk map, judgment calls) */
+.pr-section-full{padding:56px 0 0;border-top:1px solid var(--hairline);}
+.pr-section-inner{max-width:1100px;padding:0 40px;margin:0 auto;}
+
+/* ---- Section 1: exec summary ledger ---- */
+.es-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px;align-items:stretch;}
+.es-headline{background:var(--ink);border-radius:var(--radius-md);padding:clamp(28px,3vw,44px);min-height:340px;display:flex;flex-direction:column;justify-content:space-between;}
+.es-microlabel{font:700 11px var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--brass);}
+.es-numeral{font:900 clamp(120px,14vw,190px)/.85 var(--font-sans);letter-spacing:-0.05em;color:var(--paper);}
+.es-label{font:700 15px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--paper);margin:20px 0 10px;}
+.es-body{font:400 16px/1.55 var(--font-sans);color:#A8A79E;max-width:380px;}
+.es-ledger{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:clamp(20px,2vw,28px) clamp(22px,2.4vw,34px);display:flex;flex-direction:column;justify-content:center;}
+.es-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px 22px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--hairline);}
+.es-row-last{border-bottom:none;padding:18px 0 4px;}
+.es-num{font:900 clamp(38px,3.6vw,50px)/1 var(--font-sans);letter-spacing:-0.02em;text-align:right;font-variant-numeric:tabular-nums;}
+.es-rlabel{font:700 11px var(--font-sans);letter-spacing:.07em;text-transform:uppercase;color:var(--ink);margin-bottom:6px;}
+.es-rbody{font:400 14px/1.5 var(--font-sans);color:var(--ink-muted);}
+
+/* ---- Section 2: coaching carousel color-spine rows ---- */
+.cc-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);overflow:hidden;}
+.cc-row{display:grid;grid-template-columns:8px minmax(150px,1.1fr) minmax(200px,1fr) minmax(150px,.9fr);gap:20px;align-items:center;border-bottom:1px solid var(--hairline-light);padding-right:12px;}
+.cc-row:last-child{border-bottom:none;}
+.cc-spine{align-self:stretch;}
+.cc-name{font:700 16px var(--font-sans);padding:16px 0;}
+.cc-chips{display:flex;align-items:center;gap:10px;}
+.cc-chip{padding:5px 11px;border-radius:6px;font:700 12px var(--font-sans);letter-spacing:.04em;}
+.cc-chip-from{border:1.5px solid;background:transparent;}
+.cc-chip-to{padding:6px 12px;}
+.cc-arrow{font:700 14px var(--font-sans);color:var(--ink-faintest);}
+.cc-note{font:400 13px var(--font-sans);color:var(--ink-faint);padding-right:24px;}
+
+/* ---- Section 3: QB status board interleaved ---- */
+.qbx-conf-headers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin-bottom:4px;}
+.qbx-conf-headers div{font:900 14px var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);padding-bottom:4px;border-bottom:2px solid var(--ink);}
+.qbx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;}
+.qbx-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:18px 22px 8px;}
+.qbx-divlabel{font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+.qbx-row{display:grid;grid-template-columns:4px minmax(96px,auto) minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--hairline-light);}
+.qbx-row:last-child{border-bottom:none;}
+.qbx-rail{width:4px;height:16px;border-radius:2px;}
+.qbx-team{font:700 14px var(--font-sans);}
+.qbx-qb{font:400 14px var(--font-sans);color:var(--ink-muted);}
+
+/* ---- Section 4: full picture slope charts ---- */
+.fp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.fp-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px 24px 22px;}
+.fp-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;}
+.fp-head h4{margin:0;font:900 15px var(--font-sans);}
+.fp-yearlabels{display:flex;gap:14px;font:700 10px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.fp-body{display:flex;align-items:center;gap:4px;}
+.fp-left,.fp-right{flex:1;display:flex;flex-direction:column;}
+.fp-left-row{height:58px;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
+.fp-left-row .fp-team{font:600 15px var(--font-sans);color:var(--ink-muted);}
+.fp-left-row .fp-rank2025{font:700 11px var(--font-sans);color:var(--ink-faintest);font-variant-numeric:tabular-nums;}
+.fp-right-row{height:58px;display:flex;align-items:center;gap:10px;}
+.fp-right-row .fp-rank2026{font:700 11px var(--font-sans);color:var(--ink-faintest);font-variant-numeric:tabular-nums;}
+.fp-right-row .fp-team{font:700 15px var(--font-sans);}
+.fp-right-row .fp-score{font:600 13px var(--font-sans);opacity:.75;font-variant-numeric:tabular-nums;}
+.fp-svg{flex-shrink:0;display:block;}
+
+/* ---- Section 5: risk map ---- */
+.rm-panel{background:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);box-shadow:var(--shadow-card);padding:30px clamp(24px,4vw,64px) 34px;}
+.rm-plot{position:relative;height:min(74vh,760px);min-height:600px;border-left:1px solid var(--hairline);border-bottom:1px solid var(--hairline);}
+.rm-vline{position:absolute;left:51.3%;top:0;bottom:0;width:1px;border-left:1px dashed var(--hairline);}
+.rm-hline{position:absolute;top:50%;left:0;right:0;height:1px;border-top:1px dashed var(--hairline);}
+.rm-qlabel{position:absolute;font:700 10px var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faintest);}
+.rm-yaxis{position:absolute;left:-14px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font:700 10px var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);}
+.rm-dot{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:3px;}
+.rm-circle{width:16px;height:16px;border-radius:50%;}
+.rm-label{font:700 10px var(--font-sans);letter-spacing:.03em;white-space:nowrap;}
+.rm-xaxis{display:flex;justify-content:space-between;font:700 10px var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:10px;}
+.rm-legend{display:flex;gap:16px;font:600 12px var(--font-sans);color:var(--ink-faint);border-top:1px solid var(--hairline-light);margin-top:16px;padding-top:14px;}
+.rm-legend-swatch{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--ink-faintest);box-shadow:0 0 0 4px rgba(20,23,27,.20);margin-right:4px;vertical-align:middle;}
+
+/* ---- Section 6: judgment calls ---- */
+.jc-badge-vuln{background:var(--red-pale-bg);color:var(--red);}
+.jc-badge-fallen{background:var(--brass-pale-bg);color:var(--brass-dark);}
+.jc-badge-riser{background:var(--green-pale-bg);color:var(--green);}
+.jc-panel{background:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);box-shadow:var(--shadow-card);}
+.jc-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr) minmax(260px,1fr);gap:clamp(20px,2.6vw,48px);align-items:start;padding:clamp(24px,3vw,38px) clamp(20px,4vw,56px);border-bottom:1px solid var(--hairline);}
+.jc-row:last-child{border-bottom:none;}
+.jc-team{font:900 clamp(30px,3.2vw,42px)/1 var(--font-sans);letter-spacing:-0.02em;margin-top:10px;}
+.jc-slot{font:600 13px var(--font-sans);color:var(--ink-faint);margin-top:8px;}
+.jc-col2{font:400 clamp(15px,1.2vw,17px)/1.55 var(--font-sans);color:var(--ink-muted);}
+.jc-statboxes{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.jc-statbox{border:1px solid var(--hairline);border-radius:var(--radius-sm);padding:14px 16px;}
+.jc-microlabel{font:700 10px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;}
+.jc-statval{font:900 26px var(--font-sans);line-height:1;font-variant-numeric:tabular-nums;}
+.jc-statsub{font:600 12px var(--font-sans);color:var(--ink-muted);margin-top:6px;}
+.jc-verdict{display:flex;align-items:center;gap:12px;margin-top:12px;}
+.jc-track{flex:1;height:6px;background:var(--hairline-light);border-radius:999px;overflow:hidden;}
+.jc-fill{height:100%;border-radius:999px;}
+.jc-verdict span{font:700 11px var(--font-sans);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;}
+
+/* ---- Section 7: model vs market ---- */
+.mvm-callouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:32px;}
+.mvm-callout{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:24px;}
+.mvm-callout h4{margin:10px 0 8px;font:700 17px var(--font-sans);}
+.mvm-callout p{margin:0;font:400 14px/1.5 var(--font-sans);color:var(--ink-muted);}
+.mvm-table-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:24px clamp(16px,2vw,28px);}
+.mvm-caption{display:flex;justify-content:space-between;align-items:center;font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:6px;}
+.mvm-legend{display:flex;gap:16px;font:700 11px var(--font-sans);letter-spacing:.04em;}
+.mvm-header,.mvm-row{display:grid;grid-template-columns:44px minmax(90px,1fr) 62px 56px minmax(120px,1.5fr) 56px;gap:12px;align-items:center;}
+.mvm-header{padding:10px 0;border-bottom:1px solid var(--hairline);font:700 10px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);}
+.mvm-row{padding:8px 0;border-bottom:1px solid var(--hairline-light);}
+.mvm-row:last-child{border-bottom:none;}
+.mvm-abbr{font:700 13px var(--font-sans);}
+.mvm-div{font:400 13px var(--font-sans);color:var(--ink-muted);}
+.mvm-num{font:600 13px var(--font-sans);text-align:right;font-variant-numeric:tabular-nums;}
+.mvm-bar{display:flex;gap:6px;align-items:center;}
+.mvm-bar-left{flex:1;display:flex;justify-content:flex-end;}
+.mvm-bar-right{flex:1;}
+.mvm-tick{width:1px;height:14px;background:var(--hairline);flex-shrink:0;}
+
+@media (max-width: 900px){
+  .es-grid,.fp-grid,.qbx-grid,.qbx-conf-headers{grid-template-columns:1fr;}
+  .jc-row{grid-template-columns:1fr;}
+  .mvm-header,.mvm-row{grid-template-columns:36px minmax(70px,1fr) 50px 44px minmax(90px,1.1fr) 44px;font-size:12px;}
+}

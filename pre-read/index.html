@@ -32,6 +32,10 @@
   <a href="#deep-dives">Division Deep Dives</a>
   <a href="#fantasy">Storylines</a>
   <a href="#appendix">Methodology &amp; Sources</a>
+  <span class="pr-jumpnav-group">
+    <a href="#judgment-calls" class="pr-jumpnav-brass">Judgment Calls</a>
+    <a href="#model-vs-market" class="pr-jumpnav-brass">Model vs. Market</a>
+  </span>
 </nav>
 
 <section class="pr-cover">
@@ -39,35 +43,23 @@
   <h1>2026 NFL Preseason Pre-Read</h1>
   <p>Coaching carousel, QB rooms, rookie impact, and a from-scratch prediction model.</p>
 </section>
-
 <section class="pr-section" id="exec-summary">
   <div class="section-eyebrow">Executive Summary</div>
   <h2>The Offseason in Five Numbers</h2>
-  <div class="stat-grid">
-    <div class="stat-card">
-      <div class="num">10</div>
-      <div class="label">Head Coaching Changes</div>
-      <div class="note">Tied for the most in a single NFL offseason ever.</div>
+  <div class="es-grid">
+    <div class="es-headline">
+      <div class="es-microlabel">The headline number</div>
+      <div class="es-bottom">
+        <div class="es-numeral">10</div>
+        <div class="es-label">Head Coaching Changes</div>
+        <div class="es-body">Tied for the most in a single NFL offseason ever. Nearly a third of the league starts the year under someone new.</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="num">3</div>
-      <div class="label">Wide-Open QB Rooms</div>
-      <div class="note">Teams with a genuinely wide-open QB competition entering camp.</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">3</div>
-      <div class="label">Toss-Up Divisions</div>
-      <div class="note">Rated a true toss-up by our confidence model (AFC South, NFC East, NFC South).</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">+21</div>
-      <div class="label">Saints Trajectory Score</div>
-      <div class="note">Highest in the league — not bad for a team we almost wrote off as a "dark horse."</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">14</div>
-      <div class="label">Rams – Cardinals Power Swing</div>
-      <div class="note">Point swing between the Rams (best Power Score) and the Cardinals (worst).</div>
+    <div class="es-ledger">
+      <div class="es-row"><div class="es-num" style="color:#8E4230">3</div><div><div class="es-rlabel">Wide-Open QB Rooms</div><div class="es-rbody">Browns, Vikings and Falcons enter camp without a settled starter.</div></div></div>
+      <div class="es-row"><div class="es-num" style="color:#8a6a1f">3</div><div><div class="es-rlabel">Toss-Up Divisions</div><div class="es-rbody">AFC South, NFC East and NFC South rate as true coin flips.</div></div></div>
+      <div class="es-row"><div class="es-num" style="color:#3F7A62">+21</div><div><div class="es-rlabel">Saints Trajectory Score</div><div class="es-rbody">Highest in the league — not bad for a team we almost wrote off as a "dark horse."</div></div></div>
+      <div class="es-row es-row-last"><div class="es-num" style="color:#14171B">14</div><div><div class="es-rlabel">Rams – Cardinals Power Swing</div><div class="es-rbody">Points between the best Power Score in the league and the worst.</div></div></div>
     </div>
   </div>
 </section>
@@ -80,7 +72,6 @@
     <p>Full formulas and sources are in the Methodology &amp; Sources section at the bottom. The <a href="../nfl-model/index.html">NFL dashboard</a> also has a glossary covering every term used there in more depth.</p>
   </div>
 </section>
-
 <section class="pr-section" id="coaching-carousel">
   <div class="section-eyebrow">Coaching Carousel</div>
   <h2>16 Teams Changed Their Staff</h2>
@@ -106,18 +97,108 @@
   </div>
 
   <h3 style="font:700 15px var(--font-sans);margin-bottom:6px;">Who Moved Where</h3>
-  <p class="dek" style="margin-bottom:16px;">All 10 new head coaches this cycle. Left badge is the coach's previous stop, right badge is the new team.</p>
-  <div class="card">
-    <div class="hire-row"><span class="name">Jeff Hafley</span><span class="arrow-badge">GB → MIA</span><span class="note">ex-Packers DC</span></div>
-    <div class="hire-row"><span class="name">Kevin Stefanski</span><span class="arrow-badge">CLE → ATL</span><span class="note">ex-Browns HC</span></div>
-    <div class="hire-row"><span class="name">Mike McCarthy</span><span class="arrow-badge">DAL → PIT</span><span class="note">former Cowboys/Packers HC</span></div>
-    <div class="hire-row"><span class="name">John Harbaugh</span><span class="arrow-badge">BAL → NYG</span><span class="note">ex-Ravens HC</span></div>
-    <div class="hire-row"><span class="name">Robert Saleh</span><span class="arrow-badge">SF → TEN</span><span class="note">ex-49ers DC</span></div>
-    <div class="hire-row"><span class="name">Mike LaFleur</span><span class="arrow-badge">LAR → ARI</span><span class="note">ex-Rams OC</span></div>
-    <div class="hire-row"><span class="name">Jesse Minter</span><span class="arrow-badge">LAC → BAL</span><span class="note">ex-Chargers DC</span></div>
-    <div class="hire-row"><span class="name">Joe Brady</span><span class="arrow-badge">BUF → BUF</span><span class="note">promoted, ex-Bills OC</span></div>
-    <div class="hire-row"><span class="name">Todd Monken</span><span class="arrow-badge">BAL → CLE</span><span class="note">ex-Ravens OC</span></div>
-    <div class="hire-row"><span class="name">Klint Kubiak</span><span class="arrow-badge">SEA → LV</span><span class="note">ex-Seahawks OC</span></div>
+  <p class="dek" style="margin-bottom:16px;">All 10 new head coaches this cycle. Left chip is the coach's previous stop, right chip is the new team.</p>
+  <div class="cc-card">
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#203731 0 50%,#008E97 50% 100%)"></div>
+      <div class="cc-name">Jeff Hafley</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#203731;color:#203731">GB</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#008E97;color:#FFFFFF">MIA</span>
+      </div>
+      <div class="cc-note">ex-Packers DC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#311D00 0 50%,#A71930 50% 100%)"></div>
+      <div class="cc-name">Kevin Stefanski</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#311D00;color:#311D00">CLE</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#A71930;color:#FFFFFF">ATL</span>
+      </div>
+      <div class="cc-note">ex-Browns HC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#003594 0 50%,#FFB612 50% 100%)"></div>
+      <div class="cc-name">Mike McCarthy</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#003594;color:#003594">DAL</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#FFB612;color:#0B0D10">PIT</span>
+      </div>
+      <div class="cc-note">former Cowboys/Packers HC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#241773 0 50%,#0B2265 50% 100%)"></div>
+      <div class="cc-name">John Harbaugh</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#241773;color:#241773">BAL</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#0B2265;color:#FFFFFF">NYG</span>
+      </div>
+      <div class="cc-note">ex-Ravens HC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#AA0000 0 50%,#0C2340 50% 100%)"></div>
+      <div class="cc-name">Robert Saleh</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#AA0000;color:#AA0000">SF</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#0C2340;color:#FFFFFF">TEN</span>
+      </div>
+      <div class="cc-note">ex-49ers DC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#003594 0 50%,#97233F 50% 100%)"></div>
+      <div class="cc-name">Mike LaFleur</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#003594;color:#003594">LAR</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#97233F;color:#FFFFFF">ARI</span>
+      </div>
+      <div class="cc-note">ex-Rams OC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#0080C6 0 50%,#241773 50% 100%)"></div>
+      <div class="cc-name">Jesse Minter</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#0080C6;color:#0080C6">LAC</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#241773;color:#FFFFFF">BAL</span>
+      </div>
+      <div class="cc-note">ex-Chargers DC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:#00338D"></div>
+      <div class="cc-name">Joe Brady</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#00338D;color:#00338D">BUF</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#00338D;color:#FFFFFF">BUF</span>
+      </div>
+      <div class="cc-note">promoted, ex-Bills OC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#241773 0 50%,#311D00 50% 100%)"></div>
+      <div class="cc-name">Todd Monken</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#241773;color:#241773">BAL</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#311D00;color:#FFFFFF">CLE</span>
+      </div>
+      <div class="cc-note">ex-Ravens OC</div>
+    </div>
+    <div class="cc-row">
+      <div class="cc-spine" style="background:linear-gradient(180deg,#002244 0 50%,#000000 50% 100%)"></div>
+      <div class="cc-name">Klint Kubiak</div>
+      <div class="cc-chips">
+        <span class="cc-chip cc-chip-from" style="border-color:#002244;color:#002244">SEA</span>
+        <span class="cc-arrow">→</span>
+        <span class="cc-chip cc-chip-to" style="background:#000000;color:#FFFFFF">LV</span>
+      </div>
+      <div class="cc-note">ex-Seahawks OC</div>
+    </div>
   </div>
 </section>
 
@@ -126,62 +207,63 @@
   <h2>The League-Wide QB Status Board</h2>
   <p class="dek">Tied for highest QB turnover in league history entering a season.</p>
 
-  <div class="qb-board">
-    <div class="division-block">
-      <h3>AFC East</h3>
-      <div class="qb-row"><span class="team">Bills</span><span class="qb">Josh Allen</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Patriots</span><span class="qb">Drake Maye</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Jets</span><span class="qb">Geno Smith</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Dolphins</span><span class="qb">Malik Willis</span><span class="badge badge-set">Set</span></div>
+  <div class="qbx-conf-headers"><div>AFC</div><div>NFC</div></div>
+  <div class="qbx-grid">
+    <div class="qbx-card">
+      <div class="qbx-divlabel">East</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#00338D"></div><div class="qbx-team">Bills</div><div class="qbx-qb">Josh Allen</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#002244"></div><div class="qbx-team">Patriots</div><div class="qbx-qb">Drake Maye</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#125740"></div><div class="qbx-team">Jets</div><div class="qbx-qb">Geno Smith</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#008E97"></div><div class="qbx-team">Dolphins</div><div class="qbx-qb">Malik Willis</div><span class="badge badge-set">Set</span></div>
     </div>
-    <div class="division-block">
-      <h3>AFC North</h3>
-      <div class="qb-row"><span class="team">Ravens</span><span class="qb">Lamar Jackson</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Bengals</span><span class="qb">Joe Burrow</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Steelers</span><span class="qb">Aaron Rodgers</span><span class="badge badge-waiting">Rookie Waiting</span></div>
-      <div class="qb-row"><span class="team">Browns</span><span class="qb">Watson / Sanders / Gabriel / Green</span><span class="badge badge-open">Wide Open</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">East</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#004C54"></div><div class="qbx-team">Eagles</div><div class="qbx-qb">Jalen Hurts</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#003594"></div><div class="qbx-team">Cowboys</div><div class="qbx-qb">Dak Prescott</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0B2265"></div><div class="qbx-team">Giants</div><div class="qbx-qb">Jaxson Dart</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#5A1414"></div><div class="qbx-team">Commanders</div><div class="qbx-qb">Jayden Daniels</div><span class="badge badge-set">Set</span></div>
     </div>
-    <div class="division-block">
-      <h3>AFC South</h3>
-      <div class="qb-row"><span class="team">Texans</span><span class="qb">C.J. Stroud</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Jaguars</span><span class="qb">Trevor Lawrence</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Colts</span><span class="qb">Daniel Jones</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Titans</span><span class="qb">Cam Ward</span><span class="badge badge-set">Set</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">North</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#241773"></div><div class="qbx-team">Ravens</div><div class="qbx-qb">Lamar Jackson</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#FB4F14"></div><div class="qbx-team">Bengals</div><div class="qbx-qb">Joe Burrow</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#FFB612"></div><div class="qbx-team">Steelers</div><div class="qbx-qb">Aaron Rodgers</div><span class="badge badge-waiting">Rookie Waiting</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#311D00"></div><div class="qbx-team">Browns</div><div class="qbx-qb">Watson / Sanders / Gabriel / Green</div><span class="badge badge-open">Wide Open</span></div>
     </div>
-    <div class="division-block">
-      <h3>AFC West</h3>
-      <div class="qb-row"><span class="team">Broncos</span><span class="qb">Bo Nix</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Chiefs</span><span class="qb">Patrick Mahomes</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Chargers</span><span class="qb">Justin Herbert</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Raiders</span><span class="qb">Kirk Cousins</span><span class="badge badge-waiting">Rookie Waiting</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">North</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0B162A"></div><div class="qbx-team">Bears</div><div class="qbx-qb">Caleb Williams</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#203731"></div><div class="qbx-team">Packers</div><div class="qbx-qb">Jordan Love</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0076B6"></div><div class="qbx-team">Lions</div><div class="qbx-qb">Jared Goff</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#4F2683"></div><div class="qbx-team">Vikings</div><div class="qbx-qb">Murray / McCarthy</div><span class="badge badge-open">Wide Open</span></div>
     </div>
-    <div class="division-block">
-      <h3>NFC East</h3>
-      <div class="qb-row"><span class="team">Eagles</span><span class="qb">Jalen Hurts</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Cowboys</span><span class="qb">Dak Prescott</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Giants</span><span class="qb">Jaxson Dart</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Commanders</span><span class="qb">Jayden Daniels</span><span class="badge badge-set">Set</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">South</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#03202F"></div><div class="qbx-team">Texans</div><div class="qbx-qb">C.J. Stroud</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#101820"></div><div class="qbx-team">Jaguars</div><div class="qbx-qb">Trevor Lawrence</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#002C5F"></div><div class="qbx-team">Colts</div><div class="qbx-qb">Daniel Jones</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0C2340"></div><div class="qbx-team">Titans</div><div class="qbx-qb">Cam Ward</div><span class="badge badge-set">Set</span></div>
     </div>
-    <div class="division-block">
-      <h3>NFC North</h3>
-      <div class="qb-row"><span class="team">Bears</span><span class="qb">Caleb Williams</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Packers</span><span class="qb">Jordan Love</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Lions</span><span class="qb">Jared Goff</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Vikings</span><span class="qb">Murray / McCarthy</span><span class="badge badge-open">Wide Open</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">South</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0085CA"></div><div class="qbx-team">Panthers</div><div class="qbx-qb">Bryce Young</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#D50A0A"></div><div class="qbx-team">Buccaneers</div><div class="qbx-qb">Baker Mayfield</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#D3BC8D"></div><div class="qbx-team">Saints</div><div class="qbx-qb">Tyler Shough</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#A71930"></div><div class="qbx-team">Falcons</div><div class="qbx-qb">Tua / Penix</div><span class="badge badge-open">Wide Open</span></div>
     </div>
-    <div class="division-block">
-      <h3>NFC South</h3>
-      <div class="qb-row"><span class="team">Panthers</span><span class="qb">Bryce Young</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Buccaneers</span><span class="qb">Baker Mayfield</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Saints</span><span class="qb">Tyler Shough</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Falcons</span><span class="qb">Tua / Penix</span><span class="badge badge-open">Wide Open</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">West</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#FB4F14"></div><div class="qbx-team">Broncos</div><div class="qbx-qb">Bo Nix</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#E31837"></div><div class="qbx-team">Chiefs</div><div class="qbx-qb">Patrick Mahomes</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#0080C6"></div><div class="qbx-team">Chargers</div><div class="qbx-qb">Justin Herbert</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#000000"></div><div class="qbx-team">Raiders</div><div class="qbx-qb">Kirk Cousins</div><span class="badge badge-waiting">Rookie Waiting</span></div>
     </div>
-    <div class="division-block">
-      <h3>NFC West</h3>
-      <div class="qb-row"><span class="team">Rams</span><span class="qb">Matthew Stafford</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">49ers</span><span class="qb">Brock Purdy</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Seahawks</span><span class="qb">Sam Darnold</span><span class="badge badge-set">Set</span></div>
-      <div class="qb-row"><span class="team">Cardinals</span><span class="qb">Jacoby Brissett</span><span class="badge badge-waiting">Rookie Waiting</span></div>
+    <div class="qbx-card">
+      <div class="qbx-divlabel">West</div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#003594"></div><div class="qbx-team">Rams</div><div class="qbx-qb">Matthew Stafford</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#AA0000"></div><div class="qbx-team">49ers</div><div class="qbx-qb">Brock Purdy</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#002244"></div><div class="qbx-team">Seahawks</div><div class="qbx-qb">Sam Darnold</div><span class="badge badge-set">Set</span></div>
+      <div class="qbx-row"><div class="qbx-rail" style="background:#97233F"></div><div class="qbx-team">Cardinals</div><div class="qbx-qb">Jacoby Brissett</div><span class="badge badge-waiting">Rookie Waiting</span></div>
     </div>
   </div>
 
@@ -255,7 +337,6 @@
     <div class="card"><h4>Colts <span class="badge badge-moderate">Moderate</span></h4><p>WR Alec Pierce's ankle surgery carries a 4-6 month recovery that could cost him the preseason and part of the regular season.</p></div>
   </div>
 </section>
-
 <section class="pr-section" id="predictions">
   <div class="section-eyebrow">Division Recap &amp; Predictions</div>
   <h2>2025 Final Standings, All 8 Divisions</h2>
@@ -272,45 +353,32 @@
   </table>
   <p class="dek" style="margin-top:-16px;">Source: Pro-Football-Reference.com, 2025 NFL Standings &amp; Team Stats.</p>
 
-  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">The Full Picture: 2025 Finish → 2026 Predicted</h3>
-  <p class="dek">Left = 2025 final standings order. Right = 2026 predicted rank (Power Score). Green = predicted to rise, red = predicted to fall.</p>
-  <div class="chart-row">
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-east.svg" alt="AFC East predicted rank chart"><figcaption>AFC East</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-north.svg" alt="AFC North predicted rank chart"><figcaption>AFC North</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-south.svg" alt="AFC South predicted rank chart"><figcaption>AFC South</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-afc-west.svg" alt="AFC West predicted rank chart"><figcaption>AFC West</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-east.svg" alt="NFC East predicted rank chart"><figcaption>NFC East</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-north.svg" alt="NFC North predicted rank chart"><figcaption>NFC North</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-south.svg" alt="NFC South predicted rank chart"><figcaption>NFC South</figcaption></figure>
-    <figure class="chart-figure"><img src="assets/charts/predicted-rank-nfc-west.svg" alt="NFC West predicted rank chart"><figcaption>NFC West</figcaption></figure>
-  </div>
-
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Division Confidence Ratings</h3>
   <table class="pr-table" style="margin-bottom:32px;">
     <tr><th>Division</th><th>Leader</th><th>Runner-up</th><th>Gap (1v2)</th><th>Rating</th></tr>
-    <tr><td>AFC East</td><td>Patriots</td><td>Bills</td><td>3.1</td><td><span class="badge badge-medium">Medium</span></td></tr>
-    <tr><td>AFC North</td><td>Bengals</td><td>Steelers</td><td>2.5</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>AFC East</td><td>Patriots</td><td>Bills</td><td>0.7</td><td><span class="badge badge-low">Low</span></td></tr>
+    <tr><td>AFC North</td><td>Steelers</td><td>Ravens</td><td>0.0</td><td><span class="badge badge-low">Low</span></td></tr>
     <tr><td>AFC South</td><td>Texans</td><td>Jaguars</td><td>0.9</td><td><span class="badge badge-low">Low</span></td></tr>
-    <tr><td>AFC West</td><td>Broncos</td><td>Chargers</td><td>6.8</td><td><span class="badge badge-high">High</span></td></tr>
-    <tr><td>NFC East</td><td>Eagles</td><td>Cowboys</td><td>1.1</td><td><span class="badge badge-low">Low</span></td></tr>
-    <tr><td>NFC North</td><td>Bears</td><td>Vikings</td><td>2.6</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>AFC West</td><td>Broncos</td><td>Chargers</td><td>5.1</td><td><span class="badge badge-high">High</span></td></tr>
+    <tr><td>NFC East</td><td>Cowboys</td><td>Eagles</td><td>0.7</td><td><span class="badge badge-low">Low</span></td></tr>
+    <tr><td>NFC North</td><td>Bears</td><td>Vikings</td><td>2.5</td><td><span class="badge badge-medium">Medium</span></td></tr>
     <tr><td>NFC South</td><td>Saints</td><td>Panthers</td><td>1.0</td><td><span class="badge badge-low">Low</span></td></tr>
-    <tr><td>NFC West</td><td>Rams</td><td>Seahawks</td><td>2.8</td><td><span class="badge badge-medium">Medium</span></td></tr>
+    <tr><td>NFC West</td><td>Rams</td><td>Seahawks</td><td>1.0</td><td><span class="badge badge-low">Low</span></td></tr>
   </table>
-  <p class="dek" style="margin-top:-16px;">Confidence = gap between the #1 and #2 team's Power Score, minus their average Volatility ÷ 6. (Volatility = a team's Upside score plus its Downside score added together — how wide its total range of outcomes is, regardless of direction.)</p>
+  <p class="dek" style="margin-top:-16px;">Confidence = gap between the #1 and #2 team's Power Score, minus their average Volatility ÷ 6. (Volatility = a team's Upside score plus its Downside score added together — how wide its total range of outcomes is, regardless of direction.) Rating shown reflects the raw Power Score gap between the top two.</p>
 
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Cone of Certainty, by Division</h3>
   <p class="dek">Power Score ± Upside/Downside range.</p>
   <table class="pr-table" style="margin-bottom:32px;">
-    <tr><th>Division</th><th>#1</th><th>Range</th><th>#2</th><th>Range</th><th>#3</th><th>Range</th><th>#4</th><th>Range</th></tr>
-    <tr><td>AFC East</td><td>Patriots</td><td>+6.1</td><td>Bills</td><td>+3.0</td><td>Jets</td><td>-0.9</td><td>Dolphins</td><td>-5.8</td></tr>
-    <tr><td>AFC North</td><td>Bengals</td><td>-0.4</td><td>Steelers</td><td>-2.9</td><td>Ravens</td><td>-2.9</td><td>Browns</td><td>-8.8</td></tr>
-    <tr><td>AFC South</td><td>Texans</td><td>+8.1</td><td>Jaguars</td><td>+7.2</td><td>Colts</td><td>+3.4</td><td>Titans</td><td>-5.5</td></tr>
-    <tr><td>AFC West</td><td>Broncos</td><td>+8.4</td><td>Chargers</td><td>+1.6</td><td>Chiefs</td><td>-2.3</td><td>Raiders</td><td>-8.9</td></tr>
-    <tr><td>NFC East</td><td>Eagles</td><td>+4.5</td><td>Cowboys</td><td>+3.4</td><td>Giants</td><td>+1.0</td><td>Commanders</td><td>-5.2</td></tr>
-    <tr><td>NFC North</td><td>Bears</td><td>+4.3</td><td>Vikings</td><td>+1.7</td><td>Packers</td><td>+0.8</td><td>Lions</td><td>-2.4</td></tr>
-    <tr><td>NFC South</td><td>Saints</td><td>+5.3</td><td>Panthers</td><td>+4.3</td><td>Buccaneers</td><td>-0.6</td><td>Falcons</td><td>-3.4</td></tr>
-    <tr><td>NFC West</td><td>Rams</td><td>+8.2</td><td>Seahawks</td><td>+5.4</td><td>49ers</td><td>+0.6</td><td>Cardinals</td><td>-7.7</td></tr>
+    <tr><th>Division</th><th>#1</th><th>Score</th><th>#2</th><th>Score</th><th>#3</th><th>Score</th><th>#4</th><th>Score</th></tr>
+    <tr><td>AFC East</td><td>Patriots</td><td>+2.6</td><td>Bills</td><td>+2.0</td><td>Jets</td><td>-4.4</td><td>Dolphins</td><td>-4.8</td></tr>
+    <tr><td>AFC North</td><td>Steelers</td><td>-1.8</td><td>Ravens</td><td>-1.9</td><td>Bengals</td><td>-3.9</td><td>Browns</td><td>-7.7</td></tr>
+    <tr><td>AFC South</td><td>Texans</td><td>+4.6</td><td>Jaguars</td><td>+3.7</td><td>Colts</td><td>-0.1</td><td>Titans</td><td>-4.8</td></tr>
+    <tr><td>AFC West</td><td>Broncos</td><td>+4.9</td><td>Chargers</td><td>-0.2</td><td>Chiefs</td><td>-4.7</td><td>Raiders</td><td>-7.9</td></tr>
+    <tr><td>NFC East</td><td>Cowboys</td><td>+1.7</td><td>Eagles</td><td>+1.0</td><td>Giants</td><td>-0.4</td><td>Commanders</td><td>-5.2</td></tr>
+    <tr><td>NFC North</td><td>Bears</td><td>+0.8</td><td>Vikings</td><td>-1.8</td><td>Packers</td><td>-2.7</td><td>Lions</td><td>-4.2</td></tr>
+    <tr><td>NFC South</td><td>Saints</td><td>+1.8</td><td>Panthers</td><td>+0.8</td><td>Buccaneers</td><td>-0.6</td><td>Falcons</td><td>-4.4</td></tr>
+    <tr><td>NFC West</td><td>Rams</td><td>+4.7</td><td>Seahawks</td><td>+3.7</td><td>49ers</td><td>-1.1</td><td>Cardinals</td><td>-7.7</td></tr>
   </table>
 
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Projected Wins — Narrowest Confidence Ranges</h3>
@@ -335,25 +403,6 @@
   </div>
   <p class="dek" style="margin-top:12px;">Full 1–32 order for every team is in the Composite Power Ranking table below.</p>
 
-  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">The Team Risk Map</h3>
-  <p class="dek">X = Power Score (prediction). Y = Consistency (inverse of Upside + Downside range — higher means a narrower total range of outcomes; this is a different quantity from the "Stability" sub-score inside Trajectory). Ringed dots are the judgment calls below.</p>
-  <figure class="chart-figure">
-    <img src="assets/charts/risk-map.svg" alt="Team risk map scatter plot" style="max-width:640px;">
-  </figure>
-
-  <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Judgment Calls</h3>
-  <p class="dek">Vulnerable Leader = ranked 1st/2nd with Downside ≥ 7. Sneaky Riser = ranked 3rd/4th with Upside ≥ 6.</p>
-  <div class="card-grid">
-    <div class="card"><h4>Bengals <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>AFC North, #1. Downside 7 — the division lead runs through Burrow's own recent injury history plus Erick All's unresolved ACL.</p></div>
-    <div class="card"><h4>Steelers <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>AFC North, #2. Downside 8 — the highest in the league. This ranking assumes a 42-year-old Rodgers holds up for a full season.</p></div>
-    <div class="card"><h4>Cowboys <span class="badge badge-moderate">Vulnerable Leader</span></h4><p>NFC East, #2. Downside 9, 2nd-highest in the league. Dallas's rise depends on Overshown fully recovering from a severe multi-ligament knee injury.</p></div>
-    <div class="card"><h4>Packers <span class="badge badge-major">Fallen Leader</span></h4><p>NFC North, now #3. Not a "vulnerable" lead anymore — Parsons is now reported likely to miss much of the season, and it already cost Green Bay 2nd place in the division.</p></div>
-    <div class="card"><h4>Titans <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC South, #4. Upside 7 — the only team with two players on the national All-Breakout Team (Ward, Helm).</p></div>
-    <div class="card"><h4>Raiders <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC West, #4. Upside 7 — Ashton Jeanty is a real regression-to-the-mean case, independent of the scheme change.</p></div>
-    <div class="card"><h4>Cardinals <span class="badge badge-set">Sneaky Riser</span></h4><p>NFC West, #4. Upside 7, Downside 7 — the widest total range in the league. Boom-or-bust, not just a bad team.</p></div>
-    <div class="card"><h4>Jets <span class="badge badge-set">Sneaky Riser</span></h4><p>AFC East, #3. Upside 6 — T'Vondre Sweat has real breakout DT tools on a team already showing more life than its record.</p></div>
-  </div>
-
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Strength of Schedule Impacts</h3>
   <div class="card-grid" style="margin-bottom:32px;">
     <div class="card"><h4>Saints get a schedule bump</h4><p>11.6 projected wins — not just a strong Power Score, but the easiest schedule in the league (SOS -1.41).</p></div>
@@ -375,29 +424,529 @@
   </table>
 </section>
 
+<section class="pr-section" id="full-picture">
+  <div class="section-eyebrow">Division Recap &amp; Predictions</div>
+  <h3 style="font:900 28px var(--font-sans);margin:0 0 10px;">The Full Picture: 2025 Finish → 2026 Predicted</h3>
+  <p class="dek">Left = 2025 final standings order. Right = 2026 predicted rank (Power Score). Green = predicted to rise, red = predicted to fall.</p>
+  <div class="fp-grid">
+  <div class="fp-card">
+    <div class="fp-head"><h4>AFC East</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Patriots</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Bills</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Dolphins</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Jets</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,29 C42,29 68,29 110,29" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,87 110,87" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,145 110,145" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,203 110,203" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#14171B">Patriots</span><span class="fp-score" style="color:#14171B">+2.6</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#14171B">Bills</span><span class="fp-score" style="color:#14171B">+2.0</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#3F7A62">Jets</span><span class="fp-score" style="color:#3F7A62">-4.4</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#8E4230">Dolphins</span><span class="fp-score" style="color:#8E4230">-4.8</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>NFC East</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Eagles</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Cowboys</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Commanders</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Giants</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,87 C42,87 68,29 110,29" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,29 C42,29 68,87 110,87" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,145 110,145" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,203 110,203" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#3F7A62">Cowboys</span><span class="fp-score" style="color:#3F7A62">+1.7</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#8E4230">Eagles</span><span class="fp-score" style="color:#8E4230">+1.0</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#3F7A62">Giants</span><span class="fp-score" style="color:#3F7A62">-0.4</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#8E4230">Commanders</span><span class="fp-score" style="color:#8E4230">-5.2</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>AFC North</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Steelers</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Ravens</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Bengals</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Browns</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,29 C42,29 68,29 110,29" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,87 110,87" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,145 110,145" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,203 110,203" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#14171B">Steelers</span><span class="fp-score" style="color:#14171B">-1.8</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#14171B">Ravens</span><span class="fp-score" style="color:#14171B">-1.9</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#14171B">Bengals</span><span class="fp-score" style="color:#14171B">-3.9</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#14171B">Browns</span><span class="fp-score" style="color:#14171B">-7.7</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>NFC North</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Bears</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Packers</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Vikings</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Lions</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,29 C42,29 68,29 110,29" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,87 110,87" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,145 110,145" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,203 110,203" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#14171B">Bears</span><span class="fp-score" style="color:#14171B">+0.8</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#3F7A62">Vikings</span><span class="fp-score" style="color:#3F7A62">-1.8</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#8E4230">Packers</span><span class="fp-score" style="color:#8E4230">-2.7</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#14171B">Lions</span><span class="fp-score" style="color:#14171B">-4.2</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>AFC South</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Jaguars</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Texans</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Colts</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Titans</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,29 C42,29 68,87 110,87" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,29 110,29" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,145 110,145" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,203 110,203" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#3F7A62">Texans</span><span class="fp-score" style="color:#3F7A62">+4.6</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#8E4230">Jaguars</span><span class="fp-score" style="color:#8E4230">+3.7</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#14171B">Colts</span><span class="fp-score" style="color:#14171B">-0.1</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#14171B">Titans</span><span class="fp-score" style="color:#14171B">-4.8</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>NFC South</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Panthers</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Buccaneers</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Falcons</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Saints</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,203 C42,203 68,29 110,29" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,29 C42,29 68,87 110,87" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,145 110,145" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,203 110,203" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#3F7A62">Saints</span><span class="fp-score" style="color:#3F7A62">+1.8</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#8E4230">Panthers</span><span class="fp-score" style="color:#8E4230">+0.8</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#8E4230">Buccaneers</span><span class="fp-score" style="color:#8E4230">-0.6</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#8E4230">Falcons</span><span class="fp-score" style="color:#8E4230">-4.4</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>AFC West</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Broncos</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Chargers</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">Chiefs</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Raiders</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,29 C42,29 68,29 110,29" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,87 C42,87 68,87 110,87" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,145 110,145" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,203 110,203" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#14171B">Broncos</span><span class="fp-score" style="color:#14171B">+4.9</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#14171B">Chargers</span><span class="fp-score" style="color:#14171B">-0.2</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#14171B">Chiefs</span><span class="fp-score" style="color:#14171B">-4.7</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#14171B">Raiders</span><span class="fp-score" style="color:#14171B">-7.9</span></div></div>
+    </div>
+  </div>
+  <div class="fp-card">
+    <div class="fp-head"><h4>NFC West</h4><div class="fp-yearlabels"><span>2025</span><span>2026</span></div></div>
+    <div class="fp-body">
+      <div class="fp-left"><div class="fp-left-row"><span class="fp-team">Seahawks</span><span class="fp-rank2025">1</span></div><div class="fp-left-row"><span class="fp-team">Rams</span><span class="fp-rank2025">2</span></div><div class="fp-left-row"><span class="fp-team">49ers</span><span class="fp-rank2025">3</span></div><div class="fp-left-row"><span class="fp-team">Cardinals</span><span class="fp-rank2025">4</span></div></div>
+      <svg width="110" height="232" viewBox="0 0 110 232" class="fp-svg"><path d="M0,87 C42,87 68,29 110,29" stroke="#3F7A62" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,29 C42,29 68,87 110,87" stroke="#8E4230" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,145 C42,145 68,145 110,145" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/><path d="M0,203 C42,203 68,203 110,203" stroke="#DCD7C7" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="fp-right"><div class="fp-right-row"><span class="fp-rank2026">1</span><span class="fp-team" style="color:#3F7A62">Rams</span><span class="fp-score" style="color:#3F7A62">+4.7</span></div><div class="fp-right-row"><span class="fp-rank2026">2</span><span class="fp-team" style="color:#8E4230">Seahawks</span><span class="fp-score" style="color:#8E4230">+3.7</span></div><div class="fp-right-row"><span class="fp-rank2026">3</span><span class="fp-team" style="color:#14171B">49ers</span><span class="fp-score" style="color:#14171B">-1.1</span></div><div class="fp-right-row"><span class="fp-rank2026">4</span><span class="fp-team" style="color:#14171B">Cardinals</span><span class="fp-score" style="color:#14171B">-7.7</span></div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="pr-section-full" id="risk-map">
+  <div class="pr-section-inner">
+    <div class="section-eyebrow">Division Recap &amp; Predictions</div>
+    <h3 style="font:900 28px var(--font-sans);margin:0 0 10px;">The Team Risk Map</h3>
+    <p class="dek" style="max-width:820px;">X = Power Score (prediction). Y = Consistency (inverse of Upside + Downside range — higher means a narrower total range of outcomes; this is a different quantity from the "Stability" sub-score inside Trajectory). Ringed dots are the judgment calls below.</p>
+  </div>
+  <div class="rm-panel">
+    <div class="rm-plot">
+      <div class="rm-vline"></div>
+      <div class="rm-hline"></div>
+      <div class="rm-qlabel" style="top:14px;left:16px;">Steady &amp; Weak</div>
+      <div class="rm-qlabel" style="top:14px;right:16px;">Steady &amp; Strong</div>
+      <div class="rm-qlabel" style="bottom:14px;left:16px;">Risky &amp; Weak</div>
+      <div class="rm-qlabel" style="bottom:14px;right:16px;">Risky &amp; Strong</div>
+      <div class="rm-yaxis">Consistency →</div>
+      <div class="rm-dot" style="left:6.00%;top:71.00%;flex-direction:column"><div class="rm-circle" style="background:#000000;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">LV</div></div>
+    <div class="rm-dot" style="left:6.90%;top:39.50%;flex-direction:column"><div class="rm-circle" style="background:#311D00;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">CLE</div></div>
+    <div class="rm-dot" style="left:7.16%;top:92.00%;flex-direction:column"><div class="rm-circle" style="background:#97233F;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">ARI</div></div>
+    <div class="rm-dot" style="left:24.03%;top:71.00%;flex-direction:column"><div class="rm-circle" style="background:#5A1414;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">WAS</div></div>
+    <div class="rm-dot" style="left:27.09%;top:60.50%;flex-direction:column"><div class="rm-circle" style="background:#0C2340;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">TEN</div></div>
+    <div class="rm-dot" style="left:27.17%;top:50.00%;flex-direction:column"><div class="rm-circle" style="background:#008E97;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">MIA</div></div>
+    <div class="rm-dot" style="left:27.74%;top:92.00%;flex-direction:column"><div class="rm-circle" style="background:#E31837;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">KC</div></div>
+    <div class="rm-dot" style="left:29.62%;top:39.50%;flex-direction:column"><div class="rm-circle" style="background:#125740;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">NYJ</div></div>
+    <div class="rm-dot" style="left:29.75%;top:81.50%;flex-direction:column"><div class="rm-circle" style="background:#A71930;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">ATL</div></div>
+    <div class="rm-dot" style="left:31.31%;top:60.50%;flex-direction:column"><div class="rm-circle" style="background:#0076B6;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">DET</div></div>
+    <div class="rm-dot" style="left:33.45%;top:71.00%;flex-direction:column"><div class="rm-circle" style="background:#FB4F14;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">CIN</div></div>
+    <div class="rm-dot" style="left:41.57%;top:92.00%;flex-direction:column"><div class="rm-circle" style="background:#203731;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">GB</div></div>
+    <div class="rm-dot" style="left:47.33%;top:39.50%;flex-direction:column"><div class="rm-circle" style="background:#241773;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">BAL</div></div>
+    <div class="rm-dot" style="left:47.49%;top:81.50%;flex-direction:column"><div class="rm-circle" style="background:#FFB612;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">PIT</div></div>
+    <div class="rm-dot" style="left:48.12%;top:18.50%;flex-direction:column"><div class="rm-circle" style="background:#4F2683;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">MIN</div></div>
+    <div class="rm-dot" style="left:52.48%;top:50.00%;flex-direction:column"><div class="rm-circle" style="background:#AA0000;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">SF</div></div>
+    <div class="rm-dot" style="left:55.93%;top:50.00%;flex-direction:column"><div class="rm-circle" style="background:#D50A0A;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">TB</div></div>
+    <div class="rm-dot" style="left:55.43%;top:29.00%;flex-direction:column"><div class="rm-circle" style="background:#0B2265;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">NYG</div></div>
+    <div class="rm-dot" style="left:60.74%;top:29.00%;flex-direction:column-reverse"><div class="rm-circle" style="background:#0080C6;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">LAC</div></div>
+    <div class="rm-dot" style="left:59.47%;top:60.50%;flex-direction:column"><div class="rm-circle" style="background:#002C5F;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">IND</div></div>
+    <div class="rm-dot" style="left:63.79%;top:39.50%;flex-direction:column"><div class="rm-circle" style="background:#0085CA;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">CAR</div></div>
+    <div class="rm-dot" style="left:67.22%;top:39.50%;flex-direction:column-reverse"><div class="rm-circle" style="background:#0B162A;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">CHI</div></div>
+    <div class="rm-dot" style="left:66.92%;top:50.00%;flex-direction:column"><div class="rm-circle" style="background:#004C54;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">PHI</div></div>
+    <div class="rm-dot" style="left:71.68%;top:60.50%;flex-direction:column"><div class="rm-circle" style="background:#003594;box-shadow:0 0 0 4px rgba(20,23,27,.20);"></div><div class="rm-label" style="color:#14171B">DAL</div></div>
+    <div class="rm-dot" style="left:72.48%;top:39.50%;flex-direction:column"><div class="rm-circle" style="background:#D3BC8D;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">NO</div></div>
+    <div class="rm-dot" style="left:73.77%;top:18.50%;flex-direction:column"><div class="rm-circle" style="background:#00338D;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">BUF</div></div>
+    <div class="rm-dot" style="left:78.36%;top:18.50%;flex-direction:column"><div class="rm-circle" style="background:#002244;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">NE</div></div>
+    <div class="rm-dot" style="left:85.58%;top:29.00%;flex-direction:column"><div class="rm-circle" style="background:#101820;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">JAX</div></div>
+    <div class="rm-dot" style="left:85.61%;top:60.50%;flex-direction:column"><div class="rm-circle" style="background:#002244;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">SEA</div></div>
+    <div class="rm-dot" style="left:90.41%;top:8.00%;flex-direction:column"><div class="rm-circle" style="background:#03202F;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">HOU</div></div>
+    <div class="rm-dot" style="left:92.81%;top:50.00%;flex-direction:column"><div class="rm-circle" style="background:#003594;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">LAR</div></div>
+    <div class="rm-dot" style="left:95.70%;top:8.00%;flex-direction:column-reverse"><div class="rm-circle" style="background:#FB4F14;box-shadow:0 0 0 2px #FFFFFF;"></div><div class="rm-label" style="color:#8C8F93">DEN</div></div>
+    </div>
+    <div class="rm-xaxis"><span>← Weaker</span><span style="color:#B9B3A3">Power Score</span><span>Stronger →</span></div>
+    <div class="rm-legend"><span><span class="rm-legend-swatch"></span> Judgment call (see below)</span><span>Dot color = team primary</span></div>
+  </div>
+</section>
+
+<section class="pr-section-full" id="judgment-calls">
+  <div class="pr-section-inner">
+    <div class="section-eyebrow">Division Recap &amp; Predictions</div>
+    <h2>Judgment Calls</h2>
+    <p class="dek">Vulnerable Leader = ranked 1st/2nd with Downside ≥ 7. Sneaky Riser = ranked 3rd/4th with Upside ≥ 6.</p>
+  </div>
+  <div class="jc-panel">
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-vuln">Vulnerable Leader</span><div class="jc-team">Steelers</div><div class="jc-slot">AFC North, #1</div></div>
+      <div class="jc-col2">AFC North, #1. Downside 8 — the highest in the league. This ranking assumes a 42-year-old Rodgers holds up for a full season.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-1.8</div><div class="jc-statsub">#T18 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">8.5</div><div class="jc-statsub">#T17 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:4%;background:#8E4230"></div></div><span style="color:#8E4230">Market higher by 1 spot</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-vuln">Vulnerable Leader</span><div class="jc-team">Cowboys</div><div class="jc-slot">NFC East, #1</div></div>
+      <div class="jc-col2">NFC East, #1. Downside 9, 2nd-highest in the league. Dallas's division lead depends on Overshown fully recovering from a severe multi-ligament knee injury.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">+1.7</div><div class="jc-statsub">#9 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">9.0</div><div class="jc-statsub">#16 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:29%;background:#3F7A62"></div></div><span style="color:#3F7A62">Model higher by 7 spots</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-fallen">Fallen Leader</span><div class="jc-team">Packers</div><div class="jc-slot">NFC North, now #3</div></div>
+      <div class="jc-col2">NFC North, now #3. Not a "vulnerable" lead anymore — Parsons is now reported likely to miss much of the season, and it already cost Green Bay 2nd place in the division.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-2.7</div><div class="jc-statsub">#21 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">10.0</div><div class="jc-statsub">#T9 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:50%;background:#8E4230"></div></div><span style="color:#8E4230">Market higher by 12 spots</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-riser">Sneaky Riser</span><div class="jc-team">Titans</div><div class="jc-slot">AFC South, #4</div></div>
+      <div class="jc-col2">AFC South, #4. Upside 7 — the only team with two players on the national All-Breakout Team (Ward, Helm).</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-4.8</div><div class="jc-statsub">#T27 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">6.5</div><div class="jc-statsub">#27 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:0%;background:#8C8F93"></div></div><span style="color:#8C8F93">Model and market agree</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-riser">Sneaky Riser</span><div class="jc-team">Raiders</div><div class="jc-slot">AFC West, #4</div></div>
+      <div class="jc-col2">AFC West, #4. Upside 7 — Ashton Jeanty is a real regression-to-the-mean case, independent of the scheme change.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-7.9</div><div class="jc-statsub">#32 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">5.5</div><div class="jc-statsub">#T29 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:12%;background:#8E4230"></div></div><span style="color:#8E4230">Market higher by 3 spots</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-riser">Sneaky Riser</span><div class="jc-team">Cardinals</div><div class="jc-slot">NFC West, #4</div></div>
+      <div class="jc-col2">NFC West, #4. Upside 7, Downside 7 — the widest total range in the league. Boom-or-bust, not just a bad team.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-7.7</div><div class="jc-statsub">#T30 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">4.5</div><div class="jc-statsub">#T31 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:4%;background:#3F7A62"></div></div><span style="color:#3F7A62">Model higher by 1 spot</span></div>
+      </div>
+    </div>
+    <div class="jc-row">
+      <div class="jc-col1"><span class="badge jc-badge-riser">Sneaky Riser</span><div class="jc-team">Jets</div><div class="jc-slot">AFC East, #3</div></div>
+      <div class="jc-col2">AFC East, #3. Upside 6 — T'Vondre Sweat has real breakout DT tools on a team already showing more life than its record.</div>
+      <div class="jc-col3">
+        <div class="jc-statboxes">
+          <div class="jc-statbox"><div class="jc-microlabel">Model Power</div><div class="jc-statval">-4.4</div><div class="jc-statsub">#T24 of 32</div></div>
+          <div class="jc-statbox"><div class="jc-microlabel">Market Total</div><div class="jc-statval">5.5</div><div class="jc-statsub">#T29 of 32</div></div>
+        </div>
+        <div class="jc-verdict"><div class="jc-track"><div class="jc-fill" style="width:21%;background:#3F7A62"></div></div><span style="color:#3F7A62">Model higher by 5 spots</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pr-section" id="model-vs-market">
+  <div class="section-eyebrow">Division Recap &amp; Predictions</div>
+  <h2>The Model vs. the Market</h2>
+  <p class="dek">Sportsbooks price all 32 teams too. Lining our order up against theirs shows where the model is making a claim the market has not, and where it is simply agreeing with the consensus.</p>
+  <p class="dek" style="font-size:14px;color:var(--ink-faint);margin-top:-24px;">Ranks compared, not raw units — a Power Score and a win total are different scales. Positive gap = the model is higher on a team than the market.</p>
+
+  <div class="mvm-callouts">
+    <div class="mvm-callout">
+      <span class="badge jc-badge-vuln">Biggest disagreement</span>
+      <h4>Chiefs — market T3 of 32 (10.5), model 26th</h4>
+      <p>The market still has Kansas City in the top handful of win totals in football. The model has them 26th, on an aging core around a 36-year-old Kelce, Rice's suspension risk, and — the acute piece — Mahomes' own ACL+LCL recovery with Week 1 availability genuinely uncertain. One of these reads is badly wrong.</p>
+    </div>
+    <div class="mvm-callout">
+      <span class="badge jc-badge-vuln">Where the model is early</span>
+      <h4>Lions 10.5 · Ravens 11.5</h4>
+      <p>Both sit near the top of the market and well outside the model's top half — Lions 23rd, Ravens 20th. Detroit's gap is specific: Kerby Joseph's status is "team does not know when or if he will return," on top of an Achilles tear and an arrest already in the secondary. Baltimore's is roster-driven, not injury-driven — losing All-Pro center Linderbaum to career backups, under a full staff overhaul. Neither line has moved to reflect it.</p>
+    </div>
+    <div class="mvm-callout">
+      <span class="badge jc-badge-riser">Where the model is long</span>
+      <h4>Jaguars 8.5 · Saints 7.5 · Broncos 9.5</h4>
+      <p>Three teams the model ranks in its top nine (Jaguars tied for 4th, Saints 8th, Broncos 1st) while the market prices them well down the board. All three carry zero or near-zero coaching turnover, which the Trajectory score rewards more heavily than the board does.</p>
+    </div>
+  </div>
+  <div class="mvm-table-card">
+    <div class="mvm-caption"><span>All 32 teams · sorted by disagreement</span><span class="mvm-legend"><span style="color:#3F7A62">◀ Model higher</span><span style="color:#8E4230">Market higher ▶</span></span></div>
+    <div class="mvm-header">
+      <div class="mvm-abbr">Team</div><div class="mvm-div">Division</div><div class="mvm-num">Power</div><div class="mvm-num">Line</div><div style="text-align:center">Model ↔ Market</div><div class="mvm-num">Gap</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">JAX</div>
+      <div class="mvm-div">AFC South</div>
+      <div class="mvm-num">+3.7</div>
+      <div class="mvm-num">8.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:54%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+13</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">NO</div>
+      <div class="mvm-div">NFC South</div>
+      <div class="mvm-num">+1.8</div>
+      <div class="mvm-num">7.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:54%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+13</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">DEN</div>
+      <div class="mvm-div">AFC West</div>
+      <div class="mvm-num">+4.9</div>
+      <div class="mvm-num">9.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:42%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+10</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">CAR</div>
+      <div class="mvm-div">NFC South</div>
+      <div class="mvm-num">+0.8</div>
+      <div class="mvm-num">7.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:42%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+10</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">HOU</div>
+      <div class="mvm-div">AFC South</div>
+      <div class="mvm-num">+4.6</div>
+      <div class="mvm-num">9.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:33%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+8</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">IND</div>
+      <div class="mvm-div">AFC South</div>
+      <div class="mvm-num">-0.1</div>
+      <div class="mvm-num">7.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:33%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+8</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">DAL</div>
+      <div class="mvm-div">NFC East</div>
+      <div class="mvm-num">+1.7</div>
+      <div class="mvm-num">9.0</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:29%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+7</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">NYG</div>
+      <div class="mvm-div">NFC East</div>
+      <div class="mvm-num">-0.4</div>
+      <div class="mvm-num">7.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:25%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+6</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">NYJ</div>
+      <div class="mvm-div">AFC East</div>
+      <div class="mvm-num">-4.4</div>
+      <div class="mvm-num">5.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:21%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+5</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">MIA</div>
+      <div class="mvm-div">AFC East</div>
+      <div class="mvm-num">-4.8</div>
+      <div class="mvm-num">4.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:17%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+4</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">NE</div>
+      <div class="mvm-div">AFC East</div>
+      <div class="mvm-num">+2.6</div>
+      <div class="mvm-num">10.0</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:12%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+3</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">ATL</div>
+      <div class="mvm-div">NFC South</div>
+      <div class="mvm-num">-4.4</div>
+      <div class="mvm-num">7.0</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:8%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+2</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">TB</div>
+      <div class="mvm-div">NFC South</div>
+      <div class="mvm-num">-0.6</div>
+      <div class="mvm-num">8.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:4%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">ARI</div>
+      <div class="mvm-div">NFC West</div>
+      <div class="mvm-num">-7.7</div>
+      <div class="mvm-num">4.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:4%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#3F7A62">+1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">CHI</div>
+      <div class="mvm-div">NFC North</div>
+      <div class="mvm-num">+0.8</div>
+      <div class="mvm-num">9.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8C8F93">—</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">TEN</div>
+      <div class="mvm-div">AFC South</div>
+      <div class="mvm-num">-4.8</div>
+      <div class="mvm-num">6.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:0%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8C8F93">—</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">LAR</div>
+      <div class="mvm-div">NFC West</div>
+      <div class="mvm-num">+4.7</div>
+      <div class="mvm-num">11.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:4%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">SEA</div>
+      <div class="mvm-div">NFC West</div>
+      <div class="mvm-num">+3.7</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:4%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">PIT</div>
+      <div class="mvm-div">AFC North</div>
+      <div class="mvm-num">-1.8</div>
+      <div class="mvm-num">8.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:4%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">MIN</div>
+      <div class="mvm-div">NFC North</div>
+      <div class="mvm-num">-1.8</div>
+      <div class="mvm-num">8.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:4%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-1</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">CLE</div>
+      <div class="mvm-div">AFC North</div>
+      <div class="mvm-num">-7.7</div>
+      <div class="mvm-num">6.0</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:8%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-2</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">LAC</div>
+      <div class="mvm-div">AFC West</div>
+      <div class="mvm-num">-0.2</div>
+      <div class="mvm-num">9.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:12%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-3</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">LV</div>
+      <div class="mvm-div">AFC West</div>
+      <div class="mvm-num">-7.9</div>
+      <div class="mvm-num">5.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:12%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-3</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">BUF</div>
+      <div class="mvm-div">AFC East</div>
+      <div class="mvm-num">+2.0</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:17%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-4</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">PHI</div>
+      <div class="mvm-div">NFC East</div>
+      <div class="mvm-num">+1.0</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:29%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-7</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">WAS</div>
+      <div class="mvm-div">NFC East</div>
+      <div class="mvm-num">-5.2</div>
+      <div class="mvm-num">7.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:33%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-8</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">CIN</div>
+      <div class="mvm-div">AFC North</div>
+      <div class="mvm-num">-3.9</div>
+      <div class="mvm-num">9.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:46%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-11</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">GB</div>
+      <div class="mvm-div">NFC North</div>
+      <div class="mvm-num">-2.7</div>
+      <div class="mvm-num">10.0</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:50%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-12</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">SF</div>
+      <div class="mvm-div">NFC West</div>
+      <div class="mvm-num">-1.1</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:58%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-14</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">BAL</div>
+      <div class="mvm-div">AFC North</div>
+      <div class="mvm-num">-1.9</div>
+      <div class="mvm-num">11.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:79%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-19</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">DET</div>
+      <div class="mvm-div">NFC North</div>
+      <div class="mvm-num">-4.2</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:83%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-20</div>
+    </div>
+    <div class="mvm-row">
+      <div class="mvm-abbr">KC</div>
+      <div class="mvm-div">AFC West</div>
+      <div class="mvm-num">-4.7</div>
+      <div class="mvm-num">10.5</div>
+      <div class="mvm-bar"><div class="mvm-bar-left"><div style="width:0%;background:#3F7A62;height:9px;border-radius:2px;margin-left:auto;"></div></div><div class="mvm-tick"></div><div class="mvm-bar-right"><div style="width:96%;background:#8E4230;height:9px;border-radius:2px;"></div></div></div>
+      <div class="mvm-num" style="color:#8E4230">-23</div>
+    </div>
+  </div>
+  <p style="color:var(--ink-faint);font-size:12px;line-height:1.6;max-width:680px;margin-top:16px;">Market lines: average of DraftKings (via RotoWire, Aug 2026) and the late-August consensus board compiled by Sports Brackets, rounded to the half-win. Averages can land on whole numbers no book posts.<br>Model figures: Power Score, Weaver Analytics 2026 Preseason Pre-Read, rescored Aug 2026 to correct a Scheme Continuity inclusion the 7/24 audit had already retired. Lines move; the model does not.</p>
+</section>
+
 <section class="pr-section" id="deep-dives">
   <div class="section-eyebrow">Division Deep Dives</div>
   <h2>Predictions, Division by Division</h2>
 
   <div class="deep-dive">
-    <div class="deep-dive-head"><h3>AFC East</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <div class="deep-dive-head"><h3>AFC East</h3><span class="badge badge-low">Low Confidence</span></div>
     <p class="summary">The Jets closed real ground on a productive offseason — just not enough to pass the top two yet.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Patriots (+6.1)</div><div class="blurb">Full coaching continuity and an A.J. Brown blockbuster addition outweigh a real edge rusher hole and the Vrabel distraction.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Bills (+3.0)</div><div class="blurb">Absorbing a full coordinator overhaul, softened by Joe Brady's internal promotion to HC.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Jets (-0.9) <span class="trend-up">▲</span></div><div class="blurb">NFL.com called their offseason "extremely productive." Full staff continuity into Year 2 under Glenn.</div><div class="prior">2025: #4</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Dolphins (-5.8) <span class="trend-down">▼</span></div><div class="blurb">Full rebuild: new HC, OC, and DC, plus the league's thinnest WR room after trading Waddle.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Patriots (+2.6)</div><div class="blurb">Full coaching continuity and an A.J. Brown blockbuster addition outweigh a real edge rusher hole and the Vrabel distraction.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Bills (+2.0)</div><div class="blurb">Absorbing a full coordinator overhaul, softened by Joe Brady's internal promotion to HC.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Jets (-4.4) <span class="trend-up">▲</span></div><div class="blurb">NFL.com called their offseason "extremely productive." Full staff continuity into Year 2 under Glenn.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Dolphins (-4.8) <span class="trend-down">▼</span></div><div class="blurb">Full rebuild: new HC, OC, and DC, plus the league's thinnest WR room after trading Waddle.</div><div class="prior">2025: #3</div></div>
     </div>
   </div>
 
   <div class="deep-dive">
-    <div class="deep-dive-head"><h3>AFC North</h3><span class="badge badge-medium">Medium Confidence</span></div>
-    <p class="summary">Bengals and Steelers are separated by less than a point — and both division leaders carry real injury risk.</p>
+    <div class="deep-dive-head"><h3>AFC North</h3><span class="badge badge-low">Low Confidence</span></div>
+    <p class="summary">Steelers and Ravens are separated by a tenth of a point — and Cincinnati, last year's presumptive leader, now sits third once Scheme Continuity is correctly excluded from the score.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Bengals (-0.4) <span class="trend-up">▲</span></div><div class="blurb">Full continuity and a fixed defense, but the lead runs through Burrow's own recent injury history.</div><div class="prior">2025: #3</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Steelers (-2.9) <span class="trend-down">▼</span></div><div class="blurb">The league's highest Downside score (8) — this ranking assumes a 42-year-old Rodgers holds up all year.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Ravens (-2.9) <span class="trend-down">▼</span></div><div class="blurb">Lost All-Pro center Linderbaum to the Raiders; replacements are career backups. Full staff overhaul.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Browns (-8.8)</div><div class="blurb">QB has been the defining issue for decades, still unresolved — now a 4-way open competition.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Steelers (-1.8)</div><div class="blurb">The league's highest Downside score (8) — this ranking assumes a 42-year-old Rodgers holds up all year.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Ravens (-1.9)</div><div class="blurb">Lost All-Pro center Linderbaum to the Raiders; replacements are career backups. Full staff overhaul.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Bengals (-3.9)</div><div class="blurb">Full continuity and a fixed defense, but the lead runs through Burrow's own recent injury history.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Browns (-7.7)</div><div class="blurb">QB has been the defining issue for decades, still unresolved — now a 4-way open competition.</div><div class="prior">2025: #4</div></div>
     </div>
   </div>
 
@@ -405,10 +954,10 @@
     <div class="deep-dive-head"><h3>AFC South</h3><span class="badge badge-low">Low Confidence</span></div>
     <p class="summary">Texans vs. Jaguars is a literal coin flip — 0.9 points apart with real continuity on both sides.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Texans (+8.1) <span class="trend-up">▲</span></div><div class="blurb">Fewest roster issues in the AFC and zero coaching turnover — the division's steadiest team.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Jaguars (+7.2) <span class="trend-down">▼</span></div><div class="blurb">Best 2nd-half team in the league last year, running it back with full staff continuity.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Colts (+3.4)</div><div class="blurb">Real WR2 hole after trading Pittman, offset by a Daniel Jones extension resolving QB uncertainty.</div><div class="prior">2025: #3</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Titans (-5.5)</div><div class="blurb">Last place, but two players (Ward, Helm) made the league's All-Breakout Team — real ceiling underneath.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Texans (+4.6) <span class="trend-up">▲</span></div><div class="blurb">Fewest roster issues in the AFC and zero coaching turnover — the division's steadiest team.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Jaguars (+3.7) <span class="trend-down">▼</span></div><div class="blurb">Best 2nd-half team in the league last year, running it back with full staff continuity.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Colts (-0.1)</div><div class="blurb">Real WR2 hole after trading Pittman, offset by a Daniel Jones extension resolving QB uncertainty.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Titans (-4.8)</div><div class="blurb">Last place, but two players (Ward, Helm) made the league's All-Breakout Team — real ceiling underneath.</div><div class="prior">2025: #4</div></div>
     </div>
   </div>
 
@@ -416,20 +965,20 @@
     <div class="deep-dive-head"><h3>AFC West</h3><span class="badge badge-high">High Confidence</span></div>
     <p class="summary">Broncos have no real competition. Chiefs' picture got materially worse this week — Mahomes' Week 1 status is genuinely uncertain.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Broncos (+8.4)</div><div class="blurb">Least roster turnover in the league. Only a minor TE gap on an otherwise complete roster.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Chargers (+1.6)</div><div class="blurb">Offensive guard remains a real weak link despite heavy investment there.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Chiefs (-2.3)</div><div class="blurb">UPDATE: Mahomes tore his ACL+LCL in Week 15 2025 and Week 1 2026 availability is genuinely uncertain despite ahead-of-schedule rehab reports — a real, acute concern, not just an aging-core narrative.</div><div class="prior">2025: #3</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Raiders (-8.9)</div><div class="blurb">Full staff overhaul and no legitimate WR1 — but Jeanty is a real regression-to-the-mean buy-low case.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Broncos (+4.9)</div><div class="blurb">Least roster turnover in the league. Only a minor TE gap on an otherwise complete roster.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Chargers (-0.2)</div><div class="blurb">Offensive guard remains a real weak link despite heavy investment there.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Chiefs (-4.7)</div><div class="blurb">UPDATE: Mahomes tore his ACL+LCL in Week 15 2025 and Week 1 2026 availability is genuinely uncertain despite ahead-of-schedule rehab reports — a real, acute concern, not just an aging-core narrative.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Raiders (-7.9)</div><div class="blurb">Full staff overhaul and no legitimate WR1 — but Jeanty is a real regression-to-the-mean buy-low case.</div><div class="prior">2025: #4</div></div>
     </div>
   </div>
 
   <div class="deep-dive">
     <div class="deep-dive-head"><h3>NFC East</h3><span class="badge badge-low">Low Confidence</span></div>
-    <p class="summary">Eagles survive losing a superstar — barely. The cushion over Dallas is down to 1.1 points.</p>
+    <p class="summary">Dallas actually leads the East once Scheme Continuity is correctly excluded — Philadelphia's continuity edge wasn't enough to hold the top spot on the corrected score, and the cushion is down to 0.7 points either way.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Eagles (+4.5)</div><div class="blurb">Traded away A.J. Brown and lost their starting safety — real subtractions, saved by zero coaching turnover.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Cowboys (+3.4)</div><div class="blurb">A rare drama-free summer and major defensive investment — but Dallas carries real risk on Overshown's knee recovery.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Giants (+1.0) <span class="trend-up">▲</span></div><div class="blurb">Full staff overhaul, but GM/Harbaugh "did an excellent job" patching most other holes per reporting.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Cowboys (+1.7) <span class="trend-up">▲</span></div><div class="blurb">A rare drama-free summer and major defensive investment — Dallas's division lead carries real risk on Overshown's knee recovery.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Eagles (+1.0) <span class="trend-down">▼</span></div><div class="blurb">Traded away A.J. Brown and lost their starting safety — real subtractions, held up by zero coaching turnover.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Giants (-0.4) <span class="trend-up">▲</span></div><div class="blurb">Full staff overhaul, but GM/Harbaugh "did an excellent job" patching most other holes per reporting.</div><div class="prior">2025: #4</div></div>
       <div class="dd-team"><div class="rank">#4</div><div class="name">Commanders (-5.2) <span class="trend-down">▼</span></div><div class="blurb">WR2 opposite McLaurin never addressed — a real risk to Daniels' development as he returns from injury.</div><div class="prior">2025: #3</div></div>
     </div>
   </div>
@@ -438,10 +987,10 @@
     <div class="deep-dive-head"><h3>NFC North</h3><span class="badge badge-medium">Medium Confidence</span></div>
     <p class="summary">Packers fell behind Vikings this week — Parsons' recovery is now reported to likely cost him much of the season. Lions' secondary situation got worse too.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Bears (+4.3)</div><div class="blurb">Interior DL got "zero improvement" — the one real hole on an otherwise ascending, healthy young roster.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Vikings (+1.7) <span class="trend-up">▲</span></div><div class="blurb">The QB competition between Murray and McCarthy is still genuinely unresolved entering camp.</div><div class="prior">2025: #3</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">Packers (+0.8) <span class="trend-down">▼</span></div><div class="blurb">UPDATE: Parsons' ACL+meniscus recovery is now reported to likely sideline him for much of the regular season — not cleared for practice until September at the earliest, targeting a postseason return.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Lions (-2.4)</div><div class="blurb">UPDATE: S Kerby Joseph's status is "team does not know when or if he will return" per HC Dan Campbell — worse than a recovery-timeline question, on top of the Achilles tear and the arrest.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Bears (+0.8)</div><div class="blurb">Interior DL got "zero improvement" — the one real hole on an otherwise ascending, healthy young roster.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Vikings (-1.8) <span class="trend-up">▲</span></div><div class="blurb">The QB competition between Murray and McCarthy is still genuinely unresolved entering camp.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">Packers (-2.7) <span class="trend-down">▼</span></div><div class="blurb">UPDATE: Parsons' ACL+meniscus recovery is now reported to likely sideline him for much of the regular season — not cleared for practice until September at the earliest, targeting a postseason return.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Lions (-4.2)</div><div class="blurb">UPDATE: S Kerby Joseph's status is "team does not know when or if he will return" per HC Dan Campbell — worse than a recovery-timeline question, on top of the Achilles tear and the arrest.</div><div class="prior">2025: #4</div></div>
     </div>
   </div>
 
@@ -449,25 +998,24 @@
     <div class="deep-dive-head"><h3>NFC South</h3><span class="badge badge-low">Low Confidence</span></div>
     <p class="summary">The Saints aren't a dark horse anymore — they're the favorite. Panthers' division win last year ran hotter than their point differential earned.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Saints (+5.3) <span class="trend-up">▲</span></div><div class="blurb">Drafted Tyson 8th overall to pair with Olave, while Shough's emergence solved QB for free. Zero coaching turnover.</div><div class="prior">2025: #4</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Panthers (+4.3) <span class="trend-down">▼</span></div><div class="blurb">Real defensive investment (Phillips, Lloyd), but one of the more fortunate teams in football last year — some correction is due.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Saints (+1.8) <span class="trend-up">▲</span></div><div class="blurb">Drafted Tyson 8th overall to pair with Olave, while Shough's emergence solved QB for free. Zero coaching turnover.</div><div class="prior">2025: #4</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Panthers (+0.8) <span class="trend-down">▼</span></div><div class="blurb">Real defensive investment (Phillips, Lloyd), but one of the more fortunate teams in football last year — some correction is due.</div><div class="prior">2025: #1</div></div>
       <div class="dd-team"><div class="rank">#3</div><div class="name">Buccaneers (-0.6) <span class="trend-down">▼</span></div><div class="blurb">Fired their OC and hired Zac Robinson — real scheme risk — with the league's least productive TE room still unaddressed.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#4</div><div class="name">Falcons (-3.4) <span class="trend-down">▼</span></div><div class="blurb">Both starting interior DL starters departed. Penix's ACL recovery is unresolved and Pearce Jr. faces felony charges.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#4</div><div class="name">Falcons (-4.4) <span class="trend-down">▼</span></div><div class="blurb">Both starting interior DL starters departed. Penix's ACL recovery is unresolved and Pearce Jr. faces felony charges.</div><div class="prior">2025: #3</div></div>
     </div>
   </div>
 
   <div class="deep-dive">
-    <div class="deep-dive-head"><h3>NFC West</h3><span class="badge badge-medium">Medium Confidence</span></div>
+    <div class="deep-dive-head"><h3>NFC West</h3><span class="badge badge-low">Low Confidence</span></div>
     <p class="summary">Rams are the best team in football. Cardinals have the widest range of outcomes in the league.</p>
     <div class="deep-dive-teams">
-      <div class="dd-team"><div class="rank">#1</div><div class="name">Rams (+8.2) <span class="trend-up">▲</span></div><div class="blurb">Traded for reigning DPOY Myles Garrett on an already "most complete roster in the league." Zero coaching turnover.</div><div class="prior">2025: #2</div></div>
-      <div class="dd-team"><div class="rank">#2</div><div class="name">Seahawks (+5.4) <span class="trend-down">▼</span></div><div class="blurb">Reigning Super Bowl champions with real WR-depth concerns behind JSN and an aging Kupp.</div><div class="prior">2025: #1</div></div>
-      <div class="dd-team"><div class="rank">#3</div><div class="name">49ers (+0.6)</div><div class="blurb">No reliable free safety, and the Brandon Aiyuk trade saga remains unresolved and contentious.</div><div class="prior">2025: #3</div></div>
+      <div class="dd-team"><div class="rank">#1</div><div class="name">Rams (+4.7) <span class="trend-up">▲</span></div><div class="blurb">Traded for reigning DPOY Myles Garrett on an already "most complete roster in the league." Zero coaching turnover.</div><div class="prior">2025: #2</div></div>
+      <div class="dd-team"><div class="rank">#2</div><div class="name">Seahawks (+3.7) <span class="trend-down">▼</span></div><div class="blurb">Reigning Super Bowl champions with real WR-depth concerns behind JSN and an aging Kupp.</div><div class="prior">2025: #1</div></div>
+      <div class="dd-team"><div class="rank">#3</div><div class="name">49ers (-1.1)</div><div class="blurb">No reliable free safety, and the Brandon Aiyuk trade saga remains unresolved and contentious.</div><div class="prior">2025: #3</div></div>
       <div class="dd-team"><div class="rank">#4</div><div class="name">Cardinals (-7.7)</div><div class="blurb">No reliable starting QB through the whole season — but Walter Nolen III's Pro Bowl-caliber flashes make this a real boom-or-bust roster.</div><div class="prior">2025: #4</div></div>
     </div>
   </div>
 </section>
-
 <section class="pr-section" id="fantasy">
   <div class="section-eyebrow">Storylines the Model Flags</div>
   <h2>Player Storylines Worth Watching</h2>
@@ -500,7 +1048,6 @@
   </div>
   <p class="dek" style="margin-top:16px;">This section is directional, built from research already gathered for the model — storylines worth watching, not fantasy advice or a ranked draft board.</p>
 </section>
-
 <section class="pr-section" id="appendix">
   <div class="section-eyebrow">Appendix</div>
   <h2>Methodology &amp; Sources</h2>
@@ -514,7 +1061,7 @@
     <div class="formula-card"><h4>Cone of Certainty</h4><code>Power Score ± (Upside/Downside, scored 0–10 each)</code></div>
     <div class="formula-card"><h4>Confidence Rating</h4><code>Gap(#1 vs #2) − Avg. Volatility(#1,#2) ÷ 6</code></div>
   </div>
-  <p class="dek">Scheme Continuity (coaching-staff turnover) is still scored and shown in every team's rationale, but a July 24 audit found it added no real predictive signal once tested against three seasons of actual results — it's tracked, not counted toward Trajectory or Power Score.</p>
+  <p class="dek">Scheme Continuity (coaching-staff turnover) is still scored and shown in every team's rationale, but a July 24 audit found it added no real predictive signal once tested against three seasons of actual results — it's tracked, not counted toward Trajectory or Power Score. As of August 2026, every Power Score display on this page (Cone of Certainty, Division Confidence, Deep Dives, the Risk Map, and the Model vs. Market table) has been rescored to actually match this formula — some had drifted back to including Scheme Continuity after the July audit.</p>
   <p class="dek">Full model — all 32 teams, every formula live and adjustable — is in the companion Excel workbook. Note: the workbook keeps Scheme Continuity in its Power Score formula and always will — it's the frozen historical version, not the live one described above.</p>
 
   <h3 style="font:700 15px var(--font-sans);margin:32px 0 12px;">Sources &amp; Notes</h3>
@@ -525,8 +1072,9 @@
     <li>Fox Sports (Bucky Brooks) — 2026 positional value ranking; Over The Cap — positional market-value analysis</li>
     <li>Official team staff announcements (all 32 teams, individually confirmed)</li>
     <li>Bleacher Report, CBS Sports, Yahoo Sports, PhillyVoice, Sharp Football Analysis — composite rankings &amp; offseason drama reporting</li>
+    <li>DraftKings win totals via RotoWire (Aug 2026); Sports Brackets consensus win-total board (Aug 2026)</li>
   </ul>
-  <p class="dek" style="margin-top:16px;">Model built and scored mid-July 2026, before training camp battles, preseason games, or further roster moves. A snapshot, not a live feed.</p>
+  <p class="dek" style="margin-top:16px;">Model built and scored mid-July 2026, before training camp battles, preseason games, or further roster moves. A snapshot, not a live feed. Power Score display corrected August 2026 (see Methodology note above); underlying Need-Fill/Stability/Upside/Downside inputs unchanged.</p>
 </section>
 
 <footer class="pr-footer">
