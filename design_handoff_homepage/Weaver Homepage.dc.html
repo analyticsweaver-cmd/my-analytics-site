@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/tokens/colors.css">
+<link rel="stylesheet" href="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/tokens/typography.css">
+<link rel="stylesheet" href="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/styles.css">
+<script src="_ds/weaver-analytics-design-system-f7491772-fd2c-4889-b820-0980fa966f68/_ds_bundle.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+a{color:var(--link);text-decoration:none}
+a:hover{color:var(--link-hover)}
+</style>
+</helmet>
+
+<div style="background:var(--paper);min-height:100vh">
+
+  <div style="border-bottom:1px solid var(--hairline)">
+    <div style="max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 44px">
+      <img src="assets/logo-lockup-mono.png" alt="Weaver Analytics" style="height:44px">
+      <div style="display:flex;gap:22px;font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted)">
+        <a href="index.html" style="color:var(--steel)">Home</a>
+        <a href="cfb-model/index.html" style="color:var(--ink-muted)">CFB Model</a>
+        <a href="nfl-model/index.html" style="color:var(--ink-muted)">NFL Model</a>
+        <a href="validation.html" style="color:var(--ink-muted)">Validation</a>
+        <a href="pre-read/index.html" style="color:var(--ink-muted)">Pre-Read</a>
+        <a href="dashboards/index.html" style="color:var(--ink-muted)">Dashboards</a>
+        <a href="blog/index.html" style="color:var(--ink-muted)">Blog</a>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ heroInk }}" hint-placeholder-val="{{ true }}">
+    <div style="background:var(--ink);color:var(--paper)">
+      <div style="max-width:1240px;margin:0 auto;padding:56px 44px 52px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--brass);margin-bottom:18px">Weaver Analytics</div>
+          <h1 style="font-size:46px;font-weight:900;line-height:1.08;margin:0 0 20px;text-wrap:pretty">Football models, scored against seasons that already happened.</h1>
+          <p style="font-size:21px;line-height:1.5;margin:0 0 28px;color:var(--paper);opacity:.86;max-width:500px;text-wrap:pretty">Every NFL and FBS team gets a rating, every game gets a projection, and all of it is graded against 2023&ndash;2025. No betting lines feed the models.</p>
+          <a href="validation.html" style="font-size:19px;font-weight:700;color:var(--brass)">See the record &rarr;</a>
+        </div>
+
+        <div style="border:1px solid rgba(247,244,236,.18);border-radius:14px;padding:28px 30px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--brass)">Probability accuracy</div>
+            <div style="font-size:13px;color:rgba(247,244,236,.6)">Brier &middot; lower is better</div>
+          </div>
+          <div style="font-size:18px;line-height:1.45;color:rgba(247,244,236,.75);margin-bottom:24px">How well a stated probability matches what happened. A coin flip scores 0.250.</div>
+
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(247,244,236,.75)">CFB model</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums">0.208</span>
+              </div>
+              <div style="height:14px;background:rgba(247,244,236,.12);border-radius:8px;overflow:hidden"><div style="width:{{ wCfb }};height:100%;background:var(--green-light);border-radius:8px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(247,244,236,.75)">NFL model</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums">0.2375</span>
+              </div>
+              <div style="height:14px;background:rgba(247,244,236,.12);border-radius:8px;overflow:hidden"><div style="width:{{ wNfl }};height:100%;background:var(--steel);border-radius:8px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(247,244,236,.75)">Coin flip</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;color:rgba(247,244,236,.6)">0.250</span>
+              </div>
+              <div style="height:14px;background:rgba(247,244,236,.12);border-radius:8px;overflow:hidden"><div style="width:{{ wCoin }};height:100%;background:var(--neutral-tan);border-radius:8px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:rgba(247,244,236,.55);margin-top:20px;line-height:1.45">1,979 CFB games and 816 NFL games, pooled 2023&ndash;2025. {{ axisNote }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ heroPaper }}" hint-placeholder-val="{{ false }}">
+    <div style="border-bottom:1px solid var(--hairline)">
+      <div style="max-width:1240px;margin:0 auto;padding:56px 44px 52px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--brass);margin-bottom:18px">Weaver Analytics</div>
+          <h1 style="font-size:46px;font-weight:900;line-height:1.08;margin:0 0 20px;text-wrap:pretty">Football models, scored against seasons that already happened.</h1>
+          <p style="font-size:21px;line-height:1.5;margin:0 0 28px;color:var(--ink-muted);max-width:500px;text-wrap:pretty">Every NFL and FBS team gets a rating, every game gets a projection, and all of it is graded against 2023&ndash;2025. No betting lines feed the models.</p>
+          <a href="validation.html" style="font-size:19px;font-weight:700">See the record &rarr;</a>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:14px;box-shadow:0 1px 2px rgba(20,23,27,.05),0 8px 24px rgba(20,23,27,.06);padding:28px 30px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted)">Probability accuracy</div>
+            <div style="font-size:13px;color:var(--ink-faint)">Brier &middot; lower is better</div>
+          </div>
+          <div style="font-size:18px;line-height:1.45;color:var(--ink-muted);margin-bottom:24px">How well a stated probability matches what happened. A coin flip scores 0.250.</div>
+
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-muted)">CFB model</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums">0.208</span>
+              </div>
+              <div style="height:14px;background:rgba(20,23,27,.06);border-radius:8px;overflow:hidden"><div style="width:{{ wCfb }};height:100%;background:var(--green);border-radius:8px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-muted)">NFL model</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums">0.2375</span>
+              </div>
+              <div style="height:14px;background:rgba(20,23,27,.06);border-radius:8px;overflow:hidden"><div style="width:{{ wNfl }};height:100%;background:var(--steel);border-radius:8px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-muted)">Coin flip</span>
+                <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink-faint)">0.250</span>
+              </div>
+              <div style="height:14px;background:rgba(20,23,27,.06);border-radius:8px;overflow:hidden"><div style="width:{{ wCoin }};height:100%;background:var(--neutral-tan);border-radius:8px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--ink-faint);margin-top:20px;line-height:1.45">1,979 CFB games and 816 NFL games, pooled 2023&ndash;2025. {{ axisNote }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showStatBand }}" hint-placeholder-val="{{ true }}">
+    <div style="background:var(--surface);border-bottom:1px solid var(--hairline)">
+      <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)">
+        <div style="padding:26px 28px;border-right:1px solid var(--hairline)">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px">CFB margin error</div>
+          <div style="font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums">13.71</div>
+          <div style="font-size:13px;color:var(--ink-muted);margin-top:6px">points off per game</div>
+        </div>
+        <div style="padding:26px 28px;border-right:1px solid var(--hairline)">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px">NFL wins correlation</div>
+          <div style="font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums">0.382</div>
+          <div style="font-size:13px;color:var(--ink-muted);margin-top:6px">p &lt; 0.001</div>
+        </div>
+        <div style="padding:26px 28px;border-right:1px solid var(--hairline)">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px">Games backtested</div>
+          <div style="font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums">2,795</div>
+          <div style="font-size:13px;color:var(--ink-muted);margin-top:6px">816 NFL &middot; 1,979 CFB</div>
+        </div>
+        <div style="padding:26px 28px">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px">Simulated seasons</div>
+          <div style="font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums">20,000</div>
+          <div style="font-size:13px;color:var(--ink-muted);margin-top:6px">per NFL projection run</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width:1240px;margin:0 auto;padding:52px 44px 8px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--steel);margin-bottom:8px">How it works</div>
+    <div style="font-size:30px;font-weight:900;margin-bottom:26px">Rate, project, then grade</div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:44px 1fr 1.4fr;gap:24px;padding:22px 0;border-top:1px solid var(--hairline);align-items:baseline">
+        <div style="font-size:19px;font-weight:900;color:var(--brass)">01</div>
+        <div style="font-size:21px;font-weight:900">Rate every team</div>
+        <div style="font-size:19px;line-height:1.5;color:var(--ink-muted)">A Power Score built from personnel, coaching, transfer portal movement, and returning production.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:44px 1fr 1.4fr;gap:24px;padding:22px 0;border-top:1px solid var(--hairline);align-items:baseline">
+        <div style="font-size:19px;font-weight:900;color:var(--brass)">02</div>
+        <div style="font-size:21px;font-weight:900">Project the season</div>
+        <div style="font-size:19px;line-height:1.5;color:var(--ink-muted)">Ratings become matchup margins and win probabilities. The NFL model simulates the season 20,000 times for win totals and playoff odds.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:44px 1fr 1.4fr;gap:24px;padding:22px 0;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);align-items:baseline">
+        <div style="font-size:19px;font-weight:900;color:var(--brass)">03</div>
+        <div style="font-size:21px;font-weight:900">Grade the guesses</div>
+        <div style="font-size:19px;line-height:1.5;color:var(--ink-muted)">Every projection is checked against 2023&ndash;2025. Features that don't improve accuracy come out &mdash; scheme continuity did, and the win correlation rose from 0.352 to 0.382.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:44px 44px 8px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--steel);margin-bottom:8px">The record</div>
+    <div style="font-size:30px;font-weight:900;margin-bottom:8px">Caught, not hidden</div>
+    <div style="font-size:19px;line-height:1.5;color:var(--ink-muted);max-width:680px;margin-bottom:26px">The largest miss so far was overconfidence, not a bad pick: games the NFL model called at 76.5% were actually won 68.1% of the time. The gap is what the simulation fix closed.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:28px;align-items:start">
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(20,23,27,.05),0 8px 24px rgba(20,23,27,.06);padding:28px 30px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:22px">Called vs. actual</div>
+        <div style="display:flex;align-items:flex-end;gap:22px;height:150px">
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+            <div style="font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;margin-bottom:8px">76.5%</div>
+            <div style="height:100%;background:var(--steel);border-radius:8px 8px 0 0"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:89%">
+            <div style="font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;margin-bottom:8px">68.1%</div>
+            <div style="height:100%;background:var(--red-light);border-radius:8px 8px 0 0"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:22px;margin-top:12px">
+          <div style="flex:1;font-size:13px;color:var(--ink-muted)">model said</div>
+          <div style="flex:1;font-size:13px;color:var(--ink-muted)">actually happened</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(20,23,27,.05),0 8px 24px rgba(20,23,27,.06);overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:16px 26px;border-bottom:1px solid var(--hairline);font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-faint)">
+          <div>Check</div><div>NFL</div><div>CFB</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:16px 26px;border-bottom:1px solid var(--hairline);font-size:18px">
+          <div style="color:var(--ink-muted)">Games backtested</div><div style="font-weight:600">816</div><div style="font-weight:600">1,979</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:16px 26px;border-bottom:1px solid var(--hairline);font-size:18px">
+          <div style="color:var(--ink-muted)">Calibration (Brier)</div><div style="font-weight:600">0.2375</div><div style="font-weight:600;color:var(--green)">0.208</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:16px 26px;border-bottom:1px solid var(--hairline);font-size:18px">
+          <div style="color:var(--ink-muted)">Season simulation</div><div style="font-weight:600">20,000 runs</div><div style="font-weight:600;color:var(--ink-faint)">Not built yet</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:16px 26px;font-size:18px">
+          <div style="color:var(--ink-muted)">Home-field advantage</div><div style="font-weight:600">Flat 2 pts</div><div style="font-weight:600;color:var(--green)">Team-specific</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:22px"><a href="validation.html" style="font-size:19px;font-weight:700">Every miss, and what changed because of it &rarr;</a></div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:48px 44px 64px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--brass);padding-bottom:14px;border-bottom:2px solid var(--brass)">Dashboards &amp; tools</div>
+        <div style="display:flex;flex-direction:column">
+          <a href="cfb-model/index.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">The Weaver Line &mdash; CFB</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Open &rarr;</span>
+          </a>
+          <a href="nfl-model/index.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">The Weaver Blitz &mdash; NFL</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Open &rarr;</span>
+          </a>
+          <a href="roster-movers.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">CFB Roster Movement</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Open &rarr;</span>
+          </a>
+          <a href="disagreements.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">Model vs. SP+</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Open &rarr;</span>
+          </a>
+          <a href="regression-watch.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">NFL Regression Watch</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Open &rarr;</span>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--steel);padding-bottom:14px;border-bottom:2px solid var(--steel)">Writing</div>
+        <div style="display:flex;flex-direction:column">
+          <a href="pre-read/index.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">2026 NFL Preseason Pre-Read</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Read &rarr;</span>
+          </a>
+          <a href="spotlights/arkansas-2026.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">Arkansas 2026: A Roster Rebuilt</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Read &rarr;</span>
+          </a>
+          <a href="blog/index.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);color:var(--ink)">
+            <span style="font-size:20px;font-weight:900">Blog</span>
+            <span style="font-size:18px;color:var(--steel);font-weight:700;white-space:nowrap">Read &rarr;</span>
+          </a>
+          <a href="dashboards/index.html" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:18px 0;color:var(--ink-faint)">
+            <span style="font-size:20px;font-weight:900">What's next</span>
+            <span style="font-size:18px;font-weight:700;white-space:nowrap">See plans &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--hairline);background:var(--surface)">
+    <div style="max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 44px">
+      <div style="font-size:15px;color:var(--ink-muted)">Weaver Analytics &mdash; a personal project.</div>
+      <div style="display:flex;gap:20px;font-size:12px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase">
+        <a href="validation.html">Validation</a>
+        <a href="nfl-model/methodology.html">NFL methodology</a>
+        <a href="cfb-model/methodology.html">CFB methodology</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroSurface&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Ink scoreboard&quot;,&quot;Paper&quot;],&quot;default&quot;:&quot;Ink scoreboard&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showStatBand&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;chartAxis&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Zoomed&quot;,&quot;True zero&quot;],&quot;default&quot;:&quot;Zoomed&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Accuracy chart&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const surface = this.props.heroSurface ?? 'Ink scoreboard';
+    const zoom = (this.props.chartAxis ?? 'Zoomed') === 'Zoomed';
+    return {
+      heroInk: surface === 'Ink scoreboard',
+      heroPaper: surface !== 'Ink scoreboard',
+      showStatBand: this.props.showStatBand ?? true,
+      wCfb: zoom ? '25.7%' : '83.2%',
+      wNfl: zoom ? '67.9%' : '95%',
+      wCoin: zoom ? '85.7%' : '100%',
+      axisNote: zoom ? 'Axis starts at 0.190.' : 'Axis starts at 0.',
+    };
+  }
+}
+</script>
+</body>
+</html>
