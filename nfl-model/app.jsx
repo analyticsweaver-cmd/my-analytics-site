@@ -40,6 +40,19 @@ const TEAM_COLORS = {
 };
 function teamColor(team) { return (TEAM_COLORS[team] && TEAM_COLORS[team].primary) || '#8C8F93'; }
 
+// Display-only full city+name labels (not model data — same category of static
+// lookup as TEAM_COLORS' abbr) for the Team Detail Summary eyebrow.
+const TEAM_FULL_NAME = {
+  Bills: 'Buffalo Bills', Dolphins: 'Miami Dolphins', Patriots: 'New England Patriots', Jets: 'New York Jets',
+  Ravens: 'Baltimore Ravens', Bengals: 'Cincinnati Bengals', Browns: 'Cleveland Browns', Steelers: 'Pittsburgh Steelers',
+  Texans: 'Houston Texans', Colts: 'Indianapolis Colts', Jaguars: 'Jacksonville Jaguars', Titans: 'Tennessee Titans',
+  Broncos: 'Denver Broncos', Chiefs: 'Kansas City Chiefs', Raiders: 'Las Vegas Raiders', Chargers: 'Los Angeles Chargers',
+  Cowboys: 'Dallas Cowboys', Giants: 'New York Giants', Eagles: 'Philadelphia Eagles', Commanders: 'Washington Commanders',
+  Bears: 'Chicago Bears', Lions: 'Detroit Lions', Packers: 'Green Bay Packers', Vikings: 'Minnesota Vikings',
+  Panthers: 'Carolina Panthers', Buccaneers: 'Tampa Bay Buccaneers', Falcons: 'Atlanta Falcons', Saints: 'New Orleans Saints',
+  Rams: 'Los Angeles Rams', '49ers': 'San Francisco 49ers', Seahawks: 'Seattle Seahawks', Cardinals: 'Arizona Cardinals',
+};
+
 const GLOSSARY_TERMS = [
   { term: 'Baseline', def: 'Prior-season win total, rescaled ((wins − 8.5) × 2) so an 8.5-win team scores zero — the model\'s starting point before any judgment adjustments.' },
   { term: 'Trajectory', def: 'Need-Fill + Stability — the hand-scored judgment layer covering roster needs and off-field risk. Scheme Continuity (coaching turnover) is scored and shown elsewhere but no longer feeds this number as of a 2026-07-24 audit correction — see Model Validation below.' },
@@ -53,12 +66,6 @@ const GLOSSARY_TERMS = [
   { term: 'Playoff / Super Bowl probability', def: 'From the same season simulation as the Cone of Certainty, carried through a full playoff bracket (with correct re-seeding) 5,000 times per team.' },
 ];
 
-const VALIDATION_STATS = [
-  { headline: 'Power Score vs. actual wins: r = 0.382 (p < 0.001, n = 96)', gloss: '3 seasons (2023–2025) of leave-one-season-out backtesting — the strongest, most confident result in this whole project. Power Score reliably tracks how teams actually perform.' },
-  { headline: 'Simulated win-total uncertainty is ~1.6x wider than simple math suggests', gloss: "A 20,000-run Monte Carlo season simulation showed the analytical (non-simulated) confidence intervals understate real uncertainty. This dashboard's Cone of Certainty uses the wider, simulation-based numbers." },
-  { headline: 'Win-probability calibration improved: Brier score 0.2375 → 0.2372', gloss: 'Brier score measures how well-calibrated a set of predicted probabilities is (0 = perfect, 0.25 = no better than always guessing 50/50) — games predicted as heavy favorites/underdogs were overconfident at the extremes; simulating uncertainty rather than using a single point estimate pulled those predictions back toward reality.' },
-  { headline: 'A 2026-07-24 audit correction removed Scheme Continuity from Power Score', gloss: 'Three independent tests found it was quietly hurting accuracy, not helping — full methodology, evidence, and a documented correction (including a fix that turned out to be unnecessary once this one was applied) in the full audit.', link: { href: 'methodology.html', label: 'Read the full technical audit →' } },
-];
 
 // Team Profile narrative content (TEAM_PROFILE_DESIGN_SYSTEM.md) — hand-authored
 // per team, not derived from the data pipeline. Teams without an entry here just
@@ -1349,6 +1356,17 @@ function signed(v, d = 1) {
   return (n > 0 ? '+' : '') + n.toFixed(d);
 }
 
+// Small-number word forms (0-32 covers every count this page needs — team
+// counts, point gaps) so data-generated captions on the Power Rankings tab
+// read like "Twelve teams..." instead of "12 teams...". Falls back to the
+// numeral for anything outside that range rather than guessing further.
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty',
+  'twenty-one', 'twenty-two', 'twenty-three', 'twenty-four', 'twenty-five', 'twenty-six', 'twenty-seven',
+  'twenty-eight', 'twenty-nine', 'thirty', 'thirty-one', 'thirty-two'];
+function numWord(n) { return NUMBER_WORDS[n] !== undefined ? NUMBER_WORDS[n] : String(n); }
+function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
 // Largest-remainder rounding: rounds `parts` to `decimals` places so they sum
 // EXACTLY to `total` rounded to the same precision, instead of each part and
 // the total being rounded independently (which can silently drift by 0.1 —
@@ -1382,6 +1400,19 @@ function readableTextColor(hex) {
   const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.6 ? '#0B0D10' : '#FFFFFF';
+}
+
+// Relative luminance (0-1) of a hex color - used by the Team Detail redesign
+// to decide (a) whether a team's secondary color reads on the dark summary
+// eyebrow, and (b) whether a team's primary color is too close to black to
+// build the win-distribution's team-color alpha scale (Team Pages handoff
+// section 2.3's "near-black" fallback).
+function hexLuminance(hex) {
+  const h = (hex || '').replace('#', '');
+  if (h.length !== 6) return 1;
+  const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+  if ([r, g, b].some((n) => Number.isNaN(n))) return 1;
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 }
 
 function confidenceColor(confidence) {
@@ -1428,6 +1459,66 @@ function DataTable({ columns, rows }) {
   );
 }
 
+// Visual walk-through of the Power Score formula for the Power Rankings tab's
+// second column: the equation, plain-language definitions (reusing GLOSSARY_TERMS
+// as the single source of truth), and a worked example off real, live data.
+function PowerScoreWalkthrough({ team, parts, total }) {
+  const defs = Object.fromEntries(GLOSSARY_TERMS.map((g) => [g.term, g.def]));
+  const TERM_COLORS = [
+    { term: 'Baseline', color: 'var(--steel)' },
+    { term: 'Trajectory', color: 'var(--brass)' },
+    { term: 'Regression', color: 'var(--green)' },
+  ];
+  return (
+    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:22px')}>
+      <div>
+        <div style={st('font:700 13px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:14px')}>How Power Score Is Built</div>
+        <div style={st('display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;font:900 19px var(--font-sans);color:var(--ink);line-height:1.25;align-content:flex-start')}>
+          <span style={{ color: 'var(--steel)' }}>45% Baseline</span>
+          <span style={{ color: 'var(--ink-faint)' }}>+</span>
+          <span style={{ color: 'var(--brass)' }}>35% Trajectory</span>
+          <span style={{ color: 'var(--ink-faint)' }}>+</span>
+          <span style={{ color: 'var(--green)' }}>20% Regression</span>
+          <span style={{ color: 'var(--ink-faint)' }}>=</span>
+          <span>Power Score</span>
+        </div>
+      </div>
+
+      <div style={st('display:flex;flex-direction:column;gap:14px')}>
+        {TERM_COLORS.map((t) => (
+          <div key={t.term} style={st('display:flex;gap:10px;align-items:flex-start')}>
+            <span style={{ width: 10, height: 10, borderRadius: 999, background: t.color, marginTop: 6, flexShrink: 0 }} />
+            <div>
+              <div style={st('font:700 14px var(--font-sans);color:var(--ink)')}>{t.term}</div>
+              <div style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>{defs[t.term]}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {team && (
+        <div style={st('border-top:1px solid var(--hairline);padding-top:18px;display:flex;flex-direction:column;gap:8px')}>
+          <div style={st('font:700 13px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:4px')}>Worked example: {team}</div>
+          {parts.map((p) => (
+            <div key={p.key} style={st('display:flex;justify-content:space-between;gap:12px;font:500 14px var(--font-sans);color:var(--ink)')}>
+              <span>{p.label} ({num(p.raw, 2)}) &times; {Math.round(p.weight * 100)}%</span>
+              <span style={{ fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{signed(p.contribution, 2)}</span>
+            </div>
+          ))}
+          <div style={st('display:flex;justify-content:space-between;gap:12px;font:700 15px var(--font-sans);color:var(--ink);border-top:1px solid var(--hairline);padding-top:8px;margin-top:4px')}>
+            <span>Power Score</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{signed(total, 2)}</span>
+          </div>
+        </div>
+      )}
+
+      <div style={st('background:var(--surface-page);border-radius:var(--radius-sm);padding:16px 18px;font:400 13px/1.55 var(--font-sans);color:var(--ink-muted)')}>
+        <span style={st('color:var(--ink);font-weight:700')}>The scale is really just points.</span> Zero means a perfectly average team. Subtract two teams&rsquo; Power Scores, add a 2-point homefield edge, and that&rsquo;s the model&rsquo;s predicted margin for their matchup &mdash; no hidden scaling factor.
+      </div>
+    </div>
+  );
+}
+
 // A signed, zero-centered bar meter (Power Score, spread, etc.)
 function SignedBar({ value, scaleMax, width = 56 }) {
   const val = Number(value) || 0;
@@ -1437,6 +1528,71 @@ function SignedBar({ value, scaleMax, width = 56 }) {
   return (
     <div style={{ width, height: 8, position: 'relative', background: 'var(--hairline)', borderRadius: 4, flexShrink: 0 }}>
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: positive ? '50%' : (50 - pctFill) + '%', width: pctFill + '%', background: color, borderRadius: 4 }} />
+    </div>
+  );
+}
+
+// Three-lane diverging contribution bar (Power Rankings table, Power Score
+// column). One fixed lane per weighted component — baseline, trajectory,
+// regression, always in that top-to-bottom order — diverging from a shared
+// center line. The lane order never flips, so color always means the same
+// thing and each segment's side of center reads as its sign directly.
+function ThreeLaneBar({ segs, width = 92, height = 15 }) {
+  return (
+    <div style={{ width, height, position: 'relative', flexShrink: 0 }}>
+      <div style={{ position: 'absolute', top: 0, bottom: 0, width: 1, background: 'var(--hairline)', left: '50%' }} />
+      {segs.map((seg, i) => (
+        <div key={i} style={{ position: 'absolute', height: '25%', top: seg.top, left: seg.left, width: seg.width, background: seg.color }} />
+      ))}
+    </div>
+  );
+}
+
+// Power Rankings table — a bespoke fixed-column-width grid (Direction 1A
+// handoff), not the generic DataTable: every column has an exact pixel width
+// and its own padding/alignment, and the ungrouped table wraps a sticky
+// header + scrolling body + sticky legend footer in one flex column so it
+// can be stretched to exactly match the sidebar's height. `scroll` selects
+// that three-part flex layout; grouped-by-division tables render as a plain
+// header+rows block instead (no internal scroll, no legend — eight of those
+// would be redundant).
+function RankingsTable({ columns, rows, scroll }) {
+  const gridCols = columns.map((c) => c.width).join(' ');
+  const header = (
+    <div style={{ display: 'grid', gridTemplateColumns: gridCols, background: 'var(--surface-dark)', flexShrink: 0 }}>
+      {columns.map((c) => (
+        <div key={c.key} style={st(`padding:${c.headerPad};color:var(--text-inverse);font-weight:700;font-size:12px;letter-spacing:${c.headerTracking};text-transform:uppercase;text-align:${c.headerAlign}`)}>
+          {c.label}
+        </div>
+      ))}
+    </div>
+  );
+  const body = rows.map((r, ri) => (
+    <div key={r.team} style={{ display: 'grid', gridTemplateColumns: gridCols, background: ri % 2 === 0 ? 'var(--surface-card)' : 'var(--surface-page)', borderBottom: '1px solid var(--hairline)' }}>
+      {columns.map((c) => <React.Fragment key={c.key}>{c.render(r)}</React.Fragment>)}
+    </div>
+  ));
+
+  if (!scroll) {
+    return (
+      <div style={st('border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card)')}>
+        {header}
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <div style={st('display:flex;flex-direction:column;min-width:0;border-radius:var(--radius-md);box-shadow:var(--shadow-card);overflow:hidden')}>
+      {header}
+      <div className="rankings-table-scroll-body" style={st('flex:1;min-height:0;overflow:auto')}>{body}</div>
+      <div style={st('flex-shrink:0;background:var(--surface-card);border-top:1px solid var(--hairline);padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap')}>
+        <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)')}>Bar</span>
+        <span style={st('display:flex;align-items:center;gap:7px;font:600 13px var(--font-sans);color:var(--ink-muted)')}><span style={{ width: 12, height: 10, background: 'var(--steel)', display: 'inline-block' }} />Baseline</span>
+        <span style={st('display:flex;align-items:center;gap:7px;font:600 13px var(--font-sans);color:var(--ink-muted)')}><span style={{ width: 12, height: 10, background: 'var(--brass)', display: 'inline-block' }} />Trajectory</span>
+        <span style={st('display:flex;align-items:center;gap:7px;font:600 13px var(--font-sans);color:var(--ink-muted)')}><span style={{ width: 12, height: 10, background: 'var(--green)', display: 'inline-block' }} />Regression</span>
+        <span style={st('font:400 13px var(--font-sans);color:var(--ink-faint)')}>One lane each, top to bottom. Left of centre is negative.</span>
+      </div>
     </div>
   );
 }
@@ -1526,6 +1682,38 @@ function TalentMapField({ players, scheme }) {
   );
 }
 
+// Notched team-colour section marker (Team Pages handoff section 1, shared
+// vocabulary with the CFB dashboard) - replaces the old plain-uppercase
+// "font:700 12px...color:var(--ink-muted)" section label divs on the Team
+// Detail tab. Background is always the team's own colour; no section
+// numbers anywhere - section identity is its name.
+function SectionRibbon({ id, label, note, color }) {
+  return (
+    <div id={id} style={st('display:flex;align-items:center;margin:44px 0 0')}>
+      <span style={st(`display:inline-block;background:${color};color:var(--paper);font:900 13px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;padding:9px 34px 9px 40px;white-space:nowrap;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%)`)}>{label}</span>
+      {note ? <span style={st('font:600 13px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-left:16px')}>{note}</span> : null}
+    </div>
+  );
+}
+
+// Team Detail contents rail (Team Pages handoff section 2.4) - a plain list
+// of section names, no numbers, no scrollspy required for this pass (the
+// first item is highlighted statically per the handoff).
+const TEAM_DETAIL_CONTENTS = [
+  { id: 'summary', label: 'Summary' },
+  { id: 'the-read', label: 'The read' },
+  { id: 'team-dna', label: 'Team DNA' },
+  { id: 'five-questions', label: 'Five questions' },
+  { id: 'key-person-cliff', label: 'Key-person cliff' },
+  { id: 'model-swot', label: 'Model SWOT' },
+  { id: 'cone-of-certainty', label: 'Cone of certainty' },
+  { id: 'talent-map', label: 'Talent map' },
+  { id: 'coaching', label: 'Coaching' },
+  { id: 'schedule-journey', label: 'Schedule journey' },
+  { id: 'playoff-odds', label: 'Playoff odds' },
+  { id: 'win-distribution', label: 'Win distribution' },
+];
+
 // ----------------------------------------------------------------------
 // App
 // ----------------------------------------------------------------------
@@ -1535,6 +1723,7 @@ const TABS = [
   { id: 'team', label: 'Team Detail', tone: 'var(--brass)', textOn: 'var(--ink)' },
   { id: 'trend', label: 'Season Trend', tone: 'var(--green-light)', textOn: 'var(--ink)' },
   { id: 'playoff', label: 'Playoff Picture', tone: 'var(--value-positive)', textOn: 'var(--paper)' },
+  { id: 'glossary', label: 'Glossary', tone: 'var(--steel)', textOn: 'var(--paper)' },
 ];
 
 // Deep-linkable team profile: read ?tab=&team= once on load so a URL like
@@ -1582,8 +1771,7 @@ function App() {
 
     sortKey: 'power_score',
     sortDir: 'desc',
-    glossaryOpen: false,
-    validationOpen: false,
+    groupByDivision: false,
 
     matchupWeek: null,
     weekInput: '',
@@ -1632,7 +1820,7 @@ function App() {
   }
   useEffect(() => { loadData(); }, []);
 
-  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, coaching, talentMap, talentMapSnapshot, matchupByWeek, teamSchedule, historyRows, tab, glossaryOpen, validationOpen, pinnedTeam, selectedTeam } = s;
+  const { power, winProjections, monteCarlo, monteCarloHistogram, playoff, keyPerson, preseasonPower, coaching, talentMap, talentMapSnapshot, matchupByWeek, teamSchedule, historyRows, tab, pinnedTeam, selectedTeam } = s;
 
   // Keep the URL in sync with tab/team so the current view is always
   // bookmarkable/shareable (replaceState, not pushState - shouldn't spam
@@ -1653,8 +1841,7 @@ function App() {
     const willPin = prev.pinnedTeam !== team;
     return { pinnedTeam: willPin ? team : null, selectedTeam: willPin ? team : prev.selectedTeam };
   });
-  const toggleGlossary = () => setState((prev) => ({ glossaryOpen: !prev.glossaryOpen, validationOpen: false }));
-  const toggleValidation = () => setState((prev) => ({ validationOpen: !prev.validationOpen, glossaryOpen: false }));
+  const toggleGroupByDivision = () => setState((prev) => ({ groupByDivision: !prev.groupByDivision }));
   const pillButtonStyle = (active) => `display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--hairline);background:${active ? 'var(--ink)' : 'var(--surface-card)'};color:${active ? 'var(--paper)' : 'var(--ink-muted)'};font:700 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;cursor:pointer`;
 
   const tabsList = TABS.map((t) => {
@@ -1666,39 +1853,8 @@ function App() {
     };
   });
 
-  const glossaryPanel = glossaryOpen && (
-    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
-      {GLOSSARY_TERMS.map((gl) => (
-        <div key={gl.term}>
-          <div style={st('font:700 16px var(--font-sans);color:var(--ink);margin-bottom:4px')}>{gl.term}</div>
-          <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{gl.def}</div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const validationPanel = validationOpen && (
-    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px')}>
-      {VALIDATION_STATS.map((v) => (
-        <div key={v.headline}>
-          <div style={st('font:700 16px var(--font-sans);color:var(--ink);margin-bottom:4px')}>{v.headline}</div>
-          <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{v.gloss}</div>
-          {v.link && (
-            <a href={v.link.href} style={st('display:inline-block;margin-top:6px;font:700 14px var(--font-sans);color:var(--accent-primary)')}>{v.link.label}</a>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-  const explainerButtons = (
-    <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
-      <button style={st(pillButtonStyle(glossaryOpen))} onClick={toggleGlossary}>What do these mean? {glossaryOpen ? '▲' : '▼'}</button>
-      <button style={st(pillButtonStyle(validationOpen))} onClick={toggleValidation}>How well does this model actually work? {validationOpen ? '▲' : '▼'}</button>
-    </div>
-  );
 
   // ---------------- Rankings tab ----------------
-  const globalScaleMax = Math.max(0.001, ...power.map((r) => Math.abs(Number(r.power_score) || 0)));
   const rankSorted = [...power].sort((a, b) => (Number(b.power_score) || 0) - (Number(a.power_score) || 0));
   const rankRows = rankSorted.map((r, i) => ({ ...r, rank: i + 1, isPinned: r.team === pinnedTeam }));
   const pinnedIdx = pinnedTeam ? rankRows.findIndex((r) => r.team === pinnedTeam) : -1;
@@ -1708,7 +1864,6 @@ function App() {
     { key: 'power_score', label: 'Power Score' },
     { key: 'team', label: 'Team' },
     { key: 'wins', label: 'Prior Wins' },
-    { key: 'div_rank', label: 'Div. Rank' },
   ];
   const sortPills = SORT_FIELDS.map((f) => ({
     key: f.key, label: f.label,
@@ -1724,45 +1879,165 @@ function App() {
     const cmp = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av).localeCompare(String(bv));
     return s.sortDir === 'asc' ? cmp : -cmp;
   });
-  const rankTableProps = {
-    columns: [
-      {
-        key: 'team', label: 'Team', render: (r) => (
-          <span title={(preseasonByTeam[r.team] && preseasonByTeam[r.team].rationale) || ''} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {r.isPinned && <span style={{ width: 7, height: 7, borderRadius: 999, background: pinnedAccentColor, flexShrink: 0, display: 'inline-block' }} />}
-            {`${r.rank}. ${r.team}`}
-          </span>
-        ),
-      },
-      {
-        key: 'power_score', label: 'Power Score', render: (r) => (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
-            <SignedBar value={r.power_score} scaleMax={globalScaleMax} />
-            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{num(r.power_score, 2)}</span>
-          </div>
-        ),
-      },
-      { key: 'baseline', label: 'Baseline', render: (r) => num(r.baseline, 1) },
-      { key: 'trajectory', label: 'Trajectory', render: (r) => num(r.trajectory, 1) },
-      { key: 'regression', label: 'Regression', render: (r) => num(r.regression, 1) },
-      { key: 'div_rank', label: 'Division', render: (r) => `${r.division} #${r.div_rank}` },
-      { key: 'record', label: 'Record', render: (r) => r.record || '—' },
-      {
-        key: 'pin', label: 'Pin', render: (r) => (
+  // Three-lane contribution bar: SEG_UNITS is the largest same-sign weighted
+  // stack across all 32 teams (never a per-component max — that could let a
+  // single lane overflow half the track). Recomputed from live rankRows every
+  // render, so it tracks the data instead of being hardcoded.
+  const RANK_WEIGHTS = [
+    { key: 'baseline', weight: 0.45, color: 'var(--steel)' },
+    { key: 'trajectory', weight: 0.35, color: 'var(--brass)' },
+    { key: 'regression', weight: 0.20, color: 'var(--green)' },
+  ];
+  const segUnits = Math.max(0.001, ...rankRows.map((r) => {
+    let up = 0, down = 0;
+    RANK_WEIGHTS.forEach((w) => {
+      const v = w.weight * (Number(r[w.key]) || 0);
+      if (v >= 0) up += v; else down -= v;
+    });
+    return Math.max(up, down);
+  }));
+  function rankRowSegs(r) {
+    const segs = [];
+    RANK_WEIGHTS.forEach((w, i) => {
+      const v = w.weight * (Number(r[w.key]) || 0);
+      const width = Math.min(50, (Math.abs(v) / segUnits) * 50);
+      if (width < 0.4) return;
+      segs.push({ top: (i * 37.5) + '%', left: (v >= 0 ? 50 : 50 - width) + '%', width: width + '%', color: w.color });
+    });
+    return segs;
+  }
+
+  // ---------------- Reading-the-scale strip chart (Power Rankings Row 1) ----------------
+  // Home-field edge read from live matchup data rather than hardcoded — currently
+  // flat across every non-neutral-site game (see HFA glossary entry), so the most
+  // common value across all weeks is that flat constant; falls back to 2 if no
+  // matchup data has loaded yet.
+  const hfaSamples = Object.values(matchupByWeek).flat()
+    .filter((g) => !g.neutral_site && g.hfa_adj !== null && g.hfa_adj !== undefined)
+    .map((g) => Number(g.hfa_adj));
+  const hfaCounts = {};
+  hfaSamples.forEach((v) => { hfaCounts[v] = (hfaCounts[v] || 0) + 1; });
+  const hfaModeEntry = Object.entries(hfaCounts).sort((a, b) => b[1] - a[1])[0];
+  const hfaEdge = hfaModeEntry ? Number(hfaModeEntry[0]) : 2;
+  const hfaEdgeLabel = Number.isInteger(hfaEdge) ? String(hfaEdge) : hfaEdge.toFixed(1);
+
+  const rankScores = rankRows.map((r) => Number(r.power_score) || 0);
+  const stripDomainMin = Math.floor((rankScores.length ? Math.min(...rankScores) : -1)) - 0.5;
+  const stripDomainMax = Math.ceil((rankScores.length ? Math.max(...rankScores) : 1)) + 0.5;
+  const stripSpan = Math.max(0.001, stripDomainMax - stripDomainMin);
+  const stripPos = (v) => ((v - stripDomainMin) / stripSpan) * 100;
+  const stripZeroPct = stripPos(0).toFixed(2) + '%';
+  const stripTeams = rankRows.map((r) => {
+    const score = Number(r.power_score) || 0;
+    return { team: r.team, leftPct: stripPos(score).toFixed(2) + '%', color: score >= 0 ? 'var(--value-positive)' : 'var(--value-risk)' };
+  });
+  const stripStrongest = rankRows[0] || null;
+  const stripWeakest = rankRows.length ? rankRows[rankRows.length - 1] : null;
+  const stripRangeLabel = stripStrongest && stripWeakest
+    ? `${stripStrongest.team} ${signed(stripStrongest.power_score, 2)} to ${stripWeakest.team} ${signed(stripWeakest.power_score, 2)}`
+    : '—';
+
+  // Caption is generated from the data every render: how many teams sit at or
+  // above average, plus (only when it's actually true this week) how far back
+  // the bottom cluster sits. Never a hardcoded claim — see brand voice rule.
+  const aboveAvgCount = rankRows.filter((r) => (Number(r.power_score) || 0) >= 0).length;
+  let stripCaption = rankRows.length
+    ? `${capitalize(numWord(aboveAvgCount))} team${aboveAvgCount === 1 ? '' : 's'} sit${aboveAvgCount === 1 ? 's' : ''} above average`
+    : 'Power ratings haven’t loaded yet';
+  if (rankRows.length >= 3) {
+    const bottomThreeScores = rankRows.slice(-3).map((r) => Number(r.power_score) || 0);
+    const bottomSpread = Math.max(...bottomThreeScores) - Math.min(...bottomThreeScores);
+    const bottomGapBack = Math.floor(Math.abs(Math.max(...bottomThreeScores)));
+    if (bottomSpread <= 2 && bottomGapBack >= 1) {
+      stripCaption += `, and the bottom three are clustered more than ${numWord(bottomGapBack)} point${bottomGapBack === 1 ? '' : 's'} back`;
+    }
+  }
+  stripCaption += '.';
+
+  // ---------------- Rankings table column definitions (Direction 1A) ----------------
+  // Fixed pixel widths per the handoff's column template; Division only appears
+  // in the ungrouped table (dropped in Group by Division, same widths otherwise).
+  const rankColumns = [
+    {
+      key: 'team', width: '194px', label: 'Team', headerPad: '13px 20px', headerAlign: 'left', headerTracking: '.09em',
+      render: (r) => (
+        <div key="team" style={st('padding:9px 20px;display:flex;align-items:center;gap:10px;min-width:0')} title={(preseasonByTeam[r.team] && preseasonByTeam[r.team].rationale) || ''}>
+          <span style={{ width: 4, height: 20, borderRadius: 2, flexShrink: 0, background: teamColor(r.team) }} />
+          {r.isPinned && <span style={{ width: 7, height: 7, borderRadius: 999, background: pinnedAccentColor, flexShrink: 0 }} />}
+          <span style={st('font:600 17px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis')}>{`${r.rank}. ${r.team}`}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'power_score', width: '168px', label: 'Power Score', headerPad: '13px 20px', headerAlign: 'right', headerTracking: '.09em',
+      render: (r) => (
+        <div key="power_score" style={st('padding:9px 16px;display:flex;align-items:center;justify-content:flex-end;gap:14px')}>
+          <span style={st('font:600 17px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;min-width:44px;text-align:right')}>{num(r.power_score, 2)}</span>
+          <ThreeLaneBar segs={rankRowSegs(r)} />
+        </div>
+      ),
+    },
+    {
+      key: 'baseline', width: '68px', label: 'Base', headerPad: '13px 12px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="baseline" style={st('padding:9px 12px;font:400 17px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{num(r.baseline, 1)}</div>,
+    },
+    {
+      key: 'trajectory', width: '68px', label: 'Traj', headerPad: '13px 12px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="trajectory" style={st('padding:9px 12px;font:400 17px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{num(r.trajectory, 1)}</div>,
+    },
+    {
+      key: 'regression', width: '68px', label: 'Regr', headerPad: '13px 12px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="regression" style={st('padding:9px 12px;font:400 17px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{num(r.regression, 1)}</div>,
+    },
+    {
+      key: 'division', width: 'minmax(0,1fr)', label: 'Division', headerPad: '13px 16px', headerAlign: 'right', headerTracking: '.09em',
+      render: (r) => <div key="division" style={st('padding:9px 16px;font:400 15px var(--font-sans);color:var(--ink-muted);text-align:right;white-space:nowrap')}>{r.division}</div>,
+    },
+    {
+      key: 'record', width: '74px', label: 'Record', headerPad: '13px 14px', headerAlign: 'right', headerTracking: '.09em',
+      render: (r) => <div key="record" style={st('padding:9px 14px;font:400 17px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{r.record || '—'}</div>,
+    },
+    {
+      key: 'pin', width: '52px', label: 'Pin', headerPad: '13px 10px', headerAlign: 'center', headerTracking: '.06em',
+      render: (r) => (
+        <div key="pin" style={st('padding:9px 10px;text-align:center')}>
           <button
             onClick={() => togglePin(r.team)}
             title={r.isPinned ? `Unpin ${r.team}` : `Pin ${r.team}`}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex' }}
+            style={st('background:none;border:none;cursor:pointer;padding:2px;display:inline-flex')}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" style={{ color: r.isPinned ? pinnedAccentColor : 'var(--ink-faint)' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" style={{ color: r.isPinned ? pinnedAccentColor : 'var(--ink-faint)' }}>
               <path d="M12 2.5l2.99 6.06 6.69.97-4.84 4.72 1.14 6.66L12 17.77l-5.98 3.14 1.14-6.66-4.84-4.72 6.69-.97z" fill={r.isPinned ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
             </svg>
           </button>
-        ),
-      },
-    ],
-    rows: rankTableSorted,
-  };
+        </div>
+      ),
+    },
+  ];
+  const rankColumnsGrouped = rankColumns.filter((c) => c.key !== 'division');
+
+  // ---------------- Group by Division (Power Rankings) ----------------
+  const DIVISION_ORDER = ['AFC East', 'AFC North', 'AFC South', 'AFC West', 'NFC East', 'NFC North', 'NFC South', 'NFC West'];
+  const groupedByDivision = DIVISION_ORDER
+    .map((division) => ({
+      division,
+      rows: rankRows.filter((r) => r.division === division).sort((a, b) => (Number(b.power_score) || 0) - (Number(a.power_score) || 0)),
+    }))
+    .filter((g) => g.rows.length);
+
+  // ---------------- Power Score walkthrough (Power Rankings visual panel) ----------------
+  // Uses the pinned team when one is set, otherwise the #1 team overall, so the worked
+  // example always reflects real, current data instead of a hardcoded team.
+  const walkthroughRow = pinnedRow || rankRows[0] || null;
+  const WALKTHROUGH_WEIGHTS = [
+    { key: 'baseline', label: 'Baseline', weight: 0.45, color: 'var(--steel)' },
+    { key: 'trajectory', label: 'Trajectory', weight: 0.35, color: 'var(--brass)' },
+    { key: 'regression', label: 'Regression', weight: 0.20, color: 'var(--green)' },
+  ];
+  const walkthroughParts = walkthroughRow
+    ? WALKTHROUGH_WEIGHTS.map((w) => ({ ...w, raw: Number(walkthroughRow[w.key]) || 0, contribution: (Number(walkthroughRow[w.key]) || 0) * w.weight }))
+    : [];
+  const walkthroughTotal = walkthroughParts.reduce((sum, p) => sum + p.contribution, 0);
 
   // ---------------- Schedule & Matchups tab ----------------
   const weekGames = (matchupByWeek[String(s.matchupWeek)] || []);
@@ -1851,7 +2126,7 @@ function App() {
   const profile = TEAM_PROFILES[activeTeam];
   // Fallback rationale source (Problem 1 fix) - only teams without a
   // TEAM_PROFILES entry fall back to this; teams with a profile show the
-  // richer exec-summary prose instead (see kpiTilesJSX/fallbackRationale below).
+  // richer exec-summary prose instead (see fallbackRationale below).
   const activePreseasonRow = preseasonByTeam[activeTeam];
   const snapshotBg = teamColor(activeTeam);
   const snapshotTextColor = readableTextColor(snapshotBg);
@@ -1906,12 +2181,53 @@ function App() {
   const sosRanked = [...winProjections].sort((a, b) => (b.sos_avg_opp_power || 0) - (a.sos_avg_opp_power || 0));
   const sosRank = activeProj ? sosRanked.findIndex((r) => r.team === activeTeam) + 1 : null;
 
+  // The Summary panel's "{division leader}, atop the division" line (Team
+  // Pages handoff section 2.1) - the same `power` rows already used for
+  // div_rank elsewhere, just resorted to find whoever currently holds
+  // div_rank 1 in this team's own division. Real data, not narrative copy:
+  // works for all 32 teams, not just the Chiefs/Broncos worked example.
+  const divisionPeers = activeRow ? power.filter((r) => r.division === activeRow.division).sort((a, b) => (Number(a.div_rank) || 99) - (Number(b.div_rank) || 99)) : [];
+  const divisionLeaderRow = divisionPeers[0] || null;
+  // Gap used both by the Model SWOT's "13 pts behind {leader}" stat flag and
+  // (were it needed) any other reference to the division-leader margin -
+  // Number(leader.power_score) - Number(activeRow.power_score), so it reads
+  // positive when this team trails and negative when this team leads.
+  const divisionGap = (divisionLeaderRow && activeRow) ? Number(divisionLeaderRow.power_score) - Number(activeRow.power_score) : null;
+
+  // Eyebrow / key-person-cliff accent color: the team's own secondary color
+  // from TEAM_COLORS when it's light enough to read on the dark summary
+  // banner (Chiefs gold, per the handoff), falling back to --brass when a
+  // team's secondary is itself dark (e.g. Ravens' black) rather than
+  // introducing a second hardcoded accent.
+  const teamSecondary = TEAM_COLORS[activeTeam] && TEAM_COLORS[activeTeam].secondary;
+  const eyebrowAccent = teamSecondary && hexLuminance(teamSecondary) > 0.6 ? teamSecondary : 'var(--brass)';
+
   const componentBars = activeRow ? [
     { label: 'Baseline', value: Number(activeRow.baseline) || 0 },
     { label: 'Trajectory', value: Number(activeRow.trajectory) || 0 },
     { label: 'Regression', value: Number(activeRow.regression) || 0 },
   ] : [];
   const componentScale = Math.max(1, ...componentBars.map((b) => Math.abs(b.value)));
+  // The Power Score component (of the three above) driving the Model SWOT's
+  // lead strength/weakness claim (handoff section 2.7) - "the one that
+  // matters most" is read here as the most negative / most positive of the
+  // three real Power Score inputs, not an editorial pick, so it generalizes
+  // past the Chiefs worked example to every team with a profile.
+  const worstComponent = componentBars.length ? componentBars.reduce((a, b) => (b.value < a.value ? b : a)) : null;
+  const bestComponent = componentBars.length ? componentBars.reduce((a, b) => (b.value > a.value ? b : a)) : null;
+  // Picks whichever existing whyModelThinks bullet actually discusses that
+  // component (by name) as the lead claim, so the number-flag beside it is
+  // never disconnected from the sentence it's attached to; falls back to the
+  // first-listed bullet if none mention it by name.
+  function leadSWOTClaim(items, componentLabel) {
+    if (!items || !items.length) return null;
+    if (!componentLabel) return items[0];
+    return items.find((t) => t.toLowerCase().includes(componentLabel.toLowerCase())) || items[0];
+  }
+  const leadWeaknessText = profile && profile.whyModelThinks ? leadSWOTClaim(profile.whyModelThinks.risks, worstComponent && worstComponent.label) : null;
+  const leadStrengthText = profile && profile.whyModelThinks ? leadSWOTClaim(profile.whyModelThinks.optimism, bestComponent && bestComponent.label) : null;
+  const otherWeaknesses = profile && profile.whyModelThinks ? profile.whyModelThinks.risks.filter((t) => t !== leadWeaknessText) : [];
+  const otherStrengths = profile && profile.whyModelThinks ? profile.whyModelThinks.optimism.filter((t) => t !== leadStrengthText) : [];
 
   // Cone of Certainty: analytical (win_projections) vs simulated (monte_carlo)
   const coneRows = [];
@@ -1936,9 +2252,20 @@ function App() {
     }
   }
   const histMax = Math.max(0.01, ...histBars.map((b) => b.prob));
-  const histChartW = 460, histChartH = 160, histBarGap = 3;
-  const histBarW = histBars.length ? (histChartW - histBarGap * (histBars.length - 1)) / histBars.length : 0;
-  const histY = (p) => histChartH - (p / histMax) * (histChartH - 20);
+  // Bar height budget: 210px total (Team Pages handoff section 2.3), minus
+  // headroom for the mode bar's percentage label printed above it.
+  const histBarMaxH = 188;
+
+  // One color family for the whole win-distribution (handoff section 2.3):
+  // solid team color on the mode bar, the same hue stepped back to 40%/16%
+  // alpha for the 90%-range and tail bars. Falls back to ink/hairline for a
+  // near-black team primary (e.g. Raiders) rather than mixing in a second
+  // accent color.
+  const distTeamHex = teamColor(activeTeam);
+  const distNearBlack = hexLuminance(distTeamHex) < 0.06;
+  const distModeFill = distNearBlack ? 'var(--ink)' : distTeamHex;
+  const distRangeFill = distNearBlack ? 'var(--hairline)' : `color-mix(in srgb, ${distTeamHex} 40%, transparent)`;
+  const distTailFill = distNearBlack ? 'var(--hairline)' : `color-mix(in srgb, ${distTeamHex} 16%, transparent)`;
 
   // Team DNA (shared component, team-dna.js; wired up per NFL-Team-Profile-Narrative-Brief.md
   // section 3a) - identity, not grades: "what kind of team is this," not "how good are
@@ -1949,14 +2276,34 @@ function App() {
   // it) for any team missing a preseason_power row. Only rendered inside the narrative
   // block below, so this doesn't touch the 31 teams without a TEAM_PROFILES entry yet.
   const teamDNADimensions = activeRow ? [
-    { label: 'Record Strength', pct: percentileRank(power.map((r) => Number(r.baseline)), Number(activeRow.baseline)) },
-    { label: 'Roster/Coaching Trajectory', pct: percentileRank(power.map((r) => Number(r.trajectory)), Number(activeRow.trajectory)) },
-    { label: 'Recent Form', pct: percentileRank(power.map((r) => Number(r.regression)), Number(activeRow.regression)) },
-    { label: 'Schedule Difficulty', pct: activeProj ? percentileRank(winProjections.map((r) => Number(r.sos_avg_opp_power)), Number(activeProj.sos_avg_opp_power)) : null },
-    { label: 'Roster Needs Addressed', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.need_fill)), Number(activePreseasonRow.need_fill)) : null },
-    { label: 'Scheme Fit', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.scheme)), Number(activePreseasonRow.scheme)) : null },
-    { label: 'Organizational Stability', pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.stability)), Number(activePreseasonRow.stability)) : null },
+    { label: 'Record Strength', value: Number(activeRow.baseline), pct: percentileRank(power.map((r) => Number(r.baseline)), Number(activeRow.baseline)) },
+    { label: 'Roster/Coaching Trajectory', value: Number(activeRow.trajectory), pct: percentileRank(power.map((r) => Number(r.trajectory)), Number(activeRow.trajectory)) },
+    { label: 'Recent Form', value: Number(activeRow.regression), pct: percentileRank(power.map((r) => Number(r.regression)), Number(activeRow.regression)) },
+    { label: 'Schedule Difficulty', value: activeProj ? Number(activeProj.sos_avg_opp_power) : null, pct: activeProj ? percentileRank(winProjections.map((r) => Number(r.sos_avg_opp_power)), Number(activeProj.sos_avg_opp_power)) : null },
+    { label: 'Roster Needs Addressed', value: activePreseasonRow ? Number(activePreseasonRow.need_fill) : null, pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.need_fill)), Number(activePreseasonRow.need_fill)) : null },
+    { label: 'Scheme Fit', value: activePreseasonRow ? Number(activePreseasonRow.scheme) : null, pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.scheme)), Number(activePreseasonRow.scheme)) : null },
+    { label: 'Organizational Stability', value: activePreseasonRow ? Number(activePreseasonRow.stability) : null, pct: activePreseasonRow ? percentileRank(preseasonPower.map((r) => Number(r.stability)), Number(activePreseasonRow.stability)) : null },
   ] : [];
+
+  // Team DNA "two extremes as cards, the rest as chips" (Team Pages handoff
+  // section 2.6) - extremes are picked by percentile (the cross-team-normalized
+  // reading), not raw value, since the seven dimensions are on different raw
+  // scales and aren't otherwise comparable. Dimensions this team's snapshot
+  // doesn't have a percentile for (preseason_power not loaded, etc.) are never
+  // eligible to be an extreme - they only ever show up as an em-dashed chip.
+  const DNA_DIMENSION_NOTES = {
+    'Record Strength': GLOSSARY_TERMS.find((t) => t.term === 'Baseline').def,
+    'Roster/Coaching Trajectory': GLOSSARY_TERMS.find((t) => t.term === 'Trajectory').def,
+    'Recent Form': GLOSSARY_TERMS.find((t) => t.term === 'Regression').def,
+    'Schedule Difficulty': "Average Power Score of this team's opponents this season - a high percentile here means a brutal schedule, not a strong team.",
+    'Roster Needs Addressed': "The model's hand-scored read on how well this offseason's moves matched the roster's biggest needs.",
+    'Scheme Fit': "The model's hand-scored read on how well the roster's personnel fits the scheme the coaching staff runs.",
+    'Organizational Stability': "The model's hand-scored read on off-field and organizational risk.",
+  };
+  const dnaWithPct = teamDNADimensions.filter((d) => d.pct !== null && d.pct !== undefined && !Number.isNaN(d.pct));
+  const dnaMostPositive = dnaWithPct.length ? dnaWithPct.reduce((a, b) => (b.pct > a.pct ? b : a)) : null;
+  const dnaMostNegative = dnaWithPct.length > 1 ? dnaWithPct.reduce((a, b) => (b.pct < a.pct ? b : a)) : null;
+  const dnaChips = teamDNADimensions.filter((d) => d !== dnaMostPositive && d !== dnaMostNegative);
 
   // Plain-language Monte Carlo callout (brief section 3c) - computed per-team from
   // monteCarloHistogram (histBars above), not hardcoded to any one team's numbers.
@@ -1975,80 +2322,64 @@ function App() {
     };
   }
 
-  // KPI tiles (Power Score / Division / Record / SOS) - a single reusable block so
-  // it can sit inside the Hero Summary for teams with a narrative profile (brief
-  // Problem 2), or in its original standalone position for teams without one yet.
-  const kpiTilesInner = activeRow ? (
-    <div style={st('display:flex;gap:24px;flex-wrap:wrap')}>
-      <div style={{ minWidth: 150 }}>
-        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Power Score</div>
-        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{num(activeRow.power_score, 2)}</div>
-        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Range: {num(activeRow.low_bound, 1)} to {num(activeRow.high_bound, 1)}</div>
-      </div>
-      <div style={{ minWidth: 150 }}>
-        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Division</div>
-        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{activeRow.div_rank}</div>
-        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>{activeRow.division}</div>
-      </div>
-      <div style={{ minWidth: 150 }}>
-        <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Record</div>
-        <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.record || '—'}</div>
-        <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>PF {activeRow.pf} / PA {activeRow.pa}</div>
-      </div>
-      {sosRank && (
-        <div style={{ minWidth: 150 }}>
-          <div style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.7;margin-bottom:8px`)}>Strength of Schedule</div>
-          <div style={st(`font:900 32px var(--font-sans);color:${snapshotTextColor}`)}>#{sosRank}</div>
-          <div style={st(`font:400 13px var(--font-sans);color:${snapshotTextColor};opacity:.65;margin-top:2px`)}>Avg. opponent Power Score {num(activeProj.sos_avg_opp_power, 2)} · #1 = hardest schedule</div>
-        </div>
-      )}
-    </div>
-  ) : null;
-  const kpiTilesJSX = activeRow ? (
-    <div style={st(`background:${snapshotBg};border-radius:var(--radius-md);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px`)}>
-      {kpiTilesInner}
-    </div>
-  ) : null;
   // Fallback rationale (Problem 1 fix, option (b)): only shown for teams without a
   // TEAM_PROFILES entry, sourced from preseason_power now that `power` no longer
   // carries it. Teams with a profile skip this - the exec summary supersedes it.
   const fallbackRationale = activePreseasonRow ? activePreseasonRow.rationale : '';
 
-  // Key-Person Dependency card, extracted so it can be moved up next to Five
-  // Questions for teams with a narrative profile (brief section 3b) while staying
-  // a single implementation - already has its own graceful empty-state fallback,
-  // so it's safe to render unconditionally either place.
-  const keyPersonCardJSX = (
-    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:16px')}>
-      <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Key-Person Dependency</div>
-      {activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => {
-        const unreliable = isUnreliableKeyPerson(k.confidence);
-        return (
-        <div key={k.player} style={st('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)')}>
-          <div>
-            <div style={st('font:700 15px var(--font-sans);color:var(--ink)')}>{k.player} <span style={st('font-weight:400;color:var(--ink-muted)')}>({k.position})</span></div>
-            <div style={st(`font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:${confidenceColor(k.confidence)}`)}>
-              {unreliable ? (
-                <>low — unreliable for this position (see <a href="methodology.html#known-limits" style={st('color:inherit;text-decoration:underline')}>Known Limits</a>)</>
-              ) : k.confidence}
-            </div>
-          </div>
-          <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--ink)')}>
-            <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
-            <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
-            {unreliable ? (
-              <span style={st('color:var(--ink-faint)')}>Cliff: <b>not reliable for this position</b></span>
-            ) : (
-              <span style={st('color:var(--value-risk)')}>Cliff: <b>{signed(k.cliff, 2)}</b></span>
-            )}
-          </div>
+  // Key-person cliff section (Team Pages handoff sections 2.1/2.5/2.7's "three
+  // deliberately large elements" - #2 is this card's 88px figure). Kept as a
+  // per-player card, mapped over activeKeyPerson exactly as before, so a team
+  // with more than one flagged player (the data model allows it even though
+  // no current team has more than one) still shows every one of them rather
+  // than silently dropping extras. Still has the same graceful empty state.
+  const keyPersonCardsJSX = activeKeyPerson.length > 0 ? activeKeyPerson.map((k) => {
+    const unreliable = isUnreliableKeyPerson(k.confidence);
+    // Two-dot "healthy -> down" bridge is illustrative positioning (fixed
+    // percentages), not a scaled axis - the two numbers it connects are the
+    // only claims being made, same as the approved prototype's version of
+    // this same visual.
+    return (
+      <div key={k.player} style={st('background:var(--surface-dark);border-radius:var(--radius-md);padding:34px 38px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:44px;align-items:center')}>
+        <div style={st('display:flex;flex-direction:column;gap:4px')}>
+          <span style={st(`font:900 88px/.85 var(--font-sans);color:${unreliable ? 'var(--paper)' : eyebrowAccent}${unreliable ? ';opacity:.5' : ''}`)}>{unreliable ? '—' : num(Math.abs(k.cliff), 2)}</span>
+          <span style={st('font:700 14px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--paper);opacity:.75')}>{unreliable ? 'Cliff not reliable for this position' : "Points lost if he's down"}</span>
+          <span style={st('font:600 17px var(--font-sans);color:var(--paper);margin-top:6px')}>{k.player} · {k.position}</span>
         </div>
-        );
-      }) : (
-        <div style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
-      )}
-    </div>
-  );
+        {unreliable ? (
+          <div style={st('display:flex;flex-direction:column;gap:10px')}>
+            <div style={st('display:flex;gap:24px;font:600 14px var(--font-sans);color:var(--paper)')}>
+              <span>If healthy: <b>{num(k.power_score_if_healthy, 2)}</b></span>
+              <span>If down: <b>{num(k.power_score_if_down, 2)}</b></span>
+            </div>
+            <p style={st('font:400 17px/1.5 var(--font-sans);color:var(--paper);opacity:.85;margin:0;max-width:660px')}>
+              This position's cliff number is flagged wrong-signed by the model's own data (see <a href="methodology.html#known-limits" style={st('color:inherit;text-decoration:underline')}>Known Limits</a>) - only the qualitative read (this team is worse off without him) is trustworthy here.
+            </p>
+          </div>
+        ) : (
+          <div style={st('display:flex;flex-direction:column;gap:12px')}>
+            <div style={{ position: 'relative', height: 60 }}>
+              <div style={st('position:absolute;left:0;right:0;top:28px;height:4px;background:rgba(247,244,236,.15)')} />
+              <div style={st(`position:absolute;left:24%;right:22%;top:28px;height:4px;background:${eyebrowAccent}`)} />
+              <div style={st('position:absolute;left:22%;top:18px;width:24px;height:24px;border-radius:var(--radius-pill);background:var(--value-positive-light)')} />
+              <div style={st('position:absolute;left:76%;top:18px;width:24px;height:24px;border-radius:var(--radius-pill);background:var(--value-risk-light)')} />
+              <span style={st('position:absolute;left:14%;top:0;font:700 15px var(--font-sans);color:var(--paper);opacity:.8')}>{num(k.power_score_if_healthy, 2)}</span>
+              <span style={st('position:absolute;left:72%;top:0;font:900 22px var(--font-sans);color:var(--paper)')}>{num(k.power_score_if_down, 2)}</span>
+            </div>
+            <div style={st('display:flex;justify-content:space-between;font:700 12px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--paper);opacity:.7')}>
+              <span>Healthy — already priced in above</span>
+              <span>Down</span>
+            </div>
+            <p style={st('font:400 17px/1.5 var(--font-sans);color:var(--paper);opacity:.85;margin:0;max-width:660px')}>The healthy end of this bar is the Power Score from the summary, relisted. Only the downside figure is new information.</p>
+          </div>
+        )}
+      </div>
+    );
+  }) : [
+    <div key="none" style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding)')}>
+      <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-faint)')}>No single flagged player currently drives this team's projection — Key-Person Dependency is only computed for teams with a high-Downside player identified in the model's risk scoring.</div>
+    </div>,
+  ];
 
   // ---------------- Season Trend tab (in-season-updates plan, Phase E) ----------------
   // Ported from the CFB dashboard's own trend tab (seriesFor/buildGeom/scaleY
@@ -2153,6 +2484,25 @@ function App() {
   const afcRows = sortPlayoff(playoff.filter((r) => (r.division || '').startsWith('AFC')));
   const nfcRows = sortPlayoff(playoff.filter((r) => (r.division || '').startsWith('NFC')));
 
+  // Team DNA extreme card (handoff section 2.6) - the dimension's raw value
+  // large (900 46px), the dimension name below it (never beside - "it
+  // collides" per the handoff), a percentile-derived plain-language read,
+  // then the dimension's own glossary-style definition under a hairline.
+  function dnaExtremeCard(dim, tone) {
+    const color = tone === 'positive' ? 'var(--value-positive)' : 'var(--value-risk)';
+    const cardLabel = tone === 'positive' ? 'Most positive dimension' : 'Most negative dimension';
+    const pctLabel = dim.pct === null || dim.pct === undefined || Number.isNaN(dim.pct) ? '—' : `${Math.round(dim.pct)}th percentile`;
+    return (
+      <div key={dim.label} style={st(`display:flex;flex-direction:column;gap:8px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:24px 26px;border-top:3px solid ${color}`)}>
+        <span style={st(`font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:${color}`)}>{cardLabel}</span>
+        <span style={st('font:900 46px/.95 var(--font-sans);color:var(--ink)')}>{signed(dim.value, 1)}</span>
+        <span style={st('font:700 21px var(--font-sans);color:var(--ink)')}>{dim.label}</span>
+        <p style={st('font:400 18px/1.5 var(--font-sans);color:var(--ink);margin:0')}>{activeTeam}'s {tone === 'positive' ? 'strongest' : 'weakest'} dimension by percentile among all {teams.length} teams — {pctLabel} league-wide.</p>
+        <p style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted);margin:0;padding-top:10px;border-top:1px solid var(--hairline)')}>{DNA_DIMENSION_NOTES[dim.label]}</p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--surface-page)', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column' }}>
 
@@ -2211,31 +2561,77 @@ function App() {
       </div>
 
       {tab === 'rankings' && (
-        <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:26px')}>
-          {explainerButtons}
-          {glossaryPanel}
-          {validationPanel}
+        <div style={st('padding:28px 40px 44px;display:flex;flex-direction:column;gap:24px')}>
 
-          <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
-            {sortPills.map((p) => (
-              <button key={p.key} style={st(p.style)} onClick={p.onClick}>{p.label} {p.arrow}</button>
-            ))}
+          {/* Row 1 — reading-the-scale explainer + all-32-teams strip chart */}
+          <div className="rankings-top-row">
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:26px 28px;display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>Reading the scale</div>
+              <div style={st('font:900 26px var(--font-sans);line-height:1.2;color:var(--ink)')}>The scale is really just points.</div>
+              <p style={st('font:400 19px var(--font-sans);line-height:1.5;color:var(--ink);margin:0;text-wrap:pretty')}>
+                Zero means a perfectly average team. Subtract two teams&rsquo; Power Scores, add a {hfaEdgeLabel}-point homefield edge, and that&rsquo;s the model&rsquo;s predicted margin for their matchup.
+              </p>
+            </div>
+
+            <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:26px 28px;display:flex;flex-direction:column;gap:6px')}>
+              <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>All 32 teams on one axis</div>
+                <div style={st('font:600 13px var(--font-sans);color:var(--ink-faint)')}>{stripRangeLabel}</div>
+              </div>
+              <div style={st('position:relative;height:74px;margin-top:10px')}>
+                <div style={st('position:absolute;left:0;right:0;top:34px;height:1px;background:var(--hairline)')} />
+                <div style={{ position: 'absolute', top: 0, bottom: 22, width: 1, background: 'var(--ink)', left: stripZeroPct }} />
+                {stripTeams.map((t) => (
+                  <div key={t.team} style={{ position: 'absolute', top: 20, height: 30, width: 3, borderRadius: 2, left: t.leftPct, background: t.color }} />
+                ))}
+                <div style={{ position: 'absolute', top: 56, font: '700 11px var(--font-sans)', letterSpacing: '.05em', textTransform: 'uppercase', color: 'var(--ink-faint)', left: stripZeroPct, transform: 'translateX(-50%)' }}>Average</div>
+                <div style={st('position:absolute;top:0;left:0;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--value-risk)')}>Weakest</div>
+                <div style={st('position:absolute;top:0;right:0;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--value-positive)')}>Strongest</div>
+              </div>
+              <p style={st('font:400 15px var(--font-sans);line-height:1.45;color:var(--ink-muted);margin:6px 0 0;text-wrap:pretty')}>{stripCaption}</p>
+            </div>
           </div>
 
-          <div style={st('max-height:640px;overflow:auto;border-radius:var(--radius-md)')}>
-            {rankTableProps.rows.length
-              ? <DataTable columns={rankTableProps.columns} rows={rankTableProps.rows} />
-              : <div style={st('padding:40px;text-align:center;font:400 15px var(--font-sans);color:var(--ink-faint);background:var(--surface-card);border-radius:var(--radius-md)')}>No power ratings yet — run the pipeline to generate nfl_power_ratings.csv.</div>}
+          {/* Row 2 — sort pills */}
+          <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
+            {!s.groupByDivision && (
+              <React.Fragment>
+                <span style={st('font:700 12px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px')}>Sort</span>
+                {sortPills.map((p) => (
+                  <button key={p.key} style={st(p.style)} onClick={p.onClick}>{p.label} {p.arrow}</button>
+                ))}
+              </React.Fragment>
+            )}
+            <span style={{ flex: 1 }} />
+            <button style={st(pillButtonStyle(s.groupByDivision))} onClick={toggleGroupByDivision}>Group by Division</button>
+          </div>
+
+          {/* Row 3 — table (or grouped-by-division tables) + Power Score walkthrough sidebar */}
+          <div className="rankings-two-col">
+            {s.groupByDivision ? (
+              <div style={st('display:flex;flex-direction:column;gap:24px;min-width:0')}>
+                {groupedByDivision.map((g) => (
+                  <div key={g.division}>
+                    <div style={st('font:700 13px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>{g.division}</div>
+                    <RankingsTable columns={rankColumnsGrouped} rows={g.rows} />
+                  </div>
+                ))}
+              </div>
+            ) : rankTableSorted.length ? (
+              <RankingsTable columns={rankColumns} rows={rankTableSorted} scroll />
+            ) : (
+              <div style={st('padding:40px;text-align:center;font:400 15px var(--font-sans);color:var(--ink-faint);background:var(--surface-card);border-radius:var(--radius-md)')}>No power ratings yet — run the pipeline to generate nfl_power_ratings.csv.</div>
+            )}
+
+            <div>
+              <PowerScoreWalkthrough team={walkthroughRow ? walkthroughRow.team : null} parts={walkthroughParts} total={walkthroughTotal} />
+            </div>
           </div>
         </div>
       )}
 
       {tab === 'matchup' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:20px')}>
-          {explainerButtons}
-          {glossaryPanel}
-          {validationPanel}
-
           <div style={st('display:flex;align-items:center;gap:10px')}>
             <label style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Week</label>
             {s.availableWeeks.length > 0 ? (
@@ -2315,231 +2711,390 @@ function App() {
             <p style={st('font:400 16px var(--font-sans);color:var(--ink-muted)')}>No power rating data for {activeTeam || 'this team'} yet.</p>
           )}
 
-          {profile && (
-            <div style={st('display:flex;flex-direction:column;gap:22px')}>
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:6px')}>
-                <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)')}>Team Profile</span>
-                <h2 style={st('font:900 26px var(--font-sans);margin:6px 0 4px;color:var(--ink)')}>{profile.headline}</h2>
-                <p style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{profile.oneLiner}</p>
-              </div>
-
-              {kpiTilesJSX}
-            </div>
-          )}
-
-          {!profile && activeRow && (
-            <div style={st(`background:${snapshotBg};border-radius:var(--radius-md);padding:var(--card-padding);display:flex;flex-direction:column;gap:18px`)}>
-              {kpiTilesInner}
-              {fallbackRationale && (
-                <div style={st(`font:400 17px/1.5 var(--font-sans);color:${snapshotTextColor};opacity:.9`)}>{fallbackRationale}</div>
-              )}
-            </div>
-          )}
-
-          <div style={st('display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px')}>
-            {activeCoaching && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Coaching Overview</div>
-                {[
-                  { label: 'Head Coach', name: activeCoaching.head_coach, change: activeCoaching.changes.hc },
-                  { label: 'Offensive Coordinator', name: activeCoaching.offensive_coordinator, change: activeCoaching.changes.oc },
-                  { label: 'Defensive Coordinator', name: activeCoaching.defensive_coordinator, change: activeCoaching.changes.dc },
-                ].map((row) => (
-                  <div key={row.label} style={st('display:flex;flex-direction:column;gap:2px;padding-top:8px;border-top:1px solid var(--hairline)')}>
-                    <div style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>{row.label}</div>
-                    <div style={st('display:flex;align-items:center;gap:8px;flex-wrap:wrap')}>
-                      <span style={st('font:700 16px var(--font-sans);color:var(--ink)')}>{row.name}</span>
-                      {row.change.new && <span style={st('font:700 10px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:3px 8px;border-radius:999px')}>New in 2026</span>}
-                    </div>
-                    {row.change.new && row.change.origin && <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>{row.change.origin}</div>}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {teamDNADimensions.length > 0 && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team DNA</div>
-                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>What kind of team this is, not how good they are — each bar is this team's percentile among all {teams.length} teams on that dimension.</div>
-                <TeamDNA st={st} dimensions={teamDNADimensions} />
-              </div>
-            )}
-
-            {activeRow && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:12px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Score breakdown</div>
-                <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Shown at full scale — Power Score above applies 45%/35%/20% weights to these three, so they won't sum to it directly.</div>
-                {componentBars.map((b) => (
-                  <div key={b.label} style={st('display:flex;align-items:center;gap:12px')}>
-                    <span style={st('width:110px;flex-shrink:0;font:600 13px var(--font-sans);color:var(--ink-muted)')}>{b.label}</span>
-                    <div style={{ flex: 1 }}><SignedBar value={b.value} scaleMax={componentScale} width="100%" /></div>
-                    <span style={st('width:56px;text-align:right;font:600 13px var(--font-sans);color:var(--ink)')}>{signed(b.value, 1)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {profile && (
-            <div style={st('display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start')}>
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:14px')}>
-                {profile.execSummary.map((p, i) => (
-                  <p key={i} style={st('font:400 15px/1.6 var(--font-sans);color:var(--ink);margin:0;max-width:640px')}>{p}</p>
-                ))}
-                {monteCarloCallout && (
-                  <div style={st('background:var(--surface-page);border-left:3px solid var(--brass);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font:600 14px/1.5 var(--font-sans);color:var(--ink);max-width:640px')}>
-                    Most likely finish: {monteCarloCallout.modeWins} wins ({pct(monteCarloCallout.modeProb, 0)} of simulations). {pct(monteCarloCallout.atLeastNinePct, 0)} chance of at least 9 wins.{monteCarloCallout.rangeLow !== null && ` Simulated 90% range: ${monteCarloCallout.rangeLow} to ${monteCarloCallout.rangeHigh} wins.`}
-                  </div>
-                )}
-              </div>
-
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Five Questions That Decide the Season</div>
-                <ol style={st('margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px')}>
-                  {profile.fiveQuestions.map((q, i) => (
-                    <li key={i} style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink)')}>{q}</li>
+          {activeRow && (
+            <div style={st('display:flex;align-items:flex-start;border:1px solid var(--hairline);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card)')}>
+              <div style={st('width:212px;flex-shrink:0;align-self:stretch;border-right:1px solid var(--hairline);background:var(--surface-page);padding:24px 0')}>
+                <div style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--ink-faint);padding:0 20px 12px')}>Contents</div>
+                <div style={st('display:flex;flex-direction:column')}>
+                  {TEAM_DETAIL_CONTENTS.map((item, i) => (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      style={st(i === 0
+                        ? `font:700 13px var(--font-sans);color:var(--ink);padding:9px 20px;background:var(--surface-card);border-left:3px solid ${teamColor(activeTeam)};text-decoration:none;display:block`
+                        : 'font:600 13px var(--font-sans);color:var(--ink-muted);padding:9px 20px;border-left:3px solid transparent;text-decoration:none;display:block')}
+                    >{item.label}</a>
                   ))}
-                </ol>
-              </div>
-            </div>
-          )}
-
-          {profile && (
-            <div style={st('display:flex;flex-direction:column;gap:14px')}>
-              <div>
-                <div style={st('font:800 19px var(--font-sans);color:var(--ink)')}>Model SWOT</div>
-                <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint);margin-top:2px')}>Strengths and Weaknesses are what the model's numbers say right now. Opportunities and Threats are what would change the call.</div>
-              </div>
-              {profile.whyModelThinks && (
-                <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
-                  <SWOTQuadrant label="Strengths" sub="Current evidence behind the call" items={profile.whyModelThinks.optimism} tone="positive" />
-                  <SWOTQuadrant label="Weaknesses" sub="Current evidence working against it" items={profile.whyModelThinks.risks} tone="risk" />
                 </div>
-              )}
-              <div style={st('display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px')}>
-                <SWOTQuadrant label="Opportunities" sub="Model is probably too pessimistic if…" items={profile.changeOurMind.pessimisticIf} tone="positive" />
-                <SWOTQuadrant label="Threats" sub="Expectations should be lowered if…" items={profile.changeOurMind.lowerIf} tone="risk" />
               </div>
-            </div>
-          )}
 
-          <div style={st('display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start')}>
-            {activeTalent && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Talent Map</div>
-                <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:-6px')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts, so treat this as a starting point, not today's exact 53.</div>
-                <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
-              </div>
-            )}
+              <div style={st('flex:1;min-width:0;background:var(--surface-page)')}>
 
-            {keyPersonCardJSX}
-          </div>
-
-          <div style={st('display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start')}>
-            {activeRow && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:4px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
-                  {upcomingSchedule.length ? 'Schedule journey' : 'Full schedule'}
-                </div>
-                {journeySummary && (
-                  <div style={st('font:400 12px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{journeySummary}</div>
-                )}
-                {journeyRows.map((g) => (
-                  <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
-                    <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
-                    {g.bye ? (
-                      <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
-                    ) : (
-                      <>
-                        <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: difficultyMeta[g.difficulty].color }} title={difficultyMeta[g.difficulty].label} />
-                        <span style={st('flex:1;font:600 13px var(--font-sans);color:var(--ink)')}>
-                          {g.home ? 'vs' : '@'} {g.opponent}
-                          {g.isDivision && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>DIV</span>}
-                          {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
-                        </span>
-                        <span style={st('font:700 12px var(--font-sans);color:var(--ink-muted);text-align:right;width:38px;flex-shrink:0')}>{pct(g.win_prob, 0)}</span>
-                        <span style={st('font:600 12px var(--font-sans);color:var(--ink-muted);text-align:right')}>
-                          {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
-                        </span>
-                      </>
+                {/* ---- Summary (handoff 2.1) ---- */}
+                <div id="summary" style={st('display:grid;grid-template-columns:minmax(0,1fr) 380px;align-items:stretch;background:var(--surface-dark)')}>
+                  <div style={st('display:flex;flex-direction:column;gap:12px;justify-content:flex-end;padding:34px 40px')}>
+                    <span style={st(`font:700 12px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:${eyebrowAccent}`)}>{TEAM_FULL_NAME[activeTeam] || activeTeam} · preseason read 2026</span>
+                    <h2 style={st('font:900 46px/1.05 var(--font-sans);margin:0;color:var(--paper)')}>{profile ? profile.headline : activeTeam}</h2>
+                    {(profile ? profile.oneLiner : fallbackRationale) && (
+                      <p style={st('font:400 21px/1.45 var(--font-sans);color:var(--paper);opacity:.85;margin:0;max-width:600px')}>{profile ? profile.oneLiner : fallbackRationale}</p>
                     )}
                   </div>
-                ))}
-                <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
-                  {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse. DIV = division opponent, SWING = within 5 points of a coin flip.
+                  <div style={st(`display:flex;flex-direction:column;gap:14px;background:${snapshotBg};padding:34px 36px;justify-content:flex-end`)}>
+                    <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:10px;border-bottom:1px solid rgba(247,244,236,.35)')}>
+                      <span style={st(`font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:${snapshotTextColor};opacity:.6`)}>Power Score</span>
+                      <span style={st(`font:900 64px/.85 var(--font-sans);color:${snapshotTextColor}`)}>{num(activeRow.power_score, 2)}</span>
+                    </div>
+                    <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                      <span style={st(`font:600 14px var(--font-sans);color:${snapshotTextColor};opacity:.7`)}>2025 record</span>
+                      <span style={st(`font:600 18px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.record || '—'}</span>
+                    </div>
+                    <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                      <span style={st(`font:600 14px var(--font-sans);color:${snapshotTextColor};opacity:.7`)}>Division</span>
+                      <span style={st(`font:600 18px var(--font-sans);color:${snapshotTextColor}`)}>{activeRow.division || '—'}</span>
+                    </div>
+                    {divisionLeaderRow && (
+                      <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                        <span style={st(`font:600 14px var(--font-sans);color:${snapshotTextColor};opacity:.7`)}>{divisionLeaderRow.team}, atop the division</span>
+                        <span style={st(`font:600 18px var(--font-sans);color:${snapshotTextColor}`)}>{signed(divisionLeaderRow.power_score, 1)}</span>
+                      </div>
+                    )}
+                    <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                      <span style={st(`font:600 14px var(--font-sans);color:${snapshotTextColor};opacity:.7`)}>Strength of schedule</span>
+                      <span style={st(`font:600 18px var(--font-sans);color:${snapshotTextColor};opacity:${sosRank ? 1 : 0.5}`)}>{sosRank ? `#${sosRank}` : '—'}</span>
+                    </div>
+                    <span style={st(`font:400 12px/1.45 var(--font-sans);color:${snapshotTextColor};opacity:.75;padding-top:8px;border-top:1px solid rgba(247,244,236,.35)`)}>This is the page's one printing of the Power Score. Everywhere below, the number is referred to rather than restated.</span>
+                  </div>
                 </div>
-              </div>
-            )}
 
-            {coneRows.length > 0 && (
-              <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Cone of Certainty — projected wins</div>
-                <svg viewBox={`0 0 ${coneChartW} ${coneRows.length * coneRowH + 24}`} width="100%" height={coneRows.length * coneRowH + 24} style={{ display: 'block' }}>
-                  {coneRows.map((r, i) => {
-                    const y = i * coneRowH + coneRowH / 2;
-                    return (
-                      <React.Fragment key={r.label}>
-                        <text x={0} y={y + 4} style={{ font: '600 12px var(--font-sans)', fill: 'var(--ink-muted)' }}>{r.label}</text>
-                        <line x1={coneX(r.low)} y1={y} x2={coneX(r.high)} y2={y} stroke={r.color} strokeWidth="8" strokeLinecap="round" opacity="0.35" />
-                        <circle cx={coneX(r.mean)} cy={y} r="6" fill={r.color} />
-                        <text x={coneX(r.low)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.low, 1)}</text>
-                        <text x={coneX(r.high)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.high, 1)}</text>
-                        <text x={coneX(r.mean)} y={y - 14} style={{ font: '700 12px var(--font-sans)', fill: 'var(--ink)' }} textAnchor="middle">{num(r.mean, 1)}</text>
-                      </React.Fragment>
-                    );
-                  })}
-                </svg>
-                <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>90% confidence interval, expected wins out of 17 games. The simulated range is wider — that's the correction described in "How well does this model actually work?" on the Power Rankings tab.</div>
-              </div>
-            )}
-
-            <div style={st('display:flex;flex-direction:column;gap:18px')}>
-              {histBars.length > 0 && (
-                <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
-                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Win-total distribution</div>
-                  <svg viewBox={`0 0 ${histChartW} ${histChartH + 24}`} width="100%" height={histChartH + 24} style={{ display: 'block' }}>
-                    {histBars.map((b, i) => {
-                      const x = i * (histBarW + histBarGap);
-                      const y = histY(b.prob);
-                      const inRange = activeMC && b.wins >= Math.round(activeMC.sim_ci90_low) && b.wins <= Math.round(activeMC.sim_ci90_high);
-                      return (
-                        <React.Fragment key={b.wins}>
-                          <rect x={x} y={y} width={histBarW} height={histChartH - y} fill={inRange ? 'var(--brass)' : 'var(--hairline)'} rx="2" />
-                          <text x={x + histBarW / 2} y={histChartH + 16} style={{ font: '600 10px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{b.wins}</text>
-                        </React.Fragment>
-                      );
-                    })}
-                  </svg>
-                  <div style={st('font:400 11px var(--font-sans);color:var(--ink-faint)')}>All 20,000 simulated seasons — gold marks the 90% range shown in the Cone of Certainty.</div>
+                {/* ---- The read (handoff 2.2) ---- */}
+                <SectionRibbon id="the-read" label="The read" color={teamColor(activeTeam)} />
+                <div style={st('display:grid;grid-template-columns:minmax(0,660px) minmax(0,1fr);gap:48px;padding:26px 40px 0')}>
+                  <div style={st('display:flex;flex-direction:column;gap:16px')}>
+                    {profile ? profile.execSummary.map((p, i) => (
+                      <p key={i} style={st(`font:400 ${i === 0 ? '21px/1.55' : '19px/1.6'} var(--font-sans);color:var(--ink);margin:0`)}>{p}</p>
+                    )) : fallbackRationale ? (
+                      <p style={st('font:400 21px/1.55 var(--font-sans);color:var(--ink);margin:0')}>{fallbackRationale}</p>
+                    ) : (
+                      <p style={st('font:400 17px/1.5 var(--font-sans);color:var(--ink-faint);margin:0')}>No preseason narrative on file for {activeTeam} yet — see the Power Rankings tab for the model's numbers.</p>
+                    )}
+                  </div>
+                  <div style={st('display:flex;flex-direction:column;gap:12px;border-left:1px solid var(--hairline);padding-left:28px')}>
+                    <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--ink-faint)')}>Where these numbers live</span>
+                    <div style={st('display:flex;flex-direction:column;gap:10px')}>
+                      {profile && profile.whyModelThinks && (
+                        <div style={st('display:flex;flex-direction:column;gap:1px')}>
+                          <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>Strengths &amp; weaknesses</span>
+                          <span style={st('font:400 14px/1.4 var(--font-sans);color:var(--ink-muted)')}>Flagged in the model SWOT</span>
+                        </div>
+                      )}
+                      {activeKeyPerson.length > 0 && (
+                        <div style={st('display:flex;flex-direction:column;gap:1px')}>
+                          <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>Key-person cliff</span>
+                          <span style={st('font:400 14px/1.4 var(--font-sans);color:var(--ink-muted)')}>Drawn in full below</span>
+                        </div>
+                      )}
+                      {histBars.length > 0 && (
+                        <div style={st('display:flex;flex-direction:column;gap:1px')}>
+                          <span style={st('font:700 15px var(--font-sans);color:var(--ink)')}>Win odds and range</span>
+                          <span style={st('font:400 14px/1.4 var(--font-sans);color:var(--ink-muted)')}>Labelled on the win-distribution axis</span>
+                        </div>
+                      )}
+                    </div>
+                    <p style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-faint);margin:0;padding-top:12px;border-top:1px solid var(--hairline)')}>Figures print once, in the section that owns them, rather than repeated in prose.</p>
+                  </div>
                 </div>
-              )}
 
-              {activePlayoff && (
-                <div style={st('display:flex;flex-direction:column;gap:10px')}>
-                  {[
-                    { label: 'Division Win %', value: activePlayoff.division_win_pct },
-                    { label: 'Playoff %', value: activePlayoff.playoff_pct },
-                    { label: 'Conf. Champ %', value: activePlayoff.conf_champ_pct },
-                    { label: 'Super Bowl %', value: activePlayoff.super_bowl_pct },
-                  ].map((tile) => (
-                    <div key={tile.label} style={st('display:flex;align-items:center;justify-content:space-between;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:12px var(--card-padding)')}>
-                      <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>{tile.label}</div>
-                      <div style={st('font:900 22px var(--font-sans);color:var(--ink)')}>{pct(tile.value)}</div>
+                {/* ---- Team DNA (handoff 2.6) ---- */}
+                {teamDNADimensions.length > 0 && (
+                  <React.Fragment>
+                    <SectionRibbon id="team-dna" label="Team DNA" note="Strongest and weakest, not all eight equally" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:18px')}>
+                      <div style={st('font:400 14px var(--font-sans);color:var(--ink-faint)')}>What kind of team this is, not how good they are — each figure is this team's percentile among all {teams.length} teams on that dimension.</div>
+                      {(dnaMostPositive || dnaMostNegative) && (
+                        <div style={st(`display:grid;grid-template-columns:repeat(${dnaMostPositive && dnaMostNegative ? 2 : 1},minmax(0,1fr));gap:20px`)}>
+                          {dnaMostPositive && dnaExtremeCard(dnaMostPositive, 'positive')}
+                          {dnaMostNegative && dnaExtremeCard(dnaMostNegative, 'negative')}
+                        </div>
+                      )}
+                      <div style={st('display:flex;flex-wrap:wrap;gap:10px')}>
+                        {dnaChips.map((d) => {
+                          const hasValue = d.value !== null && d.value !== undefined && !Number.isNaN(d.value);
+                          return (
+                            <span key={d.label} style={st('font:600 14px var(--font-sans);color:var(--ink-muted);border:1px solid var(--hairline);border-radius:var(--radius-pill);padding:7px 14px;background:var(--surface-card)')}>
+                              {d.label} <strong style={st(`font-weight:700;color:${hasValue ? 'var(--ink)' : 'var(--ink-faint)'};margin-left:6px`)}>{hasValue ? signed(d.value, 1) : '—'}</strong>
+                            </span>
+                          );
+                        })}
+                        <span style={st('font:400 13px var(--font-sans);color:var(--ink-faint);align-self:center')}>Em-dash = the value lives in <em>preseason_power</em> / <em>win_projections</em>, not loaded for every team's snapshot.</span>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Five questions (handoff 2.2/2.5) ---- */}
+                {profile && profile.fiveQuestions && profile.fiveQuestions.length > 0 && (
+                  <React.Fragment>
+                    <SectionRibbon id="five-questions" label="Five questions" note="One decides the rest" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:16px')}>
+                      <div style={st(`display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:baseline;padding-left:18px;border-left:5px solid ${teamColor(activeTeam)}`)}>
+                        <span style={st(`font:900 40px/.9 var(--font-sans);color:${teamColor(activeTeam)}`)}>01</span>
+                        <div style={st('display:flex;flex-direction:column;gap:6px')}>
+                          <p style={st('font:900 32px/1.22 var(--font-sans);color:var(--ink);margin:0;max-width:820px')}>{profile.fiveQuestions[0]}</p>
+                          <span style={st('font:600 14px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>Everything else on this page moves with this answer</span>
+                        </div>
+                      </div>
+                      <div style={st('display:flex;flex-direction:column')}>
+                        {profile.fiveQuestions.slice(1).map((q, i) => (
+                          <div
+                            key={i}
+                            style={st(`display:grid;grid-template-columns:52px minmax(0,1fr);gap:20px;align-items:baseline;padding:16px 0;border-top:1px solid var(--hairline)${i === profile.fiveQuestions.length - 2 ? ';border-bottom:1px solid var(--hairline)' : ''}`)}
+                          >
+                            <span style={st('font:700 17px var(--font-sans);color:var(--ink-faint)')}>{String(i + 2).padStart(2, '0')}</span>
+                            <p style={st('font:400 19px/1.45 var(--font-sans);color:var(--ink);margin:0;max-width:860px')}>{q}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Key-person cliff (handoff 2.1/2.5) ---- */}
+                <SectionRibbon id="key-person-cliff" label="Key-person cliff" color={teamColor(activeTeam)} />
+                <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:14px')}>
+                  {keyPersonCardsJSX}
+                </div>
+
+                {/* ---- Model SWOT (handoff 2.7) ---- */}
+                {profile && profile.whyModelThinks && profile.changeOurMind && (
+                  <React.Fragment>
+                    <SectionRibbon id="model-swot" label="Model SWOT" note="Reason leads, number flags it" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:12px')}>
+                      <div style={st('background:var(--surface-dark);border-radius:var(--radius-md);padding:26px 28px;display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:32px;align-items:center')}>
+                        <div style={st('display:flex;flex-direction:column;gap:8px')}>
+                          <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--red-light)')}>Weakness · the one that matters most</span>
+                          <p style={st('font:700 26px/1.32 var(--font-sans);color:var(--paper);margin:0;max-width:720px')}>{leadWeaknessText}</p>
+                        </div>
+                        <div style={st('display:flex;flex-direction:column;gap:12px;border-left:1px solid rgba(247,244,236,.2);padding-left:26px')}>
+                          {worstComponent && (
+                            <div style={st('display:flex;flex-direction:column;gap:1px')}>
+                              <span style={st('font:900 34px/.95 var(--font-sans);color:var(--red-light)')}>{signed(worstComponent.value, 1)}</span>
+                              <span style={st('font:600 13px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--paper);opacity:.7')}>{worstComponent.label}</span>
+                            </div>
+                          )}
+                          {divisionLeaderRow && divisionGap !== null && (
+                            <div style={st('display:flex;flex-direction:column;gap:1px')}>
+                              <span style={st('font:900 26px/.95 var(--font-sans);color:var(--paper)')}>{num(Math.abs(divisionGap), 1)} pts</span>
+                              <span style={st('font:600 13px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--paper);opacity:.7')}>{divisionGap >= 0 ? `Behind ${divisionLeaderRow.team}` : `Ahead of ${divisionLeaderRow.team}`}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div style={st('display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px')}>
+                        <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:22px 24px;display:flex;flex-direction:column;gap:12px')}>
+                          <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--value-positive)')}>Strength · the one that matters most</span>
+                          <div style={st('display:flex;align-items:flex-start;gap:18px')}>
+                            <p style={st('font:700 22px/1.35 var(--font-sans);color:var(--ink);margin:0;flex:1')}>{leadStrengthText}</p>
+                            {bestComponent && (
+                              <div style={st('display:flex;flex-direction:column;gap:1px;flex-shrink:0;text-align:right')}>
+                                <span style={st('font:900 30px/.95 var(--font-sans);color:var(--value-positive)')}>{signed(bestComponent.value, 1)}</span>
+                                <span style={st('font:600 12px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>{bestComponent.label}</span>
+                              </div>
+                            )}
+                          </div>
+                          {otherStrengths.map((t, i) => (
+                            <p key={i} style={st(`font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0${i === 0 ? ';padding-top:10px;border-top:1px solid var(--hairline)' : ''}`)}>{t}</p>
+                          ))}
+                        </div>
+                        <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:22px 24px;display:flex;flex-direction:column;gap:10px')}>
+                          <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--value-risk)')}>Other weaknesses</span>
+                          {otherWeaknesses.map((t, i) => (
+                            <p key={i} style={st('font:400 17px/1.5 var(--font-sans);color:var(--ink);margin:0')}>{t}</p>
+                          ))}
+                        </div>
+                        <div style={st('background:var(--surface-page);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:20px 24px;display:flex;flex-direction:column;gap:8px')}>
+                          <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--value-positive)')}>Too pessimistic if…</span>
+                          {profile.changeOurMind.pessimisticIf.map((t, i) => (
+                            <p key={i} style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{t}</p>
+                          ))}
+                        </div>
+                        <div style={st('background:var(--surface-page);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:20px 24px;display:flex;flex-direction:column;gap:8px')}>
+                          <span style={st('font:700 11px var(--font-sans);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--value-risk)')}>Lower expectations if…</span>
+                          {profile.changeOurMind.lowerIf.map((t, i) => (
+                            <p key={i} style={st('font:400 16px/1.5 var(--font-sans);color:var(--ink-muted);margin:0')}>{t}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Cone of certainty (handoff 2.4 ribbon; chart unchanged) ---- */}
+                {coneRows.length > 0 && (
+                  <React.Fragment>
+                    <SectionRibbon id="cone-of-certainty" label="Cone of certainty" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;max-width:700px')}>
+                      <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:10px')}>
+                        <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint)')}>Projected wins, out of 17 games.</div>
+                        <svg viewBox={`0 0 ${coneChartW} ${coneRows.length * coneRowH + 24}`} width="100%" height={coneRows.length * coneRowH + 24} style={{ display: 'block' }}>
+                          {coneRows.map((r, i) => {
+                            const y = i * coneRowH + coneRowH / 2;
+                            return (
+                              <React.Fragment key={r.label}>
+                                <text x={0} y={y + 4} style={{ font: '600 12px var(--font-sans)', fill: 'var(--ink-muted)' }}>{r.label}</text>
+                                <line x1={coneX(r.low)} y1={y} x2={coneX(r.high)} y2={y} stroke={r.color} strokeWidth="8" strokeLinecap="round" opacity="0.35" />
+                                <circle cx={coneX(r.mean)} cy={y} r="6" fill={r.color} />
+                                <text x={coneX(r.low)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.low, 1)}</text>
+                                <text x={coneX(r.high)} y={y + coneRowH / 2 - 6} style={{ font: '600 11px var(--font-sans)', fill: 'var(--ink-faint)' }} textAnchor="middle">{num(r.high, 1)}</text>
+                                <text x={coneX(r.mean)} y={y - 14} style={{ font: '700 12px var(--font-sans)', fill: 'var(--ink)' }} textAnchor="middle">{num(r.mean, 1)}</text>
+                              </React.Fragment>
+                            );
+                          })}
+                        </svg>
+                        <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>90% confidence interval. The simulated range is wider than a simple analytical estimate — it's the one that accounts for how uncertain the underlying Power Score really is.</div>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Talent map (handoff 2.4/2.5.3) - promoted to a full-width moment ---- */}
+                {activeTalent && (
+                  <React.Fragment>
+                    <SectionRibbon id="talent-map" label="Talent map" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:14px')}>
+                      <div style={st('display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap')}>
+                        <h3 style={st('font:900 34px/1.15 var(--font-sans);color:var(--ink);margin:0;max-width:700px')}>Where the talent actually sits, position by position</h3>
+                        <span style={st('font:600 15px/1.45 var(--font-sans);color:var(--ink-muted);max-width:360px;text-align:right')}>Real starters, real positions — from the {talentMapSnapshot ? new Date(talentMapSnapshot + 'T12:00:00').toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : 'most recent'} depth-chart snapshot. Predates the 2026 draft class and August roster cuts.</span>
+                      </div>
+                      <TalentMapField players={activeTalent.players} scheme={activeTalent.scheme} />
+                      <p style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint);margin:0')}>Same component as today, shown at the scale it earns — one of the three deliberately large elements on this page, alongside the summary Power Score and the key-person cliff.</p>
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Coaching (handoff 2.4) ---- */}
+                {activeCoaching && (
+                  <React.Fragment>
+                    <SectionRibbon id="coaching" label="Coaching" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;max-width:700px;display:flex;flex-direction:column;gap:12px')}>
+                      {[
+                        { label: 'Head Coach', name: activeCoaching.head_coach, change: activeCoaching.changes.hc },
+                        { label: 'Offensive Coordinator', name: activeCoaching.offensive_coordinator, change: activeCoaching.changes.oc },
+                        { label: 'Defensive Coordinator', name: activeCoaching.defensive_coordinator, change: activeCoaching.changes.dc },
+                      ].map((row) => (
+                        <div key={row.label} style={st('display:flex;flex-direction:column;gap:2px;padding-top:12px;border-top:1px solid var(--hairline)')}>
+                          <div style={st('font:600 11px var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)')}>{row.label}</div>
+                          <div style={st('display:flex;align-items:center;gap:8px;flex-wrap:wrap')}>
+                            <span style={st('font:700 18px var(--font-sans);color:var(--ink)')}>{row.name}</span>
+                            {row.change.new && <span style={st('font:700 10px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;background:var(--brass);color:var(--ink);padding:3px 8px;border-radius:999px')}>New in 2026</span>}
+                          </div>
+                          {row.change.new && row.change.origin && <div style={st('font:400 13px var(--font-sans);color:var(--ink-faint)')}>{row.change.origin}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Schedule journey (handoff 2.4) ---- */}
+                <SectionRibbon id="schedule-journey" label="Schedule journey" color={teamColor(activeTeam)} />
+                <div style={st('padding:26px 40px 0;max-width:700px')}>
+                  <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:2px')}>
+                    {upcomingSchedule.length ? 'Upcoming' : 'Full schedule'}
+                  </div>
+                  {journeySummary && (
+                    <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-faint);margin-bottom:8px')}>{journeySummary}</div>
+                  )}
+                  {journeyRows.map((g) => (
+                    <div key={g.week} style={st('display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--hairline)')}>
+                      <span style={st('width:26px;flex-shrink:0;font:700 11px var(--font-sans);color:var(--ink-faint)')}>W{g.week}</span>
+                      {g.bye ? (
+                        <span style={st('flex:1;font:600 15px var(--font-sans);color:var(--ink-faint);font-style:italic')}>Bye week</span>
+                      ) : (
+                        <>
+                          <span style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, display: 'inline-block', background: difficultyMeta[g.difficulty].color }} title={difficultyMeta[g.difficulty].label} />
+                          <span style={st('flex:1;font:600 15px var(--font-sans);color:var(--ink)')}>
+                            {g.home ? 'vs' : '@'} {g.opponent}
+                            {g.isDivision && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--ink-faint)')}>DIV</span>}
+                            {g.isSwing && <span style={st('margin-left:6px;font:700 10px var(--font-sans);letter-spacing:.04em;color:var(--brass)')}>SWING</span>}
+                          </span>
+                          <span style={st('font:700 13px var(--font-sans);color:var(--ink-muted);text-align:right;width:40px;flex-shrink:0')}>{pct(g.win_prob, 0)}</span>
+                          <span style={st('font:600 13px var(--font-sans);color:var(--ink-muted);text-align:right')}>
+                            {g.date ? new Date(g.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}
+                          </span>
+                        </>
+                      )}
                     </div>
                   ))}
+                  <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint);margin-top:8px')}>
+                    {upcomingSchedule.length ? "Auto-filters to games on or after today's date." : "Season hasn't started — showing the full 18-week schedule."} Dot color and % are this team's own win probability for that game — green 60%+, gold a real toss-up, red 40%-or-worse. DIV = division opponent, SWING = within 5 points of a coin flip.
+                  </div>
                 </div>
-              )}
+
+                {/* ---- Playoff odds (handoff 2.4) ---- */}
+                {activePlayoff && (
+                  <React.Fragment>
+                    <SectionRibbon id="playoff-odds" label="Playoff odds" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;max-width:900px')}>
+                      {[
+                        { label: 'Division Win %', value: activePlayoff.division_win_pct },
+                        { label: 'Playoff %', value: activePlayoff.playoff_pct },
+                        { label: 'Conf. Champ %', value: activePlayoff.conf_champ_pct },
+                        { label: 'Super Bowl %', value: activePlayoff.super_bowl_pct },
+                      ].map((tile) => (
+                        <div key={tile.label} style={st('display:flex;flex-direction:column;gap:6px;background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:16px var(--card-padding)')}>
+                          <div style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>{tile.label}</div>
+                          <div style={st('font:900 28px var(--font-sans);color:var(--ink)')}>{pct(tile.value)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </React.Fragment>
+                )}
+
+                {/* ---- Win distribution (handoff 2.3) - moved to the last block in the
+                     tab, one team-color scale (solid mode / 40% range / 16% tails)
+                     instead of the old steel+red+tan mix, with every simulated-season
+                     figure the page cites now an axis label under its own bar instead
+                     of a separate "31%" card. ---- */}
+                {histBars.length > 0 && (
+                  <React.Fragment>
+                    <SectionRibbon id="win-distribution" label="Win distribution" note="20,000 simulated seasons" color={teamColor(activeTeam)} />
+                    <div style={st('padding:26px 40px 0;display:flex;flex-direction:column;gap:10px')}>
+                      <div style={st('display:flex;align-items:flex-end;gap:7px;height:210px;border-bottom:1px solid var(--ink)')}>
+                        {histBars.map((b) => {
+                          const isMode = monteCarloCallout && b.wins === monteCarloCallout.modeWins;
+                          const inRange = activeMC && b.wins >= Math.round(activeMC.sim_ci90_low) && b.wins <= Math.round(activeMC.sim_ci90_high);
+                          const heightPx = Math.max(2, Math.round((b.prob / histMax) * histBarMaxH));
+                          const fill = isMode ? distModeFill : inRange ? distRangeFill : distTailFill;
+                          return isMode ? (
+                            <div key={b.wins} style={st('flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px')}>
+                              <span style={st('font:900 15px var(--font-sans);color:var(--ink)')}>{pct(b.prob, 0)}</span>
+                              <div style={st(`width:100%;height:${heightPx}px;background:${fill}`)} />
+                            </div>
+                          ) : (
+                            <div key={b.wins} style={st(`flex:1;height:${heightPx}px;background:${fill}`)} />
+                          );
+                        })}
+                      </div>
+                      <div style={st('display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font:600 12px var(--font-sans);color:var(--ink-faint)')}>
+                        <span>0</span>
+                        <span>{monteCarloCallout && monteCarloCallout.rangeLow !== null ? (<><b style={st('color:var(--ink);font-weight:700')}>{monteCarloCallout.rangeLow}</b> — bottom of the 90% range</>) : '—'}</span>
+                        <span>{monteCarloCallout ? (<><b style={st('color:var(--ink);font-weight:700')}>{monteCarloCallout.modeWins}</b> — most likely, {pct(monteCarloCallout.modeProb, 0)}</>) : '—'}</span>
+                        <span>{monteCarloCallout ? (<><b style={st('color:var(--ink);font-weight:700')}>{pct(monteCarloCallout.atLeastNinePct, 0)}</b> at 9+ wins</>) : '—'}</span>
+                        <span>{monteCarloCallout && monteCarloCallout.rangeHigh !== null ? (<><b style={st('color:var(--ink);font-weight:700')}>{monteCarloCallout.rangeHigh}</b> — top of the range</>) : '—'}</span>
+                        <span>17 wins</span>
+                      </div>
+                      <p style={st('font:400 14px/1.5 var(--font-sans);color:var(--ink-faint);margin:6px 0 0;max-width:900px')}>All 20,000 simulated seasons — solid marks the most likely outcome, the deeper shade marks the 90% range shown in the Cone of Certainty above.</p>
+                    </div>
+                  </React.Fragment>
+                )}
+
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
       {tab === 'trend' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:22px')}>
-          {explainerButtons}
-          {glossaryPanel}
-          {validationPanel}
-
           <div style={st('display:flex;align-items:center;gap:16px;flex-wrap:wrap')}>
             <span style={st('font:700 12px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)')}>Team</span>
             <select
@@ -2593,10 +3148,6 @@ function App() {
 
       {tab === 'playoff' && (
         <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:26px')}>
-          {explainerButtons}
-          {glossaryPanel}
-          {validationPanel}
-
           <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
             {playoffSortPills.map((p) => (
               <button key={p.key} style={st(p.style)} onClick={p.onClick}>{p.label} {p.arrow}</button>
@@ -2614,6 +3165,20 @@ function App() {
               <div style={st('font:400 12px var(--font-sans);color:var(--ink-faint)')}>From a 5,000-season Monte Carlo simulation with a documented tiebreaker simplification (win% → head-to-head for clean 2-way ties → division/conference record → Power Score fallback) — see the <a href="methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a> for scope details.</div>
             </>
           )}
+        </div>
+      )}
+
+      {tab === 'glossary' && (
+        <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:26px;max-width:760px')}>
+          <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:20px')}>
+            {GLOSSARY_TERMS.map((gl) => (
+              <div key={gl.term}>
+                <div style={st('font:700 17px var(--font-sans);color:var(--ink);margin-bottom:4px')}>{gl.term}</div>
+                <div style={st('font:400 15px/1.5 var(--font-sans);color:var(--ink-muted)')}>{gl.def}</div>
+              </div>
+            ))}
+          </div>
+          <div style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-faint)')}>For the full methodology and validation results behind these terms, see the <a href="methodology.html" style={st('color:var(--accent-primary);font-weight:700')}>Methodology page</a>.</div>
         </div>
       )}
 
