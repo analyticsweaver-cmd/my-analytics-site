@@ -70,3 +70,12 @@ a{color:var(--link)}
 a:hover{color:var(--link-hover)}
 input[type=file]{display:none}
 button{font-family:var(--font-sans)}
+
+/* Power Rankings tab: table on the left, the Power Score walkthrough panel
+   sticky on the right. Collapses to a single column on narrow viewports. */
+.rankings-two-col{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start;}
+.rankings-two-col .walkthrough-panel{position:sticky;top:24px;}
+@media (max-width:960px){
+  .rankings-two-col{grid-template-columns:1fr;}
+  .rankings-two-col .walkthrough-panel{position:static;}
+}

@@ -94,7 +94,9 @@ a:hover{color:var(--brass);}
 /* Model Validation hub page */
 .lede{font-size:18px;color:var(--ink-muted);max-width:680px;line-height:1.6;margin:6px 0 0;}
 .stat-row{display:flex;gap:32px;flex-wrap:wrap;margin:28px 0;}
-.stat-row .stat{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px 24px;min-width:180px;}
+.stat-row .stat{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px 24px;min-width:180px;border-top:3px solid var(--brass);}
+.stat-row .stat:nth-child(2){border-top-color:var(--steel);}
+.stat-row .stat:nth-child(3){border-top-color:var(--ink);}
 .stat-row .stat .v{font-size:28px;font-weight:900;color:var(--ink);}
 .stat-row .stat .k{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-top:4px;}
 .section-title{font-size:22px;font-weight:900;margin:48px 0 6px;padding-top:20px;border-top:1px solid var(--hairline);}

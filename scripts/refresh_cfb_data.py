@@ -63,12 +63,27 @@ def main():
         with open(team_schedule_path) as f:
             team_schedule = json.load(f)
 
+    # The aggregate model's rating-diff -> point-margin conversion (scale)
+    # and flat home edge, refit against completed seasons by
+    # cfb_backtest_multiseason.py - NOT static, so the site should always
+    # read it live rather than hardcoding it in copy. None when the file
+    # doesn't exist yet (backtest never run).
+    margin_fit = None
+    margin_fit_path = os.path.join(src, "cfb_margin_fit.json")
+    if os.path.exists(margin_fit_path):
+        with open(margin_fit_path) as f:
+            margin_fit = json.load(f)
+        margin_fit["last_calibrated"] = datetime.date.fromtimestamp(
+            os.path.getmtime(margin_fit_path)
+        ).isoformat()
+
     data = {
         "power": power,
         "history": history,
         "matchup_by_week": matchup_by_week,
         "available_weeks": weeks,
         "team_schedule": team_schedule,
+        "margin_fit": margin_fit,
         "generated_at": datetime.date.today().isoformat(),
     }
 
@@ -78,7 +93,7 @@ def main():
 
     print(f"Wrote {out_path}")
     print(f"  power rows: {len(power)}, history rows: {len(history)}, weeks: {weeks}, "
-          f"team_schedule teams: {len(team_schedule)}")
+          f"team_schedule teams: {len(team_schedule)}, margin_fit: {margin_fit}")
     print("Next: git add -A && git commit -m 'refresh cfb data' && git push")
 
 
