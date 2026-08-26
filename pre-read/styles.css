@@ -14,7 +14,6 @@
 --radius-md:14px;--radius-sm:8px;--font-sans:'Archivo',system-ui,sans-serif;
 }
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
 body{margin:0;font-family:var(--font-sans);background:var(--paper);color:var(--ink);}
 a{color:var(--steel);}
 
