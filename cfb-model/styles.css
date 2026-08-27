@@ -71,11 +71,17 @@ a:hover{color:var(--link-hover)}
 input[type=file]{display:none}
 button{font-family:var(--font-sans)}
 
-/* Power Rankings tab: table on the left, the Power Score walkthrough panel
-   sticky on the right. Collapses to a single column on narrow viewports. */
-.rankings-two-col{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start;}
-.rankings-two-col .walkthrough-panel{position:sticky;top:24px;}
-@media (max-width:960px){
+/* Power Rankings tab (Direction 1A). Row 1: the "reading the scale" card and
+   the all-teams strip chart, side by side. Row 3: table (or grouped-by-
+   conference tables) on the left, the Power Score walkthrough sidebar on the
+   right — align-items:stretch is what makes the two columns exactly the same
+   height, so the sidebar no longer needs to be sticky. Both rows collapse to
+   a single column below 1100px, where the table's scroll body gets an
+   explicit max-height since it no longer has a sibling to size against. */
+.rankings-top-row{display:grid;grid-template-columns:1fr 1.25fr;gap:24px;align-items:stretch;}
+.rankings-two-col{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:stretch;}
+@media (max-width:1100px){
+  .rankings-top-row{grid-template-columns:1fr;}
   .rankings-two-col{grid-template-columns:1fr;}
-  .rankings-two-col .walkthrough-panel{position:static;}
+  .rankings-table-scroll-body{max-height:640px;}
 }

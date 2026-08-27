@@ -629,6 +629,29 @@ function signed(v, d = 1) {
   return (n > 0 ? '+' : '') + n.toFixed(d);
 }
 
+// Largest-remainder rounding: rounds `parts` to `decimals` places so they sum
+// EXACTLY to `total` rounded to the same precision, instead of each part and
+// the total being rounded independently (which can silently drift — classic
+// "sum of roundings != rounding of sum"). Used by the rankings sidebar's
+// worked example so the Prior/Season lines always add up to the displayed
+// Power Score at the displayed precision.
+function roundPartsToTotal(parts, total, decimals = 1) {
+  const scale = 10 ** decimals;
+  const targetTenths = Math.round(total * scale);
+  const floors = parts.map((v) => Math.floor(v * scale));
+  let remainder = targetTenths - floors.reduce((a, b) => a + b, 0);
+  const fracs = parts.map((v, i) => v * scale - floors[i]);
+  const result = [...floors];
+  if (remainder > 0) {
+    const order = fracs.map((_, i) => i).sort((a, b) => fracs[b] - fracs[a]);
+    for (let i = 0; i < remainder; i++) result[order[i % order.length]] += 1;
+  } else if (remainder < 0) {
+    const order = fracs.map((_, i) => i).sort((a, b) => fracs[a] - fracs[b]);
+    for (let i = 0; i < -remainder; i++) result[order[i % order.length]] -= 1;
+  }
+  return result.map((v) => v / scale);
+}
+
 function readableTextColor(hex) {
   const h = (hex || '#8C8F93').replace('#', '');
   const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
@@ -717,16 +740,22 @@ function buildIndexChart(series, metricDefs, maxW, minW, chartH, chartKey, setCh
 // (assets/data/cfb-data.json's margin_fit, refreshed by refresh_cfb_data.py)
 // rather than hardcoding a number that goes stale the next time the model is
 // recalibrated.
-function CFBPowerScoreWalkthrough({ team, rating, gamesPlayed, scale, homeEdge, lastCalibrated }) {
+function CFBPowerScoreWalkthrough({ team, rating, gamesPlayed, scale, homeEdge, lastCalibrated, priorRating, priorWeight: priorWeightProp, seasonRating, seasonWeight: seasonWeightProp }) {
   const SHRINKAGE_K = 8;
-  const seasonWeight = gamesPlayed != null ? gamesPlayed / (gamesPlayed + SHRINKAGE_K) : null;
-  const priorWeight = seasonWeight != null ? 1 - seasonWeight : null;
+  const seasonWeight = seasonWeightProp != null ? seasonWeightProp : (gamesPlayed != null ? gamesPlayed / (gamesPlayed + SHRINKAGE_K) : null);
+  const priorWeight = priorWeightProp != null ? priorWeightProp : (seasonWeight != null ? 1 - seasonWeight : null);
   const scaledPoints = (rating != null && scale != null) ? rating * scale : null;
+  // The two weighted parts must sum EXACTLY to the displayed Power Score at
+  // 3dp — same rounding pattern (roundPartsToTotal) that keeps the table's
+  // two-lane bar consistent with the number it's drawn next to.
+  const hasParts = priorRating != null && seasonRating != null && priorWeight != null && seasonWeight != null && rating != null;
+  const rawParts = hasParts ? [priorWeight * priorRating, seasonWeight * seasonRating] : null;
+  const roundedParts = rawParts ? roundPartsToTotal(rawParts, rating, 3) : null;
   return (
-    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:22px')}>
+    <div style={st('background:var(--surface-card);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:var(--card-padding);display:flex;flex-direction:column;gap:20px')}>
       <div>
         <div style={st('font:700 13px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:14px')}>How Power Score Is Built</div>
-        <div style={st('display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font:900 17px var(--font-sans);color:var(--ink);line-height:1.4')}>
+        <div style={st('display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;align-content:flex-start;font:900 19px/1.25 var(--font-sans);color:var(--ink)')}>
           <span style={{ color: 'var(--steel)' }}>Preseason Prior</span>
           <span style={{ color: 'var(--ink-faint)' }}>+</span>
           <span style={{ color: 'var(--brass)' }}>This Season's Efficiency</span>
@@ -758,20 +787,32 @@ function CFBPowerScoreWalkthrough({ team, rating, gamesPlayed, scale, homeEdge, 
         </div>
       )}
 
-      {team && rating != null && scale != null && (
+      {team && roundedParts && (
         <div style={st('border-top:1px solid var(--hairline);padding-top:18px;display:flex;flex-direction:column;gap:8px')}>
           <div style={st('font:700 13px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:4px')}>Worked example: {team}</div>
           <div style={st('display:flex;justify-content:space-between;gap:12px;font:500 14px var(--font-sans);color:var(--ink)')}>
-            <span>Rating ({num(rating, 3)}) &times; {num(scale, 0)}</span>
-            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{signed(scaledPoints, 1)} pts</span>
+            <span>Prior ({num(priorRating, 3)}) &times; {Math.round(priorWeight * 100)}%</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{signed(roundedParts[0], 3)}</span>
           </div>
-          <div style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>Roughly {Math.abs(Math.round(scaledPoints))} points {scaledPoints >= 0 ? 'better' : 'worse'} than the model's league-average team, before either team's own home-field edge is added.</div>
+          <div style={st('display:flex;justify-content:space-between;gap:12px;font:500 14px var(--font-sans);color:var(--ink)')}>
+            <span>Season ({num(seasonRating, 3)}) &times; {Math.round(seasonWeight * 100)}%</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{signed(roundedParts[1], 3)}</span>
+          </div>
+          <div style={st('display:flex;justify-content:space-between;gap:12px;font:700 15px var(--font-sans);color:var(--ink);border-top:1px solid var(--hairline);padding-top:8px;margin-top:4px')}>
+            <span>Power Score</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{signed(rating, 3)}</span>
+          </div>
+          {scale != null && (
+            <div style={st('font:400 13px/1.5 var(--font-sans);color:var(--ink-muted)')}>Roughly {Math.abs(Math.round(scaledPoints))} points {scaledPoints >= 0 ? 'better' : 'worse'} than the model's league-average team, before either team's own home-field edge is added.</div>
+          )}
         </div>
       )}
 
-      <div style={st('background:var(--surface-page);border-radius:var(--radius-sm);padding:16px 18px;font:400 13px/1.55 var(--font-sans);color:var(--ink-muted)')}>
-        <span style={st('color:var(--ink);font-weight:700')}>The scale isn&rsquo;t fixed for the season.</span> That &times;{num(scale, 0)} conversion factor was last recalibrated {lastCalibrated || 'recently'}, off three completed seasons of real results. It gets re-evaluated whenever the model is recalibrated, not on a set schedule, so today&rsquo;s number is &ldquo;as of {lastCalibrated || 'today'},&rdquo; not a season-long constant. Home-field edge is also team-specific elsewhere on the site, not the single flat number this simplified example leaves out.
-      </div>
+      {scale != null && (
+        <div style={st('background:var(--surface-page);border-radius:var(--radius-sm);padding:16px 18px;font:400 13px/1.55 var(--font-sans);color:var(--ink-muted)')}>
+          <span style={st('color:var(--ink);font-weight:700')}>The scale isn&rsquo;t fixed for the season.</span> That &times;{num(scale, 0)} conversion factor was last recalibrated {lastCalibrated || 'recently'}, off three completed seasons of real results. It gets re-evaluated whenever the model is recalibrated, not on a set schedule, so today&rsquo;s number is &ldquo;as of {lastCalibrated || 'today'},&rdquo; not a season-long constant. Home-field edge is also team-specific elsewhere on the site, not the single flat number this simplified example leaves out.
+        </div>
+      )}
     </div>
   );
 }
@@ -796,6 +837,70 @@ function DataTable({ columns, rows }) {
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+// Two-lane diverging blend bar (Power Rankings table, Power Score column).
+// Fixed lanes — prior on top, season below — so the color order never flips
+// and each lane's side of the shared center line reads as its sign. Lane
+// width doubles as the weekly blend weight: early season the steel lane
+// dominates every row, and the brass lane grows week over week.
+function TwoLaneBar({ segs, width = 88, height = 15 }) {
+  return (
+    <div style={{ width, height, position: 'relative', flexShrink: 0 }}>
+      <div style={{ position: 'absolute', top: 0, bottom: 0, width: 1, background: 'var(--hairline)', left: '50%' }} />
+      {segs.map((seg, i) => (
+        <div key={i} style={{ position: 'absolute', height: seg.height, top: seg.top, left: seg.left, width: seg.width, background: seg.color }} />
+      ))}
+    </div>
+  );
+}
+
+// Power Rankings table (Direction 1A handoff) — a bespoke fixed-column-width
+// grid, not the generic DataTable: every column has an exact pixel width and
+// its own padding/alignment, and the ungrouped table wraps a sticky header +
+// scrolling body + sticky legend footer in one flex column so it can be
+// stretched to exactly match the sidebar's height. `scroll` selects that
+// three-part flex layout; conference-grouped tables render as a plain
+// header+rows block instead (no internal scroll, no legend — with a table
+// per conference, that would be redundant).
+function RankingsTable({ columns, rows, scroll }) {
+  const gridCols = columns.map((c) => c.width).join(' ');
+  const header = (
+    <div style={{ display: 'grid', gridTemplateColumns: gridCols, background: 'var(--surface-dark)', flexShrink: 0 }}>
+      {columns.map((c) => (
+        <div key={c.key} style={st(`padding:${c.headerPad};color:var(--text-inverse);font-weight:700;font-size:12px;letter-spacing:${c.headerTracking};text-transform:uppercase;text-align:${c.headerAlign}`)}>
+          {c.label}
+        </div>
+      ))}
+    </div>
+  );
+  const body = rows.map((r, ri) => (
+    <div key={r.team} style={{ display: 'grid', gridTemplateColumns: gridCols, alignItems: 'center', background: r.isPinned ? '#FBF3E0' : (ri % 2 ? 'var(--surface-page)' : 'var(--surface-card)'), borderBottom: '1px solid var(--hairline)' }}>
+      {columns.map((c) => <React.Fragment key={c.key}>{c.render(r)}</React.Fragment>)}
+    </div>
+  ));
+
+  if (!scroll) {
+    return (
+      <div style={st('border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-card)')}>
+        {header}
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <div style={st('display:flex;flex-direction:column;min-width:0;border-radius:var(--radius-md);box-shadow:var(--shadow-card);overflow:hidden')}>
+      {header}
+      <div className="rankings-table-scroll-body" style={st('flex:1;min-height:0;overflow:auto;background:var(--surface-card)')} tabIndex="0" aria-label="Power rankings table, scrollable">{body}</div>
+      <div style={st('flex-shrink:0;background:var(--surface-card);border-top:1px solid var(--hairline);padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap')}>
+        <span style={st('font:700 11px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)')}>Bar</span>
+        <span style={st('display:flex;align-items:center;gap:7px')}><span style={{ width: 12, height: 10, background: 'var(--steel)', display: 'inline-block' }} /><span style={st('font:600 13px var(--font-sans);color:var(--ink-muted)')}>Preseason prior</span></span>
+        <span style={st('display:flex;align-items:center;gap:7px')}><span style={{ width: 12, height: 10, background: 'var(--brass)', display: 'inline-block' }} /><span style={st('font:600 13px var(--font-sans);color:var(--ink-muted)')}>This season</span></span>
+        <span style={st('font:400 13px var(--font-sans);color:var(--ink-faint)')}>Lane width is the blended weight. Left of centre is negative.</span>
+      </div>
     </div>
   );
 }
@@ -841,6 +946,7 @@ function App() {
     selectedTeam: initialURLState.selectedTeam,
     pinnedTeam: DEFAULT_PINNED_TEAM,
     groupByConference: false,
+    showAllRankings: false,
     weekInput: '',
     availableWeeks: [],
     matchupWeek: null,
@@ -968,7 +1074,6 @@ function App() {
   const pinnedNotInData = !!pinnedTeam && !pinnedRailFound;
 
   const rankRows = powerSorted.map((r, i) => ({ ...r, rank: i + 1, isPinned: r.team === pinnedTeam }));
-  const globalScaleMax = Math.max(0.001, ...rankRows.map((r) => Math.abs(Number(r.POWER_RATING_SHRUNK) || 0)));
 
   const SORT_FIELDS = [
     { key: 'POWER_RATING_SHRUNK', label: 'Rating' },
@@ -993,80 +1098,158 @@ function App() {
     return sortDir === 'asc' ? cmp : -cmp;
   });
   let tableDisplayRows = tableSorted;
-  if (tableSorted.length > topN) {
+  if (!s.showAllRankings && tableSorted.length > topN) {
     tableDisplayRows = tableSorted.slice(0, topN);
     if (!tableDisplayRows.some((r) => r.isPinned)) {
       const pinnedFull = tableSorted.find((r) => r.isPinned);
       if (pinnedFull) tableDisplayRows = [...tableDisplayRows, pinnedFull];
     }
   }
-  const rankTableProps = {
-    columns: [
-      {
-        key: 'team', label: 'Team', render: (r) => r.isPinned ? (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 7, height: 7, borderRadius: 999, background: pinnedAccentColor, flexShrink: 0, display: 'inline-block' }} />
-            {`${r.rank}. ${r.team}`}
-          </span>
-        ) : `${r.rank}. ${r.team}`,
+
+  // ---------------- Two-lane blend bar (Power Rankings Row 3) ----------------
+  // The two weighted rating-scale components that sum to POWER_RATING_SHRUNK.
+  // `priorRating` is the prior ON THE RATING SCALE (not prior_z, which is a
+  // z-score used only in the table's Prior column) — derived exactly from the
+  // shrunk rating rather than assuming a rescale factor, per the handoff.
+  const SHRINKAGE_K = 8;
+  function cfbRowParts(r) {
+    const gp = Number(r.games_played) || 0;
+    const seasonWeight = gp / (gp + SHRINKAGE_K);
+    const priorWeight = 1 - seasonWeight;
+    const shrunk = Number(r.POWER_RATING_SHRUNK) || 0;
+    const seasonRating = r.POWER_RATING != null ? Number(r.POWER_RATING) : 0;
+    const priorRating = priorWeight > 0 ? (shrunk - seasonWeight * seasonRating) / priorWeight : shrunk;
+    return {
+      seasonWeight, priorWeight, priorRating, seasonRating,
+      priorPart: priorWeight * priorRating,
+      seasonPart: seasonWeight * seasonRating,
+    };
+  }
+  // Largest same-sign weighted stack across the whole field — NOT the max
+  // absolute POWER_RATING_SHRUNK (globalScaleMax's old job), since a team
+  // whose two parts have opposite signs can have a same-sign stack bigger
+  // than its net rating. Using the net rating here would let a lane overflow
+  // the row.
+  const segUnits = Math.max(0.001, ...rankRows.map((r) => {
+    const { priorPart, seasonPart } = cfbRowParts(r);
+    const up = Math.max(0, priorPart) + Math.max(0, seasonPart);
+    const down = Math.abs(Math.min(0, priorPart)) + Math.abs(Math.min(0, seasonPart));
+    return Math.max(up, down);
+  }));
+  function rankRowSegs(r) {
+    const { priorPart, seasonPart } = cfbRowParts(r);
+    const segs = [];
+    [[priorPart, '0%', 'var(--steel)'], [seasonPart, '58%', 'var(--brass)']].forEach(([value, top, color]) => {
+      const width = Math.min(50, (Math.abs(value) / segUnits) * 50);
+      if (width < 0.4) return;
+      segs.push({ top, height: '42%', left: (value >= 0 ? 50 : 50 - width) + '%', width: width + '%', color });
+    });
+    return segs;
+  }
+
+  // ---------------- SP+ Δ (Power Rankings Row 3) ----------------
+  // spRank = the team's rank when the field is sorted by SP_PLUS descending,
+  // computed once here rather than trusting a rank column from the CSV. Teams
+  // missing SP_PLUS are excluded from the ranking (not just given a '—' gap)
+  // so they don't shift everyone else's spRank.
+  const spRankable = [...rankRows]
+    .filter((r) => r.SP_PLUS !== null && r.SP_PLUS !== undefined && !Number.isNaN(Number(r.SP_PLUS)))
+    .sort((a, b) => (Number(b.SP_PLUS) || 0) - (Number(a.SP_PLUS) || 0));
+  const spRankByTeam = {};
+  spRankable.forEach((r, i) => { spRankByTeam[r.team] = i + 1; });
+
+  // ---------------- Tier chip (Power Rankings Team column) ----------------
+  // 135+ teams and no logos: a Power-4 / Group-of-5 / Independent chip says
+  // more than arbitrary team colors, and TEAM_COLORS doesn't cover every FBS
+  // team anyway (most Group-of-5 programs fall back to the same gray).
+  const P4_CONFERENCES = new Set(['SEC', 'Big Ten', 'Big 12', 'ACC']);
+  function tierChipColor(conference) {
+    if (!conference) return 'var(--neutral-tan)';
+    if (P4_CONFERENCES.has(conference)) return 'var(--ink)';
+    if (conference === 'FBS Independents') return 'var(--neutral-tan)';
+    return 'var(--steel)';
+  }
+
+  const rankColumns = [
+    {
+      key: 'team', width: '186px', label: 'Team', headerPad: '13px 20px', headerAlign: 'left', headerTracking: '.09em',
+      render: (r) => (
+        <div key="team" style={st('padding:9px 20px;display:flex;align-items:center;gap:10px;min-width:0')} title={r.team}>
+          <div aria-hidden="true" style={{ width: 4, height: 20, borderRadius: 2, flexShrink: 0, background: tierChipColor(r.conference) }} />
+          <span style={st('font:600 17px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis')}>{`${r.rank}. ${r.team}`}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'POWER_RATING_SHRUNK', width: '152px', label: 'Power Score', headerPad: '13px 16px', headerAlign: 'right', headerTracking: '.09em',
+      render: (r) => (
+        <div key="POWER_RATING_SHRUNK" style={st('padding:9px 16px;display:flex;align-items:center;justify-content:flex-end;gap:12px')}>
+          <span style={st('font:600 17px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;min-width:46px;text-align:right')}>{num(r.POWER_RATING_SHRUNK, 3)}</span>
+          <TwoLaneBar segs={rankRowSegs(r)} />
+        </div>
+      ),
+    },
+    {
+      key: 'prior_z', width: '60px', label: 'Prior', headerPad: '13px 10px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="prior_z" style={st('padding:9px 10px;font:400 16px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{r.prior_z == null ? '—' : signed(r.prior_z, 2)}</div>,
+    },
+    {
+      key: 'this_season', width: '70px', label: 'Season', headerPad: '13px 10px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => {
+        const gp = Number(r.games_played) || 0;
+        const text = (gp === 0 || r.POWER_RATING == null) ? '—' : signed(Number(r.POWER_RATING) * (marginFit ? Number(marginFit.scale) : 1), marginFit ? 1 : 3);
+        return <div key="this_season" style={st('padding:9px 10px;font:400 16px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{text}</div>;
       },
-      {
-        key: 'POWER_RATING_SHRUNK', label: 'Rating', render: (r) => {
-          const val = Number(r.POWER_RATING_SHRUNK) || 0;
-          const positive = val >= 0;
-          const pct = Math.min(50, (Math.abs(val) / globalScaleMax) * 50);
-          const color = positive ? 'var(--value-positive)' : 'var(--value-risk)';
-          const scale = marginFit ? Number(marginFit.scale) : null;
-          const displayVal = scale ? val * scale : val;
-          return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
-              <div style={{ width: 56, height: 8, position: 'relative', background: 'var(--hairline)', borderRadius: 4, flexShrink: 0 }}>
-                <div style={{ position: 'absolute', top: 0, bottom: 0, left: positive ? '50%' : (50 - pct) + '%', width: pct + '%', background: color, borderRadius: 4 }} />
-              </div>
-              <span style={{ fontVariantNumeric: 'tabular-nums' }}>{num(displayVal, scale ? 1 : 3)}</span>
-            </div>
-          );
-        },
+    },
+    {
+      key: 'conference', width: 'minmax(0,1fr)', label: 'Conference', headerPad: '13px 14px', headerAlign: 'right', headerTracking: '.09em',
+      render: (r) => <div key="conference" style={st('padding:9px 14px;font:400 15px var(--font-sans);color:var(--ink-muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis')} title={r.conference || ''}>{r.conference || '—'}</div>,
+    },
+    {
+      key: 'games_played', width: '56px', label: 'Rec', headerPad: '13px 10px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="games_played" style={st('padding:9px 10px;font:400 16px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{r.record || '0-0'}</div>,
+    },
+    {
+      key: 'SP_PLUS', width: '54px', label: 'SP+', headerPad: '13px 10px', headerAlign: 'right', headerTracking: '.06em',
+      render: (r) => <div key="SP_PLUS" style={st('padding:9px 10px;font:400 16px var(--font-sans);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums')}>{num(r.SP_PLUS, 1)}</div>,
+    },
+    {
+      key: 'sp_gap', width: '64px', label: 'SP+ Δ', headerPad: '13px 8px', headerAlign: 'right', headerTracking: '.04em',
+      render: (r) => {
+        const spRank = spRankByTeam[r.team];
+        const gap = spRank != null ? spRank - r.rank : null;
+        const gapText = gap == null ? '—' : (gap === 0 ? '—' : signed(gap, 0));
+        const gapColor = gap == null ? 'var(--ink-faint)' : (Math.abs(gap) > 15 ? 'var(--brass)' : (Math.abs(gap) > 5 ? 'var(--steel)' : 'var(--ink-faint)'));
+        return <div key="sp_gap" style={st(`padding:9px 8px;font:600 15px var(--font-sans);text-align:right;font-variant-numeric:tabular-nums;color:${gapColor}`)}>{gapText}</div>;
       },
-      {
-        key: 'prior_z', label: 'Preseason Prior', render: (r) => {
-          const v = r.prior_z;
-          return v == null ? '—' : `${signed(v, 2)} z`;
-        },
-      },
-      {
-        key: 'this_season', label: 'This Season', render: (r) => {
-          const gp = Number(r.games_played) || 0;
-          if (gp === 0 || r.POWER_RATING == null) return '—';
-          const scale = marginFit ? Number(marginFit.scale) : null;
-          const v = Number(r.POWER_RATING);
-          return scale ? `${signed(v * scale, 1)} pts` : signed(v, 3);
-        },
-      },
-      { key: 'conference', label: 'Conference', render: (r) => r.conference || '—' },
-      { key: 'games_played', label: 'Record', render: (r) => r.record || '0-0' },
-      { key: 'SP_PLUS', label: 'SP+', render: (r) => num(r.SP_PLUS, 1) },
-      {
-        key: 'pin', label: 'Pin', render: (r) => {
-          const isPinned = r.isPinned;
-          return (
+    },
+    {
+      key: 'pin', width: '48px', label: 'Pin', headerPad: '13px 10px', headerAlign: 'center', headerTracking: '.06em',
+      render: (r) => {
+        const isPinned = r.isPinned;
+        return (
+          <div key="pin" style={st('padding:9px 10px;text-align:center')}>
             <button
               onClick={() => togglePin(r.team)}
               title={isPinned ? `Unpin ${r.team}` : `Pin ${r.team}`}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex' }}
+              aria-label={isPinned ? `Unpin ${r.team}` : `Pin ${r.team}`}
+              aria-pressed={isPinned}
+              style={st('background:none;border:none;cursor:pointer;padding:2px;display:inline-flex')}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" style={{ color: isPinned ? pinnedAccentColor : 'var(--ink-faint)' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" style={{ color: isPinned ? pinnedAccentColor : 'var(--ink-faint)' }}>
                 <path d="M12 2.5l2.99 6.06 6.69.97-4.84 4.72 1.14 6.66L12 17.77l-5.98 3.14 1.14-6.66-4.84-4.72 6.69-.97z" fill={isPinned ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
               </svg>
             </button>
-          );
-        },
+          </div>
+        );
       },
-    ],
-    rows: tableDisplayRows,
-  };
+    },
+  ];
+  const rankColumnsGrouped = rankColumns.filter((c) => c.key !== 'conference');
 
   // ---------------- Group by Conference (Power Rankings) ----------------
+  // Uses the full rankRows, not the topN-truncated display rows — grouped
+  // view was never subject to the top-N cut.
   const CONFERENCE_ORDER = [...new Set(rankRows.map((r) => r.conference).filter(Boolean))].sort();
   const groupedByConference = CONFERENCE_ORDER
     .map((conference) => ({
@@ -1074,12 +1257,48 @@ function App() {
       rows: rankRows.filter((r) => r.conference === conference).sort((a, b) => (Number(b.POWER_RATING_SHRUNK) || 0) - (Number(a.POWER_RATING_SHRUNK) || 0)),
     }))
     .filter((g) => g.rows.length);
-  const groupedColumns = rankTableProps.columns.filter((c) => c.key !== 'conference');
+
+  // ---------------- Reading-the-scale strip chart (Power Rankings Row 1) ----------------
+  const teamCount = rankRows.length;
+  const cfbScores = rankRows.map((r) => Number(r.POWER_RATING_SHRUNK) || 0);
+  const stripLo = Math.floor((cfbScores.length ? Math.min(...cfbScores) : -0.1) * 20) / 20 - 0.01;
+  const stripHi = Math.ceil((cfbScores.length ? Math.max(...cfbScores) : 0.1) * 20) / 20 + 0.01;
+  const stripSpan = Math.max(0.001, stripHi - stripLo);
+  const stripPos = (v) => ((v - stripLo) / stripSpan) * 100;
+  const stripZeroPct = stripPos(0) + '%';
+  const stripStrongest = rankRows[0] || null;
+  const stripWeakest = rankRows.length ? rankRows[rankRows.length - 1] : null;
+  const stripRangeLabel = stripStrongest && stripWeakest
+    ? `${stripStrongest.team} ${signed(stripStrongest.POWER_RATING_SHRUNK, 3)} to ${stripWeakest.team} ${signed(stripWeakest.POWER_RATING_SHRUNK, 3)}`
+    : '—';
+  const stripPinnedRow = pinnedTeam ? rankRows.find((r) => r.team === pinnedTeam) : null;
+  const stripTicks = rankRows.map((r) => {
+    const rating = Number(r.POWER_RATING_SHRUNK) || 0;
+    const isPinnedTick = stripPinnedRow && r.team === stripPinnedRow.team;
+    return {
+      team: r.team,
+      isPinnedTick,
+      style: isPinnedTick
+        ? st(`position:absolute;top:14px;height:44px;width:3px;border-radius:2px;background:var(--ink);left:${stripPos(rating)}%`)
+        : st(`position:absolute;top:22px;height:30px;width:2px;border-radius:1px;opacity:.5;background:${rating >= 0 ? 'var(--value-positive)' : 'var(--value-risk)'};left:${stripPos(rating)}%`),
+    };
+  });
+  const aboveAvgCount = rankRows.filter((r) => (Number(r.POWER_RATING_SHRUNK) || 0) >= 0).length;
+  let stripCaption = rankRows.length
+    ? `${aboveAvgCount} of ${teamCount} teams sit above average`
+    : 'Power ratings haven’t loaded yet';
+  const topClusterN = Math.min(25, rankRows.length);
+  if (topClusterN >= 2) {
+    const clusterSpread = Number((Number(rankRows[0].POWER_RATING_SHRUNK) - Number(rankRows[topClusterN - 1].POWER_RATING_SHRUNK)).toFixed(3));
+    stripCaption += `, and the top ${topClusterN} are packed inside ${clusterSpread.toFixed(3)} rating points of each other`;
+  }
+  stripCaption += '.';
 
   // ---------------- Power Score walkthrough (Power Rankings visual panel) ----------------
   // Uses the pinned team (Arkansas by default) so the worked example always
   // reflects real, current data instead of a hardcoded team.
   const walkthroughRow = pinnedRow || rankRows[0] || null;
+  const walkthroughParts = walkthroughRow ? cfbRowParts(walkthroughRow) : null;
 
   // Run/Pass bars below show a single *net* edge (home offense-vs-away-
   // defense minus away offense-vs-home-defense). Anna's catch (2026-08-06):
@@ -1632,39 +1851,127 @@ function App() {
         ))}
       </div>
 
-      {tab === 'rankings' && (
-        <div style={st('padding:32px 40px 60px;display:flex;flex-direction:column;gap:26px')}>
+      {tab === 'rankings' && !s.loaded && (
+        // Loading skeleton (first paint, fetch in flight): the static copy in
+        // both cards and the sidebar's equation/definitions is real content
+        // and can render instantly; only the table body and the numbers that
+        // depend on data are left empty. No spinner, no placeholder box.
+        <div style={st('padding:28px 40px 44px;display:flex;flex-direction:column;gap:24px')}>
+          <div className="rankings-top-row">
+            <div style={st('background:var(--surface-card);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:26px 28px;display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>Reading the scale</div>
+              <div style={st('font:900 26px/1.2 var(--font-sans);color:var(--ink)')}>The rating isn&rsquo;t points yet.</div>
+              <p style={st('font:400 19px/1.5 var(--font-sans);color:var(--ink);margin:0;text-wrap:pretty')}>Zero is a perfectly average FBS team.</p>
+            </div>
+            <div style={st('background:var(--surface-card);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:26px 28px')} />
+          </div>
           <div className="rankings-two-col">
-            <div style={st('display:flex;flex-direction:column;gap:20px;min-width:0')}>
-              <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
-                {!s.groupByConference && sortPills.map((p) => (
-                  <button key={p.key} style={st(p.style)} onClick={p.onClick}>{p.label} {p.arrow}</button>
+            <div style={st('display:flex;flex-direction:column;min-width:0;border-radius:var(--radius-md);box-shadow:var(--shadow-card);overflow:hidden')}>
+              <div style={{ display: 'grid', gridTemplateColumns: rankColumns.map((c) => c.width).join(' '), background: 'var(--surface-dark)' }}>
+                {rankColumns.map((c) => (
+                  <div key={c.key} style={st(`padding:${c.headerPad};color:var(--text-inverse);font-weight:700;font-size:12px;letter-spacing:${c.headerTracking};text-transform:uppercase;text-align:${c.headerAlign}`)}>{c.label}</div>
                 ))}
-                <button
-                  style={st(`padding:6px 14px;border-radius:999px;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid ${s.groupByConference ? 'var(--ink)' : 'var(--hairline)'};background:${s.groupByConference ? 'var(--ink)' : 'transparent'};color:${s.groupByConference ? 'var(--paper)' : 'var(--ink-muted)'}`)}
-                  onClick={toggleGroupByConference}
-                >Group by Conference</button>
               </div>
+            </div>
+            <div>
+              <CFBPowerScoreWalkthrough team={null} rating={null} gamesPlayed={null} scale={null} homeEdge={null} lastCalibrated={null} />
+            </div>
+          </div>
+        </div>
+      )}
 
-              {s.groupByConference ? (
-                <div style={st('display:flex;flex-direction:column;gap:24px')}>
-                  {groupedByConference.map((g) => (
-                    <div key={g.conference}>
-                      <div style={st('font:700 13px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>{g.conference}</div>
-                      <DataTable columns={groupedColumns} rows={g.rows} />
-                    </div>
-                  ))}
-                </div>
+      {tab === 'rankings' && s.loaded && rankRows.length === 0 && (
+        // No powerRows at all (pipeline hasn't run): Card A stands alone
+        // full-width, Card B and the sidebar are removed rather than shown
+        // empty, and the table's spot carries today's message verbatim.
+        <div style={st('padding:28px 40px 44px;display:flex;flex-direction:column;gap:24px')}>
+          <div style={st('display:grid;grid-template-columns:1fr;gap:24px')}>
+            <div style={st('background:var(--surface-card);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:26px 28px;display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>Reading the scale</div>
+              <div style={st('font:900 26px/1.2 var(--font-sans);color:var(--ink)')}>The rating isn&rsquo;t points yet.</div>
+              <p style={st('font:400 19px/1.5 var(--font-sans);color:var(--ink);margin:0;text-wrap:pretty')}>Zero is a perfectly average FBS team.</p>
+            </div>
+          </div>
+          <div style={st('padding:40px;text-align:center;font:400 15px var(--font-sans);color:var(--ink-faint);background:var(--surface-card);border-radius:var(--radius-md)')}>No power ratings yet — run the pipeline to generate cfb_power_ratings.csv.</div>
+        </div>
+      )}
+
+      {tab === 'rankings' && s.loaded && rankRows.length > 0 && (
+        <div style={st('padding:28px 40px 44px;display:flex;flex-direction:column;gap:24px')}>
+
+          {/* Row 1 — reading-the-scale explainer + all-teams strip chart */}
+          <div className="rankings-top-row">
+            <div style={st('background:var(--surface-card);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:26px 28px;display:flex;flex-direction:column;gap:10px')}>
+              <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>Reading the scale</div>
+              <div style={st('font:900 26px/1.2 var(--font-sans);color:var(--ink)')}>The rating isn&rsquo;t points yet.</div>
+              {marginFit ? (
+                <p style={st('font:400 19px/1.5 var(--font-sans);color:var(--ink);margin:0;text-wrap:pretty')}>
+                  Zero is a perfectly average FBS team. Multiply a rating by the model&rsquo;s current &times;{num(marginFit.scale, 0)} conversion factor to get points, then subtract two teams&rsquo; numbers and add the home team&rsquo;s own edge for a predicted margin.
+                </p>
               ) : (
-                <div style={st('max-height:560px;overflow:auto;border-radius:var(--radius-md)')}>
-                  {rankTableProps.rows.length
-                    ? <DataTable columns={rankTableProps.columns} rows={rankTableProps.rows} />
-                    : <div style={st('padding:40px;text-align:center;font:400 15px var(--font-sans);color:var(--ink-faint);background:var(--surface-card);border-radius:var(--radius-md)')}>No power ratings yet — run the pipeline to generate cfb_power_ratings.csv.</div>}
-                </div>
+                <p style={st('font:400 19px/1.5 var(--font-sans);color:var(--ink);margin:0;text-wrap:pretty')}>Zero is a perfectly average FBS team.</p>
               )}
             </div>
 
-            <div className="walkthrough-panel">
+            <div style={st('background:var(--surface-card);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:26px 28px;display:flex;flex-direction:column;gap:6px')}>
+              <div style={st('display:flex;align-items:baseline;justify-content:space-between;gap:16px')}>
+                <div style={st('font:700 12px var(--font-sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted)')}>All {teamCount} teams on one axis</div>
+                <div style={st('font:600 13px var(--font-sans);color:var(--ink-faint)')}>{stripRangeLabel}</div>
+              </div>
+              <div style={st('position:relative;height:78px;margin-top:10px')} role="img" aria-label={stripCaption}>
+                <div style={st('position:absolute;left:0;right:0;top:36px;height:1px;background:var(--hairline)')} />
+                <div style={{ position: 'absolute', top: 0, bottom: 22, width: 1, background: 'var(--ink)', left: stripZeroPct }} />
+                {stripTicks.map((t) => <div key={t.team} style={t.style} />)}
+                {stripPinnedRow && (
+                  <div style={{ position: 'absolute', top: 0, left: stripPos(Number(stripPinnedRow.POWER_RATING_SHRUNK) || 0) + '%', transform: 'translateX(-50%)', font: '700 11px var(--font-sans)', letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--ink)', whiteSpace: 'nowrap' }}>{stripPinnedRow.team}</div>
+                )}
+                <div style={{ position: 'absolute', top: 60, left: stripZeroPct, transform: 'translateX(-50%)', font: '700 11px var(--font-sans)', letterSpacing: '.05em', textTransform: 'uppercase', color: 'var(--ink-faint)', whiteSpace: 'nowrap' }}>Average</div>
+                <div style={st('position:absolute;top:0;left:0;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--value-risk)')}>Weakest</div>
+                <div style={st('position:absolute;top:0;right:0;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;color:var(--value-positive)')}>Strongest</div>
+              </div>
+              <p style={st('font:400 15px/1.45 var(--font-sans);color:var(--ink-muted);margin:6px 0 0;text-wrap:pretty')}>{stripCaption}</p>
+            </div>
+          </div>
+
+          {/* Row 2 — sort pills, show-all toggle, group by conference */}
+          <div style={st('display:flex;align-items:center;gap:10px;flex-wrap:wrap')}>
+            {!s.groupByConference && (
+              <React.Fragment>
+                <span style={st('font:700 12px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px')}>Sort</span>
+                {sortPills.map((p) => (
+                  <button key={p.key} style={st(p.style)} onClick={p.onClick}>{p.label} {p.arrow}</button>
+                ))}
+              </React.Fragment>
+            )}
+            <span style={{ flex: 1 }} />
+            {!s.groupByConference && tableSorted.length > topN && (
+              <button
+                style={st('padding:6px 14px;border-radius:999px;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid var(--hairline);background:transparent;color:var(--ink-muted)')}
+                onClick={() => setState((prev) => ({ showAllRankings: !prev.showAllRankings }))}
+              >{s.showAllRankings ? `Show top ${topN}` : `Show all ${tableSorted.length}`}</button>
+            )}
+            <button
+              style={st(`padding:6px 14px;border-radius:999px;font:700 11px var(--font-sans);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid ${s.groupByConference ? 'var(--ink)' : 'var(--hairline)'};background:${s.groupByConference ? 'var(--ink)' : 'transparent'};color:${s.groupByConference ? 'var(--paper)' : 'var(--ink-muted)'}`)}
+              onClick={toggleGroupByConference}
+            >Group by Conference</button>
+          </div>
+
+          {/* Row 3 — table (or grouped-by-conference tables) + Power Score walkthrough sidebar */}
+          <div className="rankings-two-col">
+            {s.groupByConference ? (
+              <div style={st('display:flex;flex-direction:column;gap:24px;min-width:0')}>
+                {groupedByConference.map((g) => (
+                  <div key={g.conference}>
+                    <div style={st('font:700 13px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px')}>{g.conference}</div>
+                    <RankingsTable columns={rankColumnsGrouped} rows={g.rows} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <RankingsTable columns={rankColumns} rows={tableDisplayRows} scroll />
+            )}
+
+            <div>
               <CFBPowerScoreWalkthrough
                 team={walkthroughRow ? walkthroughRow.team : null}
                 rating={walkthroughRow ? Number(walkthroughRow.POWER_RATING_SHRUNK) : null}
@@ -1672,6 +1979,10 @@ function App() {
                 scale={marginFit ? Number(marginFit.scale) : null}
                 homeEdge={marginFit ? Number(marginFit.home_edge) : null}
                 lastCalibrated={marginFit ? marginFit.last_calibrated : null}
+                priorRating={walkthroughParts ? walkthroughParts.priorRating : null}
+                priorWeight={walkthroughParts ? walkthroughParts.priorWeight : null}
+                seasonRating={walkthroughParts ? walkthroughParts.seasonRating : null}
+                seasonWeight={walkthroughParts ? walkthroughParts.seasonWeight : null}
               />
             </div>
           </div>
